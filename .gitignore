@@ -1,0 +1,30 @@
+# Dependencias (si se usa servidor de desarrollo o linters)
+node_modules/
+
+# Archivos de bloqueo de paquetes
+package-lock.json
+package_lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Variables de entorno
+.env
+.env.local
+!.env.example
+
+# Builds y empaquetados
+dist/
+build/
+.cache/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Archivos del sistema y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

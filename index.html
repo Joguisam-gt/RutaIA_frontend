@@ -4,144 +4,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RutaIA | Academia de Inteligencia Artificial y Tecnologías Profundas</title>
+    <title>RutaIA | Educación Tecnológica & Inteligencia Artificial</title>
 
-    <!-- Tipografías de Google Fonts: Plus Jakarta Sans & Inter & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
-        rel="stylesheet">
-
-    <!-- CSS Base & Tokens -->
+    <!-- CSS del sistema modular -->
     <link rel="stylesheet" href="./src/css/variables.css">
     <link rel="stylesheet" href="./src/css/base.css">
-
-    <!-- CSS Components -->
     <link rel="stylesheet" href="./src/css/components/navbar.css">
-    <link rel="stylesheet" href="./src/css/components/cards.css">
-    <link rel="stylesheet" href="./src/css/components/forms.css">
-    <link rel="stylesheet" href="./src/css/components/modal.css">
     <link rel="stylesheet" href="./src/css/components/badges.css">
-    <link rel="stylesheet" href="./src/css/components/tabs.css">
+    <link rel="stylesheet" href="./src/css/components/cards.css">
 
-    <!-- CSS Views -->
-    <link rel="stylesheet" href="./src/css/views/catalog.css">
-    <link rel="stylesheet" href="./src/css/views/query.css">
-    <link rel="stylesheet" href="./src/css/views/history.css">
-    <link rel="stylesheet" href="./src/css/views/metrics.css">
-    <link rel="stylesheet" href="./src/css/views/admin.css">
-    <link rel="stylesheet" href="./src/css/views/graph.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
-<body class="theme-obsidian">
-    <!-- Contenedor de Notificaciones Toast -->
-    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+<body>
 
-    <!-- Navbar Global Superior -->
-    <header id="app-navbar" class="glass-navbar">
-        <div class="nav-container">
-            <a href="#landing" class="nav-brand">
-                <div class="brand-symbol">
-                    <div class="core-dot"></div>
+    <!-- Barra de Navegación -->
+    <header class="site-header">
+        <div class="container navbar">
+            <a href="#" class="brand" aria-label="RutaIA Home">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                        stroke-linejoin="round" width="18" height="18">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
                 </div>
-                <span class="brand-text">Ruta<span class="brand-gradient">IA</span></span>
+                <span class="brand-text">Ruta<span>IA</span></span>
             </a>
 
-            <!-- Menú Desktop -->
-            <nav class="nav-links" id="primary-navigation">
-                <a href="#landing" class="nav-item" data-route="landing">Nosotros</a>
-                <a href="#catalog" class="nav-item" data-route="catalog">Cursos</a>
-                <a href="#query" class="nav-item" data-route="query">Orientador IA (RAG)</a>
-                <a href="#history" class="nav-item" data-route="history">Mi Historial</a>
-                <a href="#metrics" class="nav-item" data-route="metrics">Métricas</a>
-                <a href="#admin" class="nav-item nav-admin-link" data-route="admin" id="nav-link-admin">Consola
-                    Admin</a>
-            </nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir Menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
 
-            <!-- Selector de Estudiante Activo & Switch de Rol -->
-            <div class="nav-actions">
-                <div class="role-selector-wrapper">
-                    <label for="role-toggle" class="role-label-text">Rol:</label>
-                    <div class="toggle-switch">
-                        <input type="checkbox" id="role-toggle" class="toggle-input">
-                        <label for="role-toggle" class="toggle-slider">
-                            <span class="role-state student-state">Estudiante</span>
-                            <span class="role-state admin-state">Admin</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="student-picker-wrapper" id="student-picker-container">
-                    <select id="active-student-select" class="input-select select-sm">
-                        <option value="">Seleccionar Estudiante...</option>
-                    </select>
-                    <button class="btn btn-ghost btn-sm" id="btn-quick-new-student" title="Nuevo Estudiante">+</button>
-                </div>
-
-                <button class="menu-toggle-btn" id="menu-toggle-btn" aria-label="Abrir navegación móvil">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Menú Móvil Desplegable -->
-        <div class="mobile-drawer" id="mobile-drawer">
-            <nav class="mobile-nav-list">
-                <a href="#landing" class="mobile-nav-item">Nosotros e Historia</a>
-                <a href="#catalog" class="mobile-nav-item">Catálogo de Cursos</a>
-                <a href="#query" class="mobile-nav-item">Asistente de Rutas IA</a>
-                <a href="#history" class="mobile-nav-item">Historial Personal</a>
-                <a href="#metrics" class="mobile-nav-item">Métricas Globales</a>
-                <a href="#admin" class="mobile-nav-item" id="mobile-link-admin">Panel de Administración</a>
-            </nav>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="#servicios" class="nav-link">Cursos & Áreas</a></li>
+                <li><a href="#historia" class="nav-link">Historia</a></li>
+                <li><a href="#mision" class="nav-link">Misión</a></li>
+                <li><a href="#explorar" class="btn btn-primary">Comenzar Ahora</a></li>
+            </ul>
         </div>
     </header>
 
-    <!-- Contenedor Principal SPA donde se inyectan las vistas -->
-    <main id="app-view" class="main-content-canvas">
-        <!-- El router cargará dinámicamente las vistas aquí -->
+    <main>
+        <!-- Hero Section -->
+        <section class="section hero" id="inicio"
+            style="text-align: center; padding-top: calc(var(--space-3xl) * 1.2);">
+            <div class="container">
+                <span class="badge badge-pill-hero">Revolución en Formación Tech ⚡</span>
+                <h1>El camino inteligente para dominar la <span class="text-gradient">tecnología moderna</span></h1>
+                <p style="max-width: 680px; margin: var(--space-md) auto var(--space-xl) auto;">
+                    RutaIA es una plataforma académica de vanguardia diseñada para potenciar tu carrera profesional
+                    mediante rutas de aprendizaje personalizadas impulsadas por Inteligencia Artificial.
+                </p>
+                <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+                    <a href="#servicios" class="btn btn-primary">Ver Áreas de Formación</a>
+                    <a href="#historia" class="btn btn-secondary">Conocer Nuestra Historia</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ¿Para qué sirve? & Servicios -->
+        <section class="section" id="servicios">
+            <div class="container">
+                <div class="section-header">
+                    <span class="badge badge-ai">Nuestra Oferta Académica</span>
+                    <h2 style="margin-top: 8px;">¿Qué puedes aprender en RutaIA?</h2>
+                    <p>Ofrecemos trayectos formativos adaptados a las exigencias reales de la industria tecnológica
+                        global.</p>
+                </div>
+
+                <div class="grid-cards">
+                    <!-- Card 1 -->
+                    <article class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 18 22 12 16 6" />
+                                <polyline points="8 6 2 12 8 18" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Programación Moderna</h3>
+                        <p class="card-desc">Domina lenguajes fundamentales como Python, TypeScript y Rust con un
+                            enfoque directo en código limpio y buenas prácticas de arquitectura.</p>
+                    </article>
+
+                    <!-- Card 2 -->
+                    <article class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Desarrollo Web Full-Stack</h3>
+                        <p class="card-desc">Construye aplicaciones robustas y escalables. Domina frontends reactivos,
+                            APIs eficientes y patrones modernos de renderizado web.</p>
+                    </article>
+
+                    <!-- Card 3 -->
+                    <article class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Bases de Datos & Big Data</h3>
+                        <p class="card-desc">Modelado relacional y NoSQL, bases de datos vectoriales para IA,
+                            optimización de consultas SQL complejas y pipelines de datos.</p>
+                    </article>
+
+                    <!-- Card 4 -->
+                    <article class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Inteligencia Artificial</h3>
+                        <p class="card-desc">Aprende Machine Learning, redes neuronales, embeddings y el diseño de
+                            sistemas RAG (Retrieval-Augmented Generation) listos para producción.</p>
+                    </article>
+
+                    <!-- Card 5 -->
+                    <article class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                <line x1="8" y1="21" x2="16" y2="21" />
+                                <line x1="12" y1="17" x2="12" y2="21" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Herramientas Tecnológicas</h3>
+                        <p class="card-desc">Flujos profesionales con Docker, Kubernetes, Git avanzado, CI/CD y entornos
+                            en la nube para desplegar software confiable.</p>
+                    </article>
+
+                    <!-- Card 6 -->
+                    <article class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Tutoría Asistida por IA</h3>
+                        <p class="card-desc">Resolución instantánea de dudas técnicas, evaluación inteligente de tu
+                            progreso y retroalimentación contextual de código 24/7.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historia y Misión -->
+        <section class="section" id="historia"
+            style="background: rgba(255, 255, 255, 0.015); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+            <div class="container">
+                <div class="story-grid">
+
+                    <!-- Historia -->
+                    <div class="card" style="border-left: 3px solid var(--color-primary);">
+                        <span class="badge" style="width: fit-content; margin-bottom: var(--space-sm);">Origen</span>
+                        <h2 style="font-size: 1.8rem; margin-bottom: var(--space-md);">Nuestra Historia</h2>
+                        <p style="margin-bottom: var(--space-md);">
+                            RutaIA nació de la necesidad de cerrar la brecha entre los programas académicos
+                            tradicionales y la acelerada evolución de la Inteligencia Artificial.
+                        </p>
+                        <p>
+                            Un equipo de ingenieros, docentes e investigadores decidió crear una institución de
+                            educación técnica que no solo enseñe teoría, sino que utilice la IA como motor para
+                            construir rutas curriculares dinámicas que preparen a los estudiantes para los desafíos del
+                            mercado real.
+                        </p>
+                    </div>
+
+                    <!-- Misión -->
+                    <div class="card" id="mision" style="border-left: 3px solid var(--color-accent);">
+                        <span class="badge badge-ai"
+                            style="width: fit-content; margin-bottom: var(--space-sm);">Propósito</span>
+                        <h2 style="font-size: 1.8rem; margin-bottom: var(--space-md);">Nuestra Misión</h2>
+                        <p style="margin-bottom: var(--space-md);">
+                            Democratizar el acceso a la educación tecnológica de primer nivel, guiando a cada estudiante
+                            a través de un recorrido pedagógico hiperpersonalizado, accesible y enfocado en proyectos
+                            aplicables.
+                        </p>
+                        <p>
+                            Queremos convertir a cada aprendiz en un creador capaz de idear, programar y desplegar
+                            soluciones apoyadas en IA y arquitectura de software moderna.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Pie de Página Institucional -->
-    <footer class="app-footer">
-        <div class="footer-layout">
-            <div class="footer-col-main">
-                <div class="brand-symbol sm">
-                    <div class="core-dot"></div>
-                </div>
-                <p class="footer-tagline">
-                    RutaIA lidera la formación técnica de alto rendimiento integrando bases de datos vectoriales,
-                    agentes inteligentes y metodologías de ingeniería de software moderna.
-                </p>
-                <span class="footer-copy">© 2025 RutaIA Academy. Arquitectura Deep Tech.</span>
-            </div>
-            <div class="footer-col">
-                <h4>Ecosistema</h4>
-                <ul>
-                    <li><a href="#catalog">Inteligencia Artificial</a></li>
-                    <li><a href="#catalog">Desarrollo Web & Cloud</a></li>
-                    <li><a href="#catalog">Bases de Datos & Data Eng</a></li>
-                    <li><a href="#query">Simulación de Rutas RAG</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Institución</h4>
-                <ul>
-                    <li><a href="#landing">Propósito & Misión</a></li>
-                    <li><a href="#landing">Trayectoria & Nodos</a></li>
-                    <li><a href="#metrics">Rendimiento Académico</a></li>
-                </ul>
-            </div>
+    <!-- Footer -->
+    <footer style="padding: var(--space-2xl) 0; border-top: 1px solid var(--color-border); text-align: center;">
+        <div class="container">
+            <p style="font-size: 0.9rem; color: var(--color-text-subtle);">
+                &copy; 2025 RutaIA - Institución de Educación Tecnológica. Todos los derechos reservados.
+            </p>
         </div>
     </footer>
 
-    <!-- Modales Dinámicos Montados en el DOM -->
-    <div id="modal-container" class="modal-layer hidden"></div>
-
-    <!-- Script Principal Vanilla -->
+    <!-- Scripts Vanilla -->
     <script type="module" src="./src/js/app.js"></script>
 </body>
 

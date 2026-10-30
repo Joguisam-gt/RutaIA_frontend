@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RutaIA | Academia de Inteligencia Artificial y Tecnologías Profundas</title>
+
+    <!-- Tipografías de Google Fonts: Plus Jakarta Sans & Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Base & Tokens -->
+    <link rel="stylesheet" href="./src/css/variables.css">
+    <link rel="stylesheet" href="./src/css/base.css">
+
+    <!-- CSS Components -->
+    <link rel="stylesheet" href="./src/css/components/navbar.css">
+    <link rel="stylesheet" href="./src/css/components/cards.css">
+    <link rel="stylesheet" href="./src/css/components/forms.css">
+    <link rel="stylesheet" href="./src/css/components/modal.css">
+    <link rel="stylesheet" href="./src/css/components/badges.css">
+    <link rel="stylesheet" href="./src/css/components/tabs.css">
+
+    <!-- CSS Views -->
+    <link rel="stylesheet" href="./src/css/views/catalog.css">
+    <link rel="stylesheet" href="./src/css/views/query.css">
+    <link rel="stylesheet" href="./src/css/views/history.css">
+    <link rel="stylesheet" href="./src/css/views/metrics.css">
+    <link rel="stylesheet" href="./src/css/views/admin.css">
+    <link rel="stylesheet" href="./src/css/views/graph.css">
+</head>
+
+<body class="theme-obsidian">
+    <!-- Contenedor de Notificaciones Toast -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Navbar Global Superior -->
+    <header id="app-navbar" class="glass-navbar">
+        <div class="nav-container">
+            <a href="#landing" class="nav-brand">
+                <div class="brand-symbol">
+                    <div class="core-dot"></div>
+                </div>
+                <span class="brand-text">Ruta<span class="brand-gradient">IA</span></span>
+            </a>
+
+            <!-- Menú Desktop -->
+            <nav class="nav-links" id="primary-navigation">
+                <a href="#landing" class="nav-item" data-route="landing">Nosotros</a>
+                <a href="#catalog" class="nav-item" data-route="catalog">Cursos</a>
+                <a href="#query" class="nav-item" data-route="query">Orientador IA (RAG)</a>
+                <a href="#history" class="nav-item" data-route="history">Mi Historial</a>
+                <a href="#metrics" class="nav-item" data-route="metrics">Métricas</a>
+                <a href="#admin" class="nav-item nav-admin-link" data-route="admin" id="nav-link-admin">Consola
+                    Admin</a>
+            </nav>
+
+            <!-- Selector de Estudiante Activo & Switch de Rol -->
+            <div class="nav-actions">
+                <div class="role-selector-wrapper">
+                    <label for="role-toggle" class="role-label-text">Rol:</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="role-toggle" class="toggle-input">
+                        <label for="role-toggle" class="toggle-slider">
+                            <span class="role-state student-state">Estudiante</span>
+                            <span class="role-state admin-state">Admin</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="student-picker-wrapper" id="student-picker-container">
+                    <select id="active-student-select" class="input-select select-sm">
+                        <option value="">Seleccionar Estudiante...</option>
+                    </select>
+                    <button class="btn btn-ghost btn-sm" id="btn-quick-new-student" title="Nuevo Estudiante">+</button>
+                </div>
+
+                <button class="menu-toggle-btn" id="menu-toggle-btn" aria-label="Abrir navegación móvil">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div class="mobile-drawer" id="mobile-drawer">
+            <nav class="mobile-nav-list">
+                <a href="#landing" class="mobile-nav-item">Nosotros e Historia</a>
+                <a href="#catalog" class="mobile-nav-item">Catálogo de Cursos</a>
+                <a href="#query" class="mobile-nav-item">Asistente de Rutas IA</a>
+                <a href="#history" class="mobile-nav-item">Historial Personal</a>
+                <a href="#metrics" class="mobile-nav-item">Métricas Globales</a>
+                <a href="#admin" class="mobile-nav-item" id="mobile-link-admin">Panel de Administración</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal SPA donde se inyectan las vistas -->
+    <main id="app-view" class="main-content-canvas">
+        <!-- El router cargará dinámicamente las vistas aquí -->
+    </main>
+
+    <!-- Pie de Página Institucional -->
+    <footer class="app-footer">
+        <div class="footer-layout">
+            <div class="footer-col-main">
+                <div class="brand-symbol sm">
+                    <div class="core-dot"></div>
+                </div>
+                <p class="footer-tagline">
+                    RutaIA lidera la formación técnica de alto rendimiento integrando bases de datos vectoriales,
+                    agentes inteligentes y metodologías de ingeniería de software moderna.
+                </p>
+                <span class="footer-copy">© 2025 RutaIA Academy. Arquitectura Deep Tech.</span>
+            </div>
+            <div class="footer-col">
+                <h4>Ecosistema</h4>
+                <ul>
+                    <li><a href="#catalog">Inteligencia Artificial</a></li>
+                    <li><a href="#catalog">Desarrollo Web & Cloud</a></li>
+                    <li><a href="#catalog">Bases de Datos & Data Eng</a></li>
+                    <li><a href="#query">Simulación de Rutas RAG</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Institución</h4>
+                <ul>
+                    <li><a href="#landing">Propósito & Misión</a></li>
+                    <li><a href="#landing">Trayectoria & Nodos</a></li>
+                    <li><a href="#metrics">Rendimiento Académico</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modales Dinámicos Montados en el DOM -->
+    <div id="modal-container" class="modal-layer hidden"></div>
+
+    <!-- Script Principal Vanilla -->
+    <script type="module" src="./src/js/app.js"></script>
+</body>
+
+</html>

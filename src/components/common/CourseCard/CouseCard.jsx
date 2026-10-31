@@ -1,4 +1,3 @@
-// src/components/common/CourseCard/CourseCard.jsx
 import React from 'react';
 import { Star, Clock, BookOpen, Heart, ArrowRight } from 'lucide-react';
 

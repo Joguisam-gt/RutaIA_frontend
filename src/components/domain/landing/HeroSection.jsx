@@ -1,4 +1,3 @@
-// src/components/domain/landing/HeroSection.jsx
 import React from 'react';
 import { Sparkles, ArrowRight, Play, Code, Bot, Database, Layout } from 'lucide-react';
 import { useLanguage } from '../../../context/LanguageContext';

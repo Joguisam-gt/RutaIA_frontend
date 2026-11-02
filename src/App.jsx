@@ -7,7 +7,10 @@ import { ThemeProvider } from './context/ThemeContext.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { NotificationProvider } from './context/NotificationContext.jsx';
 
-// Importación centralizada desde screens/index.js
+// Navbar global de interacción
+import { Navbar } from './components/layout/Navbar/Navbar.jsx';
+
+// Importación centralizada de pantallas
 import {
     LandingScreen,
     CatalogScreen,
@@ -47,6 +50,7 @@ export function App() {
                 <AuthProvider>
                     <NotificationProvider>
                         <BrowserRouter>
+                            <Navbar />
                             <Routes>
                                 {/* Rutas Públicas */}
                                 <Route path="/" element={<LandingScreen />} />

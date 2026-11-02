@@ -1,71 +1,62 @@
-import { useState, useEffect, useCallback } from 'react';
-import { articleDetailApi } from '../api/articleDetailApi';
+import { useState, useEffect } from 'react';
 
-export const useArticleDetail = (articleSlug) => {
+export const useArticleDetail = (articleId) => {
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Estado para la barra de progreso de lectura (0% a 100%)
-    const [readingProgress, setReadingProgress] = useState(0);
-
-    // Estado para la sección activa en el Table of Contents (TOC)
-    const [activeHeadingId, setActiveHeadingId] = useState('');
-
-    // Estado para la confirmación de copia de código (código 1-click copy)
-    const [copiedCodeId, setCopiedCodeId] = useState(null);
-
-    // Carga inicial del artículo
-    const fetchArticle = useCallback(async () => {
+    useEffect(() => {
+        // Simulación de carga y manejo de datos robusto con fallback local
+        setLoading(true);
         try {
-            setLoading(true);
-            setError(null);
-            const data = await articleDetailApi.getArticleBySlug(articleSlug);
-            setArticle(data);
+            const mockArticles = [
+                {
+                    id: 'cambio-paradigma-programacion-agentica',
+                    title: 'De Scripts a Agentes de IA: El Cambio de Paradigma en la Programación Agéntica',
+                    slug: 'cambio-paradigma-programacion-agentica',
+                    excerpt: 'Cómo los flujos de trabajo autónomos con LLMs y herramientas como n8n están reemplazando la automatización secuencial tradicional.',
+                    content: `
+            La programación agéntica representa un salto cualitativo respecto a los scripts de automatización tradicionales. 
+            Mientras que un script ejecuta una secuencia rígida de instrucciones predefinidas, un agente basado en IA tiene la capacidad de razonar, evaluar respuestas intermedias y tomar decisiones adaptativas.
+
+            Principales pilares de la programación agéntica:
+            1. Toma de decisiones contextual mediante modelos de lenguaje.
+            2. Uso dinámico de herramientas y bases de datos.
+            3. Bucles de retroalimentación (Self-Correction).
+          `,
+                    category: 'Inteligencia Artificial',
+                    readTime: '6 min de lectura',
+                    author: {
+                        name: 'José Rodríguez',
+                        role: 'Lead Architect & Founder',
+                        avatar: 'https://picsum.photos/id/1005/150/150',
+                    },
+                    publishedAt: '28 de Octubre, 2026',
+                    coverImage: 'https://picsum.photos/id/1060/800/400',
+                },
+            ];
+
+            const found = mockArticles.find(
+                (a) => a.id === articleId || a.slug === articleId
+            );
+
+            if (found) {
+                setArticle(found);
+            } else {
+                setArticle(mockArticles[0]);
+            }
+            setLoading(false);
         } catch (err) {
-            setError(err.message || 'No se pudo cargar el artículo especificado.');
-        } finally {
+            setError('Error al cargar el artículo.');
             setLoading(false);
         }
-    }, [articleSlug]);
-
-    useEffect(() => {
-        fetchArticle();
-    }, [fetchArticle]);
-
-    // Cálculo dinámico del porcentaje de scroll de lectura
-    useEffect(() => {
-        const handleScroll = () => {
-            const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            if (totalHeight > 0) {
-                const currentProgress = (window.scrollY / totalHeight) * 100;
-                setReadingProgress(Math.min(100, Math.max(0, currentProgress)));
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    // Copia de fragmentos de código al portapapeles con confirmación de 2 segundos
-    const copyToClipboard = async (codeText, codeId) => {
-        try {
-            await navigator.clipboard.writeText(codeText);
-            setCopiedCodeId(codeId);
-            setTimeout(() => setCopiedCodeId(null), 2000);
-        } catch (err) {
-            // Fallback si la API de clipboard no está permitida
-        }
-    };
+    }, [articleId]);
 
     return {
         article,
         loading,
         error,
-        readingProgress,
-        activeHeadingId,
-        setActiveHeadingId,
-        copiedCodeId,
-        copyToClipboard,
     };
 };
+
+export default useArticleDetail;

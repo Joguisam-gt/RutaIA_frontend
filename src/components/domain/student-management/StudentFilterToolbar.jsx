@@ -22,10 +22,10 @@ export const StudentFilterToolbar = ({
 
     const statusOptions = [
         { id: 'all', label: 'Todos los Estados' },
-        { id: 'active', label: '🟢 Activos' },
-        { id: 'completed', label: '🎓 Graduados' },
-        { id: 'at_risk', label: '⚠️ En Riesgo (>14d)' },
-        { id: 'inactive', label: '🔴 Inactivos' },
+        { id: 'active', label: 'Activos' },
+        { id: 'completed', label: 'Graduados' },
+        { id: 'at_risk', label: 'En Riesgo (>14d)' },
+        { id: 'inactive', label: 'Inactivos' },
     ];
 
     return (

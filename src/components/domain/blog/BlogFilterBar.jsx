@@ -52,3 +52,5 @@ export const BlogFilterBar = ({
         </div>
     );
 };
+
+export default BlogFilterBar;

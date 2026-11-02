@@ -92,3 +92,5 @@ export const CourseSyllabusAccordion = ({ modules = [], onSelectPreviewLesson })
         </div>
     );
 };
+
+export default CourseSyllabusAccordion;

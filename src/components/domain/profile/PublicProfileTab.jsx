@@ -142,3 +142,5 @@ export const PublicProfileTab = ({
         </form>
     );
 };
+
+export default PublicProfileTab;

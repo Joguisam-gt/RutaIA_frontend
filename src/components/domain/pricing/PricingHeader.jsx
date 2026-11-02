@@ -47,3 +47,5 @@ export const PricingHeader = ({ billingCycle, onToggleBillingCycle }) => {
         </div>
     );
 };
+
+export default PricingHeader;

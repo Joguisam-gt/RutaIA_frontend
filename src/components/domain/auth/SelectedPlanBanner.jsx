@@ -34,3 +34,5 @@ export const SelectedPlanBanner = ({ selectedPlan }) => {
         </div>
     );
 };
+
+export default SelectedPlanBanner;

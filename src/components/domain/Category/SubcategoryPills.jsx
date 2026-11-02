@@ -39,3 +39,6 @@ export const SubcategoryPills = ({
         </div>
     );
 };
+
+
+export default SubcategoryPills;

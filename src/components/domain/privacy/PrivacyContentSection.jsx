@@ -120,3 +120,5 @@ export const PrivacyContentSection = () => {
         </div>
     );
 };
+
+export default PrivacyContentSection;

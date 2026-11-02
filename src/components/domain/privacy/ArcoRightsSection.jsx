@@ -145,3 +145,5 @@ export const ArcoRightsSection = () => {
         </section>
     );
 };
+
+export default ArcoRightsSection;

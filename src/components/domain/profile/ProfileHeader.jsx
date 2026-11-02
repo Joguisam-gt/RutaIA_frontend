@@ -74,3 +74,5 @@ export const ProfileHeader = ({ userProfile, onSelectAvatarFile }) => {
         </div>
     );
 };
+
+export default ProfileHeader;

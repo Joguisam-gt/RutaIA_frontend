@@ -169,3 +169,5 @@ export const SecurityTab = ({
         </div>
     );
 };
+
+export default SecurityTab;

@@ -173,3 +173,5 @@ export const TransactionsHistoryTab = ({
         </div>
     );
 };
+
+export default TransactionsHistoryTab;

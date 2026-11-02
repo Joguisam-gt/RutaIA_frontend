@@ -89,3 +89,5 @@ export const CoursesInProgressGrid = ({ courses = [] }) => {
         </div>
     );
 };
+
+export default CoursesInProgressGrid;

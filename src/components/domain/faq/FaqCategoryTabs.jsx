@@ -33,3 +33,5 @@ export const FaqCategoryTabs = ({ categories = [], activeCategory, onSelectCateg
         </div>
     );
 };
+
+export default FaqCategoryTabs;

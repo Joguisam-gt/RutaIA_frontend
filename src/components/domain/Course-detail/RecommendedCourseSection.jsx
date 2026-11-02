@@ -18,3 +18,5 @@ export const RecommendedCoursesSection = ({ courses = [] }) => {
         </div>
     );
 };
+
+export default RecommendedCoursesSection;

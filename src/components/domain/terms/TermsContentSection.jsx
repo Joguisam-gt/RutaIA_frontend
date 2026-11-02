@@ -118,3 +118,5 @@ export const TermsContentSection = () => {
         </div>
     );
 };
+
+export default TermsContentSection;

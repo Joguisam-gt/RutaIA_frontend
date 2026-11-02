@@ -47,3 +47,5 @@ export const PrivacyStickyNav = ({ sections = [], activeSection, onOpenCookieMod
         </div>
     );
 };
+
+export default PrivacyStickyNav;

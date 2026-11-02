@@ -89,3 +89,5 @@ export const FeaturedCoursesCarousel = () => {
         </section>
     );
 };
+
+export default FeaturedCoursesCarousel;

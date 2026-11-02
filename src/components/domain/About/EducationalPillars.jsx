@@ -46,3 +46,5 @@ export const EducationalPillars = ({ pillars = [] }) => {
         </section>
     );
 };
+
+export default EducationalPillars;

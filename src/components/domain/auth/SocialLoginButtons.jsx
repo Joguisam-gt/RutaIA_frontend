@@ -46,3 +46,5 @@ export const SocialLoginButtons = ({ onSocialLogin, disabled }) => {
         </div>
     );
 };
+
+export default SocialLoginButtons;

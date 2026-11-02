@@ -41,3 +41,5 @@ export const TermsActionsHeader = ({ onPrint, onDownloadPdf, lastUpdated = '1 de
         </div>
     );
 };
+
+export default TermsActionsHeader;

@@ -120,3 +120,5 @@ export const CookiePreferencesModal = ({
         </div>
     );
 };
+
+export default CookiePreferencesModal;

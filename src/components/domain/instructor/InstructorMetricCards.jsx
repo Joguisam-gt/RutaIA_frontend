@@ -102,3 +102,5 @@ export const InstructorMetricCards = ({ metrics }) => {
         </div>
     );
 };
+
+export default InstructorMetricCards;

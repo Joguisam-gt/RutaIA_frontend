@@ -112,3 +112,5 @@ export const DirectChannelsCard = () => {
         </aside>
     );
 };
+
+export default DirectChannelsCard;

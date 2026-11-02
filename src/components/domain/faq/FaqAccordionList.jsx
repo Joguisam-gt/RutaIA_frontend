@@ -92,3 +92,5 @@ export const FaqAccordionList = ({
         </div>
     );
 };
+
+export default FaqAccordionList;

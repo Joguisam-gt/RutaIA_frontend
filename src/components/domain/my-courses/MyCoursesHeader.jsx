@@ -58,3 +58,5 @@ export const MyCoursesHeader = ({ stats }) => {
         </div>
     );
 };
+
+export default MyCoursesHeader;

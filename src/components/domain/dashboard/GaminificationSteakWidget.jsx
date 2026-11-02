@@ -102,3 +102,5 @@ export const GamificationStreakWidget = ({ streakData }) => {
         </div>
     );
 };
+
+export default GamificationStreakWidget;

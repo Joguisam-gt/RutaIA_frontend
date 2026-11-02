@@ -136,3 +136,5 @@ export async function searchSimilarEmbeddings(vectorArray, limit = 5) {
         </div>
     );
 };
+
+export default ArticleProseContent;

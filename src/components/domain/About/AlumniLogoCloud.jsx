@@ -22,3 +22,5 @@ export const AlumniLogoCloud = ({ companies = [] }) => {
         </section>
     );
 };
+
+export default AlumniLogoCloud;

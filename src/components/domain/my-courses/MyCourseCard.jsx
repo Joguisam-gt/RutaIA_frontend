@@ -166,3 +166,5 @@ export const MyCourseCard = ({
         </div>
     );
 };
+
+export default MyCourseCard;

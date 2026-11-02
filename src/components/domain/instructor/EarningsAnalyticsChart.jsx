@@ -202,3 +202,5 @@ export const EarningsAnalyticsChart = ({
         </div>
     );
 };
+
+export default EarningsAnalyticsChart;

@@ -111,3 +111,5 @@ export const CatalogSearchHeader = ({
         </div>
     );
 };
+
+export default CatalogSearchHeader;

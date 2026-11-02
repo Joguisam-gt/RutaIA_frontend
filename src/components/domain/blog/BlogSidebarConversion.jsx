@@ -130,3 +130,5 @@ export const BlogSidebarConversion = ({ popularArticles = [] }) => {
         </aside>
     );
 };
+
+export default BlogSidebarConversion;

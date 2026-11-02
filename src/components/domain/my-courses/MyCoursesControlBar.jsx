@@ -70,3 +70,5 @@ export const MyCoursesControlBar = ({
         </div>
     );
 };
+
+export default MyCoursesControlBar;

@@ -83,3 +83,5 @@ export const BalanceHeroCard = ({
         </div>
     );
 };
+
+export default BalanceHeroCard;

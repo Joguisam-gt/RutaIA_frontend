@@ -67,3 +67,5 @@ export const CategoryHeroHeader = ({ categoryMeta, categorySlug }) => {
         </div>
     );
 };
+
+export default CategoryHeroHeader;

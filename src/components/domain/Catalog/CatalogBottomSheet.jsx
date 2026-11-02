@@ -96,3 +96,5 @@ export const CatalogBottomSheet = ({
         </div>
     );
 };
+
+export default CatalogBottomSheet;

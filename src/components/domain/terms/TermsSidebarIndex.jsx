@@ -34,3 +34,5 @@ export const TermsSidebarIndex = ({ sections = [], activeSection }) => {
         </div>
     );
 };
+
+export default TermsSidebarIndex;

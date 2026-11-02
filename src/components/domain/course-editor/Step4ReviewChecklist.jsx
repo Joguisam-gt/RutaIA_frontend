@@ -86,3 +86,5 @@ export const Step4ReviewChecklist = ({
         </div>
     );
 };
+
+export default Step4ReviewChecklist;

@@ -77,3 +77,5 @@ export const ContactFaqRedirectWidget = ({ quickFaqs = [] }) => {
         </div>
     );
 };
+
+export default ContactFaqRedirectWidget;

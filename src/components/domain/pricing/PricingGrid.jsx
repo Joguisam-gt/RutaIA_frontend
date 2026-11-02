@@ -1,4 +1,3 @@
-// src/components/domain/pricing/PricingGrid.jsx
 import React from 'react';
 import { Check, ArrowRight, Zap, Building2, User } from 'lucide-react';
 
@@ -89,3 +88,5 @@ export const PricingGrid = ({ plans, billingCycle }) => {
         </div>
     );
 };
+
+export default PricingGrid;

@@ -177,3 +177,5 @@ export const StudentDataTable = ({
         </div>
     );
 };
+
+export default StudentDataTable;

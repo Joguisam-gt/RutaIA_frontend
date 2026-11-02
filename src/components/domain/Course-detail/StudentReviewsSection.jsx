@@ -53,3 +53,5 @@ export const StudentReviewsSection = ({ reviews = [] }) => {
         </div>
     );
 };
+
+export default StudentReviewsSection;

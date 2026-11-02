@@ -107,3 +107,5 @@ export const PayoutMethodsTab = () => {
         </div>
     );
 };
+
+export default PayoutMethodsTab;

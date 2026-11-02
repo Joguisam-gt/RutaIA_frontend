@@ -115,3 +115,5 @@ export const ArticleHeroHeader = ({ article }) => {
         </header>
     );
 };
+
+export default ArticleHeroHeader;

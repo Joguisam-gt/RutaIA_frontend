@@ -208,3 +208,5 @@ export const CoursePerformanceTable = ({
         </div>
     );
 };
+
+export default CoursePerformanceTable;

@@ -145,3 +145,5 @@ export const CertificatePreviewModal = ({
         </div>
     );
 };
+
+export default CertificatePreviewModal;

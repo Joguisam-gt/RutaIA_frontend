@@ -44,3 +44,5 @@ export const FaqEscalationBanner = () => {
         </div>
     );
 };
+
+export default FaqEscalationBanner;

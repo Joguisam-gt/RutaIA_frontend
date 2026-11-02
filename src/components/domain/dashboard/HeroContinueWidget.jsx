@@ -102,3 +102,5 @@ export const HeroContinueWidget = ({ heroCourse }) => {
         </div>
     );
 };
+
+export default HeroContinueWidget;

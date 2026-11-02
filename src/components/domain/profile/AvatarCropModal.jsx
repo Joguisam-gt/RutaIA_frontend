@@ -89,3 +89,5 @@ export const AvatarCropModal = ({
         </div>
     );
 };
+
+export default AvatarCropModal;

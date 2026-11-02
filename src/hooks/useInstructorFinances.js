@@ -1,75 +1,101 @@
-import { useState, useEffect, useCallback } from 'react';
-import { financesApi } from '../api/financesApi';
+import { useState } from 'react';
 
 export const useInstructorFinances = () => {
-    const [financeData, setFinanceData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [toastMessage, setToastMessage] = useState(null);
+    const [activeTab, setActiveTab] = useState('transactions'); // 'transactions' | 'courses' | 'payouts'
+    const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
 
-    // Pestañas Financieras ('transactions' | 'sales_by_course' | 'payout_methods')
-    const [activeTab, setActiveTab] = useState('transactions');
-
-    // Filtros de Transacciones
-    const [transactionType, setTransactionType] = useState('all'); // 'all' | 'sale' | 'withdrawal' | 'refund'
-    const [transactionSearch, setTransactionSearch] = useState('');
-
-    // Modal de Retiro de Fondos
-    const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false);
-    const [isSubmittingWithdrawal, setIsSubmittingWithdrawal] = useState(false);
-
-    const showToast = (msg) => {
-        setToastMessage(msg);
-        setTimeout(() => setToastMessage(null), 3000);
+    const balanceInfo = {
+        availableBalance: 1280.50,
+        pendingBalance: 320.00,
+        totalEarnings: 8450.00,
+        lastPayoutDate: '15 de Octubre, 2026',
+        currency: 'USD',
     };
 
-    const fetchFinances = useCallback(async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const summary = await financesApi.getFinanceSummary();
-            setFinanceData(summary);
-        } catch (err) {
-            setError(err.message || 'No se pudo obtener la información financiera.');
-        } font - bold {
-            setLoading(false);
-        }
-    }, []);
+    const salesByCourse = [
+        {
+            id: 'course-1',
+            title: 'React.js y Next.js: De Cero a Producción',
+            studentsCount: 142,
+            price: 29.99,
+            revenue: 4258.58,
+        },
+        {
+            id: 'course-2',
+            title: 'Backend Profesional con Node.js y Express',
+            studentsCount: 98,
+            price: 34.99,
+            revenue: 3429.02,
+        },
+        {
+            id: 'course-3',
+            title: 'Bases de Datos SQL y NoSQL Avanzado',
+            studentsCount: 26,
+            price: 29.99,
+            revenue: 762.40,
+        },
+    ];
 
-    useEffect(() => {
-        fetchFinances();
-    }, [fetchFinances]);
+    const transactionsHistory = [
+        {
+            id: 'tx-101',
+            date: '2026-10-28',
+            description: 'Venta - React.js y Next.js',
+            type: 'sale',
+            amount: 29.99,
+            status: 'completed',
+        },
+        {
+            id: 'tx-100',
+            date: '2026-10-25',
+            description: 'Retiro a Cuenta Bancaria (**** 4821)',
+            type: 'payout',
+            amount: -500.00,
+            status: 'completed',
+        },
+        {
+            id: 'tx-099',
+            date: '2026-10-22',
+            description: 'Venta - Backend Profesional con Node.js',
+            type: 'sale',
+            amount: 34.99,
+            status: 'completed',
+        },
+    ];
 
-    // Manejo de Solicitud de Retiro
-    const handleRequestWithdrawal = async (amount, payoutMethodId) => {
-        try {
-            setIsSubmittingWithdrawal(true);
-            await financesApi.requestWithdrawal(amount, payoutMethodId);
-            showToast(`Solicitud de retiro por $${amount.toFixed(2)} USD procesada con éxito.`);
-            setIsWithdrawalModalOpen(false);
-            fetchFinances();
-        } catch (err) {
-            showToast(err.message || 'Error al procesar la solicitud de retiro.');
-        } finally {
-            setIsSubmittingWithdrawal(false);
-        }
+    const payoutMethods = [
+        {
+            id: 'payout-1',
+            type: 'bank_transfer',
+            accountName: 'José Rodríguez',
+            details: 'Banco Industrial **** 4821',
+            isDefault: true,
+        },
+        {
+            id: 'payout-2',
+            type: 'paypal',
+            accountName: 'José Rodríguez',
+            details: 'jose.rodriguez@example.com',
+            isDefault: false,
+        },
+    ];
+
+    const handleRequestWithdrawal = (amount) => {
+        console.log(`Solicitud de retiro procesada por: $${amount}`);
+        setIsWithdrawModalOpen(false);
     };
 
     return {
-        financeData,
-        loading,
-        error,
-        toastMessage,
         activeTab,
         setActiveTab,
-        transactionType,
-        setTransactionType,
-        transactionSearch,
-        setTransactionSearch,
-        isWithdrawalModalOpen,
-        setIsWithdrawalModalOpen,
-        isSubmittingWithdrawal,
+        isWithdrawModalOpen,
+        setIsWithdrawModalOpen,
+        balanceInfo,
+        salesByCourse,
+        transactionsHistory,
+        payoutMethods,
         handleRequestWithdrawal,
-        refetch: fetchFinances,
     };
 };
+
+export default useInstructorFinances;

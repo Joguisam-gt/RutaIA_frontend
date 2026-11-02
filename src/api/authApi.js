@@ -1,25 +1,35 @@
-import { apiClient } from './apiClient';
+import { apiClient } from './apiClient.js';
 
 export const authApi = {
-    /**
-     * Realiza el inicio de sesión con correo, contraseña y rol seleccionado.
-     * Conecta con POST /api/v1/auth/login
-     */
-    login: async ({ email, password, role, rememberMe }) => {
-        const response = await apiClient.post('/auth/login', {
-            email,
-            password,
-            role, // 'student' | 'admin'
-            rememberMe,
-        });
+    login: async (credentials) => {
+        const response = await apiClient.post('/auth/login', credentials);
         return response.data;
     },
 
-    /**
-     * Inicia el flujo de autenticación OAuth con proveedores sociales (Google / GitHub).
-     */
-    loginWithProvider: async (provider, role = 'student', redirectTo = '') => {
-        const queryParams = new URLSearchParams({ role, redirect_to: redirectTo });
-        window.location.href = `${apiClient.defaults.baseURL}/auth/${provider}?${queryParams.toString()}`;
+    register: async (userData) => {
+        const response = await apiClient.post('/auth/register', userData);
+        return response.data;
+    },
+
+    logout: async () => {
+        const response = await apiClient.post('/auth/logout');
+        return response.data;
+    },
+
+    getProfile: async () => {
+        const response = await apiClient.get('/auth/me');
+        return response.data;
+    },
+
+    forgotPassword: async (email) => {
+        const response = await apiClient.post('/auth/forgot-password', { email });
+        return response.data;
+    },
+
+    resetPassword: async (resetData) => {
+        const response = await apiClient.post('/auth/reset-password', resetData);
+        return response.data;
     },
 };
+
+export default authApi;

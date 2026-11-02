@@ -1,22 +1,48 @@
 import React from 'react';
-import { CourseCardWithHover } from '../../common/CourseCard/CourseCardWithHover';
+import { CourseCard } from '../../common/CourseCard/CourseCard.jsx';
 
-export const RecommendedCoursesSection = ({ courses = [] }) => {
-    if (!courses.length) return null;
+const mockRecommendedCourses = [
+    {
+        id: '2',
+        title: 'Backend Profesional con Node.js, Express y NoSQL',
+        category: 'Backend',
+        level: 'Avanzado',
+        instructor: 'José Rodríguez',
+        rating: 4.8,
+        reviewCount: 210,
+        duration: '18.0 hrs',
+        lessonsCount: 92,
+        price: 34.99,
+    },
+    {
+        id: '3',
+        title: 'Diseño UX/UI de Sistemas Complejos y Design Systems',
+        category: 'UX/UI',
+        level: 'Principiante',
+        instructor: 'José Rodríguez',
+        rating: 4.9,
+        reviewCount: 180,
+        duration: '12.0 hrs',
+        lessonsCount: 60,
+        price: 0,
+    },
+];
 
+export const RecommendedCourseSection = () => {
     return (
-        <div className="pt-10 border-t border-slate-200 dark:border-slate-800">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-6">
-                Cursos recomendados para ti
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {courses.map((course) => (
-                    <CourseCardWithHover key={course.id || course._id} course={course} />
+        <section className="mt-16 pt-12 border-t border-slate-200 dark:border-slate-800">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-6">
+                Cursos recomendados para continuar tu ruta
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {mockRecommendedCourses.map((course) => (
+                    <CourseCard key={course.id} course={course} />
                 ))}
             </div>
-        </div>
+        </section>
     );
 };
 
-export default RecommendedCoursesSection;
+// Alias de exportación para dar soporte a llamadas en plural y exportación por defecto
+export const RecommendedCoursesSection = RecommendedCourseSection;
+export default RecommendedCourseSection;

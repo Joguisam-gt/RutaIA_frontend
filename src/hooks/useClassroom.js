@@ -1,147 +1,67 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { classroomApi } from '../api/classroomApi';
+import { useState } from 'react';
 
-export const useClassroom = (courseSlug = 'backend-nodejs-express', lessonSlug = 'middlewares-avanzados') => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+export const useClassroom = (courseId) => {
+    const [currentLesson, setCurrentLesson] = useState({
+        id: 'lesson-1',
+        title: '1. Introducción al ecosistema y arquitectura',
+        videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        duration: '12:45',
+        moduleTitle: 'Módulo 1: Fundamentos Básicos',
+    });
 
-    // Estados del Reproductor HTML5
-    const videoRef = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [playbackSpeed, setPlaybackSpeed] = useState(1);
-    const [volume, setVolume] = useState(1);
-    const [isMuted, setIsMuted] = useState(false);
-    const [showSubtitles, setShowSubtitles] = useState(false);
-    const [isFullscreen, setIsFullscreen] = useState(false);
-    const [autoplayNext, setAutoplayNext] = useState(true);
+    const [activeTab, setActiveTab] = useState('resources'); // 'resources' | 'forum' | 'notes'
+    const [completedLessons, setCompletedLessons] = useState(['lesson-1']);
+    const [notes, setNotes] = useState('');
+    const [forumPosts, setForumPosts] = useState([
+        {
+            id: 'post-1',
+            author: 'Carlos Gómez',
+            avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100',
+            date: 'Hace 2 días',
+            comment: '¿Cuál es la diferencia principal entre Renderizado en Servidor (SSR) y Estático (SSG)?',
+            repliesCount: 3,
+        },
+    ]);
 
-    // Navegación en Pestañas Inferiores ('resources' | 'forum')
-    const [activeBottomTab, setActiveBottomTab] = useState('resources');
-
-    // Estado Foro Q&A
-    const [forumQuestions, setForumQuestions] = useState([]);
-    const [forumSearch, setForumSearch] = useState('');
-    const [isSubmittingQuestion, setIsSubmittingQuestion] = useState(false);
-
-    // Carga inicial de datos de lección y plan de estudios
-    const fetchLessonData = useCallback(async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const result = await classroomApi.getLessonDetails(courseSlug, lessonSlug);
-            setData(result);
-        } catch (err) {
-            setError(err.message || 'No se pudo cargar el contenido de la lección.');
-        } finally {
-            setLoading(false);
-        }
-    }, [courseSlug, lessonSlug]);
-
-    useEffect(() => {
-        fetchLessonData();
-    }, [fetchLessonData]);
-
-    // Cargar preguntas del foro Q&A
-    const fetchQuestions = useCallback(async () => {
-        try {
-            const list = await classroomApi.getForumQuestions(lessonSlug, forumSearch);
-            setForumQuestions(list);
-        } catch (err) {
-            // Manejo silencioso en el foro
-        }
-    }, [lessonSlug, forumSearch]);
-
-    useEffect(() => {
-        if (activeBottomTab === 'forum') {
-            fetchQuestions();
-        }
-    }, [activeBottomTab, fetchQuestions]);
-
-    // Manejo de controles del reproductor
-    const togglePlay = () => {
-        if (videoRef.current) {
-            if (isPlaying) {
-                videoRef.current.pause();
-            } else {
-                videoRef.current.play();
-            }
-            setIsPlaying(!isPlaying);
-        }
+    const toggleLessonCompletion = (lessonId) => {
+        setCompletedLessons((prev) =>
+            prev.includes(lessonId)
+                ? prev.filter((id) => id !== lessonId)
+                : [...prev, lessonId]
+        );
     };
 
-    const handleSpeedChange = (speed) => {
-        setPlaybackSpeed(speed);
-        if (videoRef.current) {
-            videoRef.current.playbackRate = speed;
-        }
+    const handleAddForumPost = (commentText) => {
+        if (!commentText.trim()) return;
+
+        const newPost = {
+            id: `post-${Date.now()}`,
+            author: 'Estudiante',
+            avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+            date: 'Ahora mismo',
+            comment: commentText,
+            repliesCount: 0,
+        };
+
+        setForumPosts((prev) => [newPost, ...prev]);
     };
 
-    const handleSeek = (newTime) => {
-        if (videoRef.current) {
-            videoRef.current.currentTime = newTime;
-            setCurrentTime(newTime);
-        }
-    };
-
-    const handleToggleMute = () => {
-        if (videoRef.current) {
-            videoRef.current.muted = !isMuted;
-            setIsMuted(!isMuted);
-        }
-    };
-
-    const handleVolumeChange = (newVolume) => {
-        setVolume(newVolume);
-        if (videoRef.current) {
-            videoRef.current.volume = newVolume;
-            setIsMuted(newVolume === 0);
-        }
-    };
-
-    const handlePostQuestion = async (title, body) => {
-        try {
-            setIsSubmittingQuestion(true);
-            await classroomApi.createQuestion(lessonSlug, { title, body });
-            fetchQuestions();
-        } catch (err) {
-            // Manejo de errores
-        } font - bold {
-            setIsSubmittingQuestion(false);
-        }
+    const handleSaveNotes = (newNoteText) => {
+        setNotes(newNoteText);
     };
 
     return {
-        data,
-        loading,
-        error,
-        videoRef,
-        isPlaying,
-        currentTime,
-        duration,
-        playbackSpeed,
-        volume,
-        isMuted,
-        showSubtitles,
-        autoplayNext,
-        activeBottomTab,
-        forumQuestions,
-        forumSearch,
-        isSubmittingQuestion,
-        setCurrentTime,
-        setDuration,
-        setIsPlaying,
-        setAutoplayNext,
-        setShowSubtitles,
-        setActiveBottomTab,
-        setForumSearch,
-        togglePlay,
-        handleSpeedChange,
-        handleSeek,
-        handleToggleMute,
-        handleVolumeChange,
-        handlePostQuestion,
+        currentLesson,
+        setCurrentLesson,
+        activeTab,
+        setActiveTab,
+        completedLessons,
+        toggleLessonCompletion,
+        notes,
+        handleSaveNotes,
+        forumPosts,
+        handleAddForumPost,
     };
 };
+
+export default useClassroom;

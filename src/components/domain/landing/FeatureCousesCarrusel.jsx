@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CourseCard } from '../../common/CourseCard/CourseCard';
+import { CourseCard } from '../../common/CourseCard/CourseCard.jsx';
 import { useLanguage } from '../../../context/LanguageContext.jsx';
 
 const mockCourses = [
@@ -45,9 +45,10 @@ export const FeaturedCoursesCarousel = () => {
     const { t } = useLanguage();
     const [activeCategory, setActiveCategory] = useState('Todos');
     const categories = ['Todos', 'Web Dev', 'Backend', 'UX/UI'];
-    const filtered = activeCategory === 'Todos'
-        ? mockCourses
-        : mockCourses.filter((c) => c.category === activeCategory);
+    const filtered =
+        activeCategory === 'Todos'
+            ? mockCourses
+            : mockCourses.filter((c) => c.category === activeCategory);
 
     return (
         <section className="py-20 bg-slate-50 dark:bg-slate-950">
@@ -64,11 +65,10 @@ export const FeaturedCoursesCarousel = () => {
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
-                                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-                                    activeCategory === cat
+                                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeCategory === cat
                                         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
                                         : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
-                                }`}
+                                    }`}
                             >
                                 {cat}
                             </button>
@@ -85,4 +85,6 @@ export const FeaturedCoursesCarousel = () => {
     );
 };
 
+// Exportaciones alias para evitar rupturas por errores tipográficos de importación
+export const FeatureCousesCarrusel = FeaturedCoursesCarousel;
 export default FeaturedCoursesCarousel;

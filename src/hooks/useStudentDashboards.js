@@ -1,48 +1,50 @@
-import { useState, useEffect, useCallback } from 'react';
-import { studentDashboardApi } from '../api/studentDashboardApi';
+import { useState } from 'react';
 
 export const useStudentDashboard = () => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [stats, setStats] = useState({
+        coursesCompleted: 4,
+        coursesInProgress: 3,
+        hoursLearned: 48.5,
+        certificatesEarned: 2,
+        streakDays: 7,
+    });
 
-    // Índice activo para el carrusel de recomendaciones
-    const [carouselIndex, setCarouselIndex] = useState(0);
+    const [inProgressCourses, setInProgressCourses] = useState([
+        {
+            id: '1',
+            title: 'React.js y Next.js: De Cero a Producción',
+            category: 'Web Dev',
+            progress: 68,
+            nextLessonTitle: 'Server Components y Revalidación de Caché',
+            lastAccessed: 'Hace 2 horas',
+        },
+        {
+            id: '2',
+            title: 'Backend Profesional con Node.js, Express y NoSQL',
+            category: 'Backend',
+            progress: 42,
+            nextLessonTitle: 'Transacciones ACID con MongoDB y Mongoose',
+            lastAccessed: 'Ayer',
+        },
+    ]);
 
-    const fetchDashboard = useCallback(async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const res = await studentDashboardApi.getDashboardData();
-            setData(res);
-        } catch (err) {
-            setError(err.message || 'Error al cargar el panel de aprendizaje.');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchDashboard();
-    }, [fetchDashboard]);
-
-    const handleNextRecommendation = () => {
-        if (!data?.recommendations?.length) return;
-        setCarouselIndex((prev) => (prev + 1) % data.recommendations.length);
-    };
-
-    const handlePrevRecommendation = () => {
-        if (!data?.recommendations?.length) return;
-        setCarouselIndex((prev) => (prev - 1 + data.recommendations.length) % data.recommendations.length);
-    };
+    const [recommendations, setRecommendations] = useState([
+        {
+            id: '3',
+            title: 'Arquitectura de Agentes de IA con n8n y LangChain',
+            category: 'Inteligencia Artificial',
+            level: 'Avanzado',
+            rating: 4.9,
+        },
+    ]);
 
     return {
-        dashboardData: data,
-        loading,
-        error,
-        carouselIndex,
-        handleNextRecommendation,
-        handlePrevRecommendation,
-        refetch: fetchDashboard,
+        stats,
+        inProgressCourses,
+        recommendations,
     };
 };
+
+// Aliases de exportación para asegurar compatibilidad con llamadas en singular o plural
+export const useStudentDashboards = useStudentDashboard;
+export default useStudentDashboard;

@@ -130,3 +130,5 @@ export const LessonForumTab = ({
         </div>
     );
 };
+
+export default LessonForumTab;

@@ -39,3 +39,5 @@ export const CourseEditorFooter = ({
         </footer>
     );
 };
+
+export default CourseEditorFooter;

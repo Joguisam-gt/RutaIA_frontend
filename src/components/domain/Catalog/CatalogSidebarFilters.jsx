@@ -143,3 +143,5 @@ export const CatalogSidebarFilters = ({
         </aside>
     );
 };
+
+export default CatalogSidebarFilters;

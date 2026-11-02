@@ -70,3 +70,5 @@ export const PricingFaqAccordion = () => {
         </div>
     );
 };
+
+export default PricingFaqAccordion;

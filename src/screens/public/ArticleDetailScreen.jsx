@@ -1,84 +1,55 @@
 import React from 'react';
 import { useArticleDetail } from '../../hooks/useArticleDetail';
-import { HeaderControls } from '../../components/common/HeaderControls';
+import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { ReadingProgressBar } from '../../components/domain/blog-detail/ReadingProgressBar';
 import { ArticleHeroHeader } from '../../components/domain/blog-detail/ArticleHeroHeader';
-import { TableOfContents } from '../../components/domain/blog-detail/TableOfContents';
 import { ArticleProseContent } from '../../components/domain/blog-detail/ArticleProseContent';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { TableOfContentes } from '../../components/domain/blog-detail/TableOfContentes';
+import { ContextualCourseBanner } from '../../components/domain/blog-detail/ContextualCourseBanner';
+import { Loader2 } from 'lucide-react';
 
-export const ArticleDetailScreen = ({ articleSlug = 'arquitectura-rag-con-node-express-vector-db' }) => {
+export const ArticleDetailScreen = () => {
     const {
         article,
+        readingProgress,
+        headings,
+        relatedCourse,
         loading,
         error,
-        readingProgress,
-        activeHeadingId,
-        copiedCodeId,
-        copyToClipboard,
-    } = useArticleDetail(articleSlug);
-
-    const headings = [
-        { id: 'arquitectura-base', text: '1. Arquitectura Base y Selección de Herramientas', level: 2 },
-        { id: 'optimizacion-indices', text: '2. Optimización de Índices HNSW para Altas Cargas', level: 2 },
-    ];
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center text-slate-400">
-                <Loader2 size={36} className="text-indigo-500 animate-spin mb-3" />
-                <span className="text-xs font-medium">Cargando artículo...</span>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-8 text-center">
-                <p className="text-rose-500 text-sm font-semibold mb-4">{error}</p>
-                <a href="/blog" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600">
-                    <ArrowLeft size={14} />
-                    <span>Volver al Blog</span>
-                </a>
-            </div>
-        );
-    }
+    } = useArticleDetail();
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-            {/* Barra de Progreso de Lectura (2px en top) */}
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+            <Navbar brandTitle="RutaIA" />
             <ReadingProgressBar progress={readingProgress} />
 
-            {/* Header Fijo */}
-            <header className="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 px-4 py-3">
-                <div className="container mx-auto flex items-center justify-between">
-                    <a href="/blog" className="text-lg font-black tracking-tight text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
-                        <ArrowLeft size={18} />
-                        <span>Volver al Blog</span>
-                    </a>
-                    <HeaderControls />
-                </div>
-            </header>
+            <main className="max-w-7xl mx-auto px-6 py-12">
+                {loading ? (
+                    <div className="py-16 flex flex-col items-center justify-center text-slate-400">
+                        <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
+                        <span className="text-xs font-semibold">Cargando artículo...</span>
+                    </div>
+                ) : error ? (
+                    <div className="p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 rounded-2xl text-rose-600 dark:text-rose-400 text-xs">
+                        {error}
+                    </div>
+                ) : (
+                    <div className="space-y-8">
+                        <ArticleHeroHeader article={article} />
 
-            {/* Main Container Lectura Inmersiva (70% W + 30% W Sidebar Flotante) */}
-            <main className="container mx-auto px-4 py-10 max-w-6xl">
-                <ArticleHeroHeader article={article} />
-
-                <div className="flex flex-col lg:flex-row gap-12 mt-10">
-                    {/* Columna Principal de Lectura (70% W) */}
-                    <article className="w-full lg:w-7/10">
-                        <ArticleProseContent
-                            contentSections={article?.sections}
-                            onCopyCode={copyToClipboard}
-                            copiedCodeId={copiedCodeId}
-                        />
-                    </article>
-
-                    {/* Sidebar Flotante Navegable (30% W) */}
-                    <aside className="w-full lg:w-3/10">
-                        <TableOfContents headings={headings} activeId={activeHeadingId} />
-                    </aside>
-                </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                            <div className="lg:col-span-1">
+                                <TableOfContentes headings={headings} />
+                            </div>
+                            <div className="lg:col-span-3 space-y-8">
+                                <ArticleProseContent content={article?.content} />
+                                {relatedCourse && (
+                                    <ContextualCourseBanner course={relatedCourse} />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     );

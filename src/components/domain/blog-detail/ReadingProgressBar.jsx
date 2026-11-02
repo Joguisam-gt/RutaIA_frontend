@@ -14,3 +14,5 @@ export const ReadingProgressBar = ({ progress = 0 }) => {
         </div>
     );
 };
+
+export default ReadingProgressBar;

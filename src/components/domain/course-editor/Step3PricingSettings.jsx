@@ -114,3 +114,5 @@ export const Step3PricingSettings = ({ courseData, onChange }) => {
         </div>
     );
 };
+
+export default Step3PricingSettings;

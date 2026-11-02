@@ -237,3 +237,5 @@ export const RegisterFormView = ({
         </div>
     );
 };
+
+export default RegisterFormView;

@@ -81,3 +81,5 @@ export const StickyPurchaseCard = ({ course, onOpenPreview }) => {
         </div>
     );
 };
+
+export default StickyPurchaseCard;

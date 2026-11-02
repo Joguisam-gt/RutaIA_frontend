@@ -173,3 +173,5 @@ export const WishlistCourseCard = ({ course, viewMode = 'grid', onRemove }) => {
         </div>
     );
 };
+
+export default WishlistCourseCard;

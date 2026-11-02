@@ -1,47 +1,54 @@
 import React from 'react';
 import { usePricing } from '../../hooks/usePricing';
-import { HeaderControls } from '../../components/common/HeaderControls';
+import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { PricingHeader } from '../../components/domain/pricing/PricingHeader';
 import { PricingGrid } from '../../components/domain/pricing/PricingGrid';
 import { CourseModularPricingSection } from '../../components/domain/pricing/CourseModularPricingSection';
 import { PricingComparisonTable } from '../../components/domain/pricing/PricingComparisonTable';
-import { PricingFaqAccordion } from '../../components/domain/pricing/PricingFaqAccordion';
+import { PrincingFaqAccordion } from '../../components/domain/pricing/PrincingFaqAccordion';
+import { Loader2 } from 'lucide-react';
 
-export const PlansScreen = () => {
-    const { billingCycle, toggleBillingCycle, plans } = usePricing();
+export const PlanScreen = () => {
+    const {
+        billingCycle,
+        setBillingCycle,
+        plans,
+        featuresComparison,
+        faqs,
+        loading,
+        error,
+    } = usePricing();
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-            {/* Navbar Superior Fijo */}
-            <header className="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 px-4 py-3">
-                <div className="container mx-auto flex items-center justify-between">
-                    <a href="/" className="text-lg font-black tracking-tight text-indigo-600 dark:text-indigo-400">
-                        RutaIA
-                    </a>
-                    <HeaderControls />
-                </div>
-            </header>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+            <Navbar brandTitle="RutaIA" />
 
-            {/* Main Content */}
-            <main className="container mx-auto px-4 py-12">
+            <main className="max-w-7xl mx-auto px-6 py-12">
                 <PricingHeader
                     billingCycle={billingCycle}
-                    onToggleBillingCycle={toggleBillingCycle}
+                    onBillingCycleChange={setBillingCycle}
                 />
 
-                <PricingGrid
-                    plans={plans}
-                    billingCycle={billingCycle}
-                />
-
-                <CourseModularPricingSection />
-
-                <PricingComparisonTable />
-
-                <PricingFaqAccordion />
+                {loading ? (
+                    <div className="py-16 flex flex-col items-center justify-center text-slate-400">
+                        <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
+                        <span className="text-xs font-semibold">Cargando planes de suscripción...</span>
+                    </div>
+                ) : error ? (
+                    <div className="p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 rounded-2xl text-rose-600 dark:text-rose-400 text-xs mt-6">
+                        {error}
+                    </div>
+                ) : (
+                    <div className="space-y-16 mt-8">
+                        <PricingGrid plans={plans} billingCycle={billingCycle} />
+                        <CourseModularPricingSection />
+                        <PricingComparisonTable comparison={featuresComparison} />
+                        <PrincingFaqAccordion faqs={faqs} />
+                    </div>
+                )}
             </main>
         </div>
     );
 };
 
-export default PlansScreen;
+export default PlanScreen;

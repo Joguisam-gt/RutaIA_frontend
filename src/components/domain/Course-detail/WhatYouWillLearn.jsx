@@ -32,3 +32,5 @@ export const WhatYouWillLearn = ({ learningGoals = [] }) => {
         </div>
     );
 };
+
+export default WhatYouWillLearn;

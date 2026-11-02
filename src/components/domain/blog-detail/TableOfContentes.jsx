@@ -32,3 +32,5 @@ export const TableOfContents = ({ headings = [], activeId }) => {
         </div>
     );
 };
+
+export default TableOfContents;

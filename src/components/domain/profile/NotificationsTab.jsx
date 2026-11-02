@@ -96,3 +96,5 @@ export const NotificationsTab = ({ matrix, onChange, onSave }) => {
         </div>
     );
 };
+
+export default NotificationsTab;

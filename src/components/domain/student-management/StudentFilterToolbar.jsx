@@ -99,3 +99,5 @@ export const StudentFilterToolbar = ({
         </div>
     );
 };
+
+export default StudentFilterToolbar;

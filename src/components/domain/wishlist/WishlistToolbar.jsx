@@ -117,3 +117,5 @@ export const WishlistToolbar = ({
         </div>
     );
 };
+
+export default WishlistToolbar;

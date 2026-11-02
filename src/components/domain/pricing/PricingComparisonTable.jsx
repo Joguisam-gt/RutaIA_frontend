@@ -92,3 +92,5 @@ export const PricingComparisonTable = () => {
         </div>
     );
 };
+
+export default PricingComparisonTable;

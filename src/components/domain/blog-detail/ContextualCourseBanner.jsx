@@ -44,3 +44,5 @@ export const ContextualCourseBanner = ({ course }) => {
         </div>
     );
 };
+
+export default ContextualCourseBanner;

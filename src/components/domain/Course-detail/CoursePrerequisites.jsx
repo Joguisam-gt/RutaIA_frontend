@@ -26,3 +26,5 @@ export const CoursePrerequisites = ({ requirements = [] }) => {
         </div>
     );
 };
+
+export default CoursePrerequisites;

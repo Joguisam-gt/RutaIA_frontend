@@ -47,3 +47,5 @@ export const PasswordStrengthBar = ({ password, strength }) => {
         </div>
     );
 };
+
+export default PasswordStrengthBar

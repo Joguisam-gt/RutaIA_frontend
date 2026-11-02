@@ -69,3 +69,5 @@ export const TeamGrid = ({ team = [] }) => {
         </section>
     );
 };
+
+export default TeamGrid;

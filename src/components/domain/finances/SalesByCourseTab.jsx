@@ -134,3 +134,5 @@ export const SalesByCourseTab = ({ courseSales = [] }) => {
         </div>
     );
 };
+
+export default SalesByCourseTab;

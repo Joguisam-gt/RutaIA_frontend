@@ -109,3 +109,5 @@ export const CertificateCard = ({
         </div>
     );
 };
+
+export default CertificateCard;

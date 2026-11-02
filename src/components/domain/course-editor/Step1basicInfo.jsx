@@ -142,3 +142,5 @@ export const Step1BasicInfo = ({ courseData, onChange }) => {
         </div>
     );
 };
+
+export default Step1BasicInfo;

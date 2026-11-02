@@ -98,3 +98,5 @@ export const CourseEditorHeader = ({
         </header>
     );
 };
+
+export default CourseEditorHeader;

@@ -54,3 +54,5 @@ export const InstructorProfileCard = ({ instructor }) => {
         </div>
     );
 };
+
+export default InstructorProfileCard;

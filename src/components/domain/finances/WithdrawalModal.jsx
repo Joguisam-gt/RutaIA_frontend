@@ -145,3 +145,5 @@ export const WithdrawalModal = ({
         </div>
     );
 };
+
+export default WithdrawalModal;

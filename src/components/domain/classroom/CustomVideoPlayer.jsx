@@ -210,3 +210,5 @@ export const CustomVideoPlayer = ({
         </div>
     );
 };
+
+export default CustomVideoPlayer;

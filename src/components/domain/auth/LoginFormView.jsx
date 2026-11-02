@@ -170,3 +170,5 @@ export const LoginFormView = ({
         </div>
     );
 };
+
+export default LoginFormView;

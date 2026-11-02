@@ -139,3 +139,5 @@ export const Step2CurriculumContent = ({
         </div>
     );
 };
+
+export default Step2CurriculumContent;

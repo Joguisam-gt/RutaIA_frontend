@@ -66,3 +66,5 @@ export const CertificatesSummaryHeader = ({ stats }) => {
         </div>
     );
 };
+
+export default CertificatesSummaryHeader;

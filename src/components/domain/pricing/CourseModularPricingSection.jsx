@@ -1,4 +1,3 @@
-// src/components/domain/pricing/CourseModularPricingSection.jsx
 import React from 'react';
 import { BookOpen, Layers, Award, Tag } from 'lucide-react';
 
@@ -88,3 +87,5 @@ export const CourseModularPricingSection = () => {
         </div>
     );
 };
+
+export default CourseModularPricingSection;

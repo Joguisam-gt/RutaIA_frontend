@@ -190,3 +190,5 @@ export const StudentDetailModal = ({
         </div>
     );
 };
+
+export default StudentDetailModal;

@@ -72,3 +72,5 @@ export const CourseHeader = ({ course }) => {
         </div>
     );
 };
+
+export default CourseHeader;

@@ -21,3 +21,5 @@ export const AboutStatsCounter = ({ stats = [] }) => {
         </section>
     );
 };
+
+export default AboutStatsCounter;

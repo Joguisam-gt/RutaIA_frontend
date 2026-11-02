@@ -82,3 +82,5 @@ export const ForgotPasswordStepRequest = ({
         </div>
     );
 };
+
+export default ForgotPasswordStepRequest;

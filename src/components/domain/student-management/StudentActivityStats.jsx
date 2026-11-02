@@ -79,3 +79,5 @@ export const StudentActivityStats = ({ stats }) => {
         </div>
     );
 };
+
+export default StudentActivityStats;

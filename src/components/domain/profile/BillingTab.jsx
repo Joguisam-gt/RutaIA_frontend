@@ -112,3 +112,5 @@ export const BillingTab = ({ billingData }) => {
         </div>
     );
 };
+
+export default BillingTab;

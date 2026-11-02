@@ -39,3 +39,5 @@ export const WishlistUndoToast = ({ toastData, onUndo, onDismiss }) => {
         </div>
     );
 };
+
+export default WishlistUndoToast;

@@ -91,3 +91,5 @@ export const RecommendationsCarousel = ({
         </div>
     );
 };
+
+export default RecommendationsCarousel;

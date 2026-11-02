@@ -114,3 +114,5 @@ export const CurriculumSidebar = ({
         </div>
     );
 };
+
+export default CurriculumSidebar;

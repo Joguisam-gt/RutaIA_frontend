@@ -39,3 +39,5 @@ export const CompanyTimeline = ({ timeline = [] }) => {
         </section>
     );
 };
+
+export default CompanyTimeline;

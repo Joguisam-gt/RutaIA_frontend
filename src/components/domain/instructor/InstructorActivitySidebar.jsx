@@ -224,3 +224,5 @@ export const InstructorActivitySidebar = ({
         </aside>
     );
 };
+
+export default InstructorActivitySidebar;

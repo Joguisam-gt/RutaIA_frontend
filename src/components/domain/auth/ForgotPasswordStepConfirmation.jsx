@@ -72,3 +72,5 @@ export const ForgotPasswordStepConfirmation = ({
         </div>
     );
 };
+
+export default ForgotPasswordStepConfirmation;

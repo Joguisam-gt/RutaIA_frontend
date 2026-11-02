@@ -57,3 +57,5 @@ export const LessonResourcesTab = ({ resources = [] }) => {
         </div>
     );
 };
+
+export default LessonResourcesTab;

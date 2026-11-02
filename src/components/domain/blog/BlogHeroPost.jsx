@@ -92,3 +92,5 @@ export const BlogHeroPost = ({ post }) => {
         </article>
     );
 };
+
+export default BlogHeroPost;

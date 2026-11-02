@@ -1,126 +1,69 @@
 import React from 'react';
 import { useInstructorDashboard } from '../../hooks/useInstructorDashboard';
-import { HeaderControls } from '../../components/common/HeaderControls';
+import { Navbar } from '../../components/layout/Navbar/Navbar';
+import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 import { InstructorMetricCards } from '../../components/domain/instructor/InstructorMetricCards';
 import { EarningsAnalyticsChart } from '../../components/domain/instructor/EarningsAnalyticsChart';
 import { CoursePerformanceTable } from '../../components/domain/instructor/CoursePerformanceTable';
 import { InstructorActivitySidebar } from '../../components/domain/instructor/InstructorActivitySidebar';
-import { Loader2, Plus, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Loader2 } from 'lucide-react';
 
 export const InstructorDashboardScreen = () => {
     const {
-        dashboardData,
+        metrics,
+        earningsData,
+        coursePerformance,
+        recentActivity,
         loading,
         error,
-        timeRange,
-        setTimeRange,
-        chartMetric,
-        setChartMetric,
-        chartData,
-        isChartLoading,
-        tableSearch,
-        setTableSearch,
-        tableSortBy,
-        setTableSortBy,
-        timeRangeOptions,
-        pendingQuestions,
-        recentReviews,
-        replyingQuestionId,
-        handleQuickReply,
     } = useInstructorDashboard();
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center text-slate-400">
-                <Loader2 size={36} className="text-indigo-500 animate-spin mb-3" />
-                <span className="text-xs font-medium">Cargando tu panel de instructor...</span>
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-            {/* Header Fijo */}
-            <header className="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 px-6 py-4">
-                <div className="container mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <a href="/instructor/dashboard" className="text-lg font-black tracking-tight text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
-                            <ShieldCheck size={20} className="text-violet-500" />
-                            <span>RutaIA — Panel de Maestro / Admin</span>
-                        </a>
-                    </div>
-                    <HeaderControls />
-                </div>
-            </header>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+            <Navbar role="instructor" brandTitle="RutaIA" />
 
-            {/* Main Container */}
-            <main className="container mx-auto px-4 py-8 max-w-7xl">
-                {/* Encabezado Principal y Acción Crear Curso */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                    <div>
-                        <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
-                            Panel de Instructor
-                        </h1>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Supervisa las métricas financieras, inscripciones, atención a preguntas Q&A y reseñas recibidas.
-                        </p>
+            <div className="flex">
+                <Sidebar role="instructor" currentRoute="/instructor/dashboard" />
+
+                <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 flex items-center gap-2">
+                                <LayoutDashboard size={24} className="text-indigo-600" />
+                                <span>Panel del Instructor</span>
+                            </h1>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                Resumen general de métricas, rendimiento de cursos e ingresos.
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Botón CTA Crear Curso con degradado exclusivo */}
-                    <a
-                        href="/instructor/cursos/nuevo"
-                        className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 hover:opacity-95 shadow-md shadow-indigo-500/25 transition-all shrink-0"
-                    >
-                        <Plus size={16} />
-                        <span>Crear Nuevo Curso</span>
-                    </a>
-                </div>
+                    {loading ? (
+                        <div className="py-16 flex flex-col items-center justify-center text-slate-400">
+                            <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
+                            <span className="text-xs font-semibold">Cargando panel de control...</span>
+                        </div>
+                    ) : error ? (
+                        <div className="p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 rounded-2xl text-rose-600 dark:text-rose-400 text-xs">
+                            {error}
+                        </div>
+                    ) : (
+                        <div className="space-y-8">
+                            <InstructorMetricCards metrics={metrics} />
 
-                {error && (
-                    <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs font-semibold mb-6">
-                        {error}
-                    </div>
-                )}
-
-                {/* Metric Cards (Ingresos, Estudiantes, Rating, Cursos) */}
-                <InstructorMetricCards metrics={dashboardData?.metrics} />
-
-                {/* Layout 2 Columnas: Principal (70% W) + Activity Sidebar (30% W) */}
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Columna Principal */}
-                    <div className="w-full lg:w-7/10 space-y-8">
-                        {/* Gráfico Interactivo de Área (Ingresos vs Inscripciones) */}
-                        <EarningsAnalyticsChart
-                            chartData={chartData}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            chartMetric={chartMetric}
-                            onMetricChange={setChartMetric}
-                            timeRangeOptions={timeRangeOptions}
-                            isLoading={isChartLoading}
-                        />
-
-                        {/* Matriz Comparativa de Cursos */}
-                        <CoursePerformanceTable
-                            courses={dashboardData?.coursePerformance}
-                            searchValue={tableSearch}
-                            onSearchChange={setTableSearch}
-                            sortBy={tableSortBy}
-                            onSortChange={setTableSortBy}
-                        />
-                    </div>
-
-                    {/* Activity Sidebar (Q&A Pendientes + Feed de Reseñas) */}
-                    <div className="w-full lg:w-3/10">
-                        <InstructorActivitySidebar
-                            pendingQuestions={pendingQuestions}
-                            recentReviews={recentReviews}
-                            replyingQuestionId={replyingQuestionId}
-                            onQuickReply={handleQuickReply}
-                        />
-                    </div>
-                </div>
-            </main>
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <div className="lg:col-span-2 space-y-8">
+                                    <EarningsAnalyticsChart data={earningsData} />
+                                    <CoursePerformanceTable courses={coursePerformance} />
+                                </div>
+                                <div>
+                                    <InstructorActivitySidebar activities={recentActivity} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </main>
+            </div>
         </div>
     );
 };

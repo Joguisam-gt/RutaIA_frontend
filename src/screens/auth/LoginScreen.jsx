@@ -1,4 +1,3 @@
-// src/screens/auth/LoginScreen.jsx
 import React from 'react';
 import { AuthLayout } from '../../components/layout/auth/AuthLayout';
 import { useLogin } from '../../hooks/useLogin';

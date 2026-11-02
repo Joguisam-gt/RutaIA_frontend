@@ -1,19 +1,9 @@
 import React from 'react';
-import { AppRouter } from './routes/AppRouter';
-import { AuthProvider } from './context/AuthContext';
-import { NotificationProvider } from './context/NotificationContext';
-import { ThemeProvider } from './context/ThemeContext';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-export function App() {
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-        <NotificationProvider>
-          <AppRouter />
-        </NotificationProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  );
-}
-
-export default App;
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
+);

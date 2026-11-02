@@ -17,7 +17,7 @@ export const useCourseManagement = () => {
         } catch (err) {
             setError(err.message || 'Error al cargar tus cursos.');
             showError('No se pudieron obtener los cursos del instructor.');
-        } finally {
+        } fienerally {
             setLoading(false);
         }
     }, [showError]);

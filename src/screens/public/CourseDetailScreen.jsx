@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useCourseDetail } from '../../hooks/useCourseDetail';
-import { HeaderControls } from '../../components/common/HeaderControls';
-import { CourseHeader } from '../../components/domain/course-detail/CourseHeader';
-import { StickyPurchaseCard } from '../../components/domain/course-detail/StickyPurchaseCard';
-import { WhatYouWillLearn } from '../../components/domain/course-detail/WhatYouWillLearn';
-import { CoursePrerequisites } from '../../components/domain/course-detail/CoursePrerequisites';
-import { CourseSyllabusAccordion } from '../../components/domain/course-detail/CourseSyllabusAccordion';
-import { InstructorProfileCard } from '../../components/domain/course-detail/InstructorProfileCard';
-import { StudentReviewsSection } from '../../components/domain/course-detail/StudentReviewsSection';
-import { RecommendedCoursesSection } from '../../components/domain/course-detail/RecommendedCoursesSection';
-import { Loader2, X, Play } from 'lucide-react';
+import React, { useState } from "react";
+import { useCourseDetail } from "../../hooks/useCourseDetail.js";
+import { HeaderControls } from "../../components/common/HeaderControls.jsx";
+import { CourseHeader } from "../../components/domain/Course-detail/CourseHeader.jsx";
+import { StickyPurchaseCard } from "../../components/domain/Course-detail/StickyPurchaseCard.jsx";
+import { WhatYouWillLearn } from "../../components/domain/Course-detail/WhatYouWillLearn.jsx";
+import { CourseSyllabusAccordion } from "../../components/domain/Course-detail/CourseSyllabusAccordion.jsx";
+import { CoursePrerequisites } from "../../components/domain/Course-detail/CoursePrerequisites.jsx";
+import { InstructorProfileCard } from "../../components/domain/Course-detail/InstructorProfileCard.jsx";
+import { StudentReviewsSection } from "../../components/domain/Course-detail/StudentReviewsSection.jsx";
+import { RecommendedCourseSection } from "../../components/domain/Course-detail/RecommendedCourseSection.jsx";
+import { Loader2, X, Play } from "lucide-react";
 
 export const CourseDetailScreen = ({ courseSlug = 'react-nextjs-cero-a-produccion' }) => {
     const {

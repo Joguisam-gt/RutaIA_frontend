@@ -1,74 +1,76 @@
-// src/hooks/usePricing.js
 import { useState } from 'react';
 
 export const usePricing = () => {
-    const [billingCycle, setBillingCycle] = useState('annual'); // 'monthly' | 'annual'
+    const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'annual'
+    const [selectedPlanId, setSelectedPlanId] = useState('pro');
+
+    const plans = [
+        {
+            id: 'basic',
+            name: 'Plan Cursos Individuales',
+            badge: 'Básico',
+            description: 'Acceso modular a cursos específicos sin suscripción de largo plazo.',
+            monthlyPrice: 29,
+            annualPrice: 24,
+            popular: false,
+            features: [
+                'Acceso de por vida al curso adquirido',
+                'Asistente de IA para dudas en tiempo real',
+                'Certificado de finalización verificado',
+                'Proyectos prácticos para tu portafolio',
+                'Soporte en foros de la comunidad',
+            ],
+            ctaText: 'Comprar Curso',
+        },
+        {
+            id: 'pro',
+            name: 'Plan Pro Suscripción',
+            badge: 'Más Popular',
+            description: 'Acceso ilimitado a todas las rutas de desarrollo de software e Inteligencia Artificial.',
+            monthlyPrice: 49,
+            annualPrice: 39,
+            popular: true,
+            features: [
+                'Acceso ilimitado a todos los +50 cursos de la plataforma',
+                'Tutor de IA con revisión automatizada de código',
+                'Rutas de aprendizaje guiadas por rol (Frontend, Backend, IA)',
+                'Descarga de materiales y proyectos finales',
+                'Certificados profesionales emitidos en Blockchain',
+                'Soporte prioritario por mentores en vivo',
+            ],
+            ctaText: 'Comenzar Prueba Gratis',
+        },
+        {
+            id: 'team',
+            name: 'Plan Equipos & Empresas',
+            badge: 'Empresas',
+            description: 'Capacitación para equipos de desarrollo con dashboard de seguimiento y métricas.',
+            monthlyPrice: 99,
+            annualPrice: 79,
+            popular: false,
+            features: [
+                'Todas las características del Plan Pro',
+                'Dashboard de métricas y avance de miembros del equipo',
+                'Asignación personalizada de rutas y capstones',
+                'Facturación centralizada y gestión de licencias',
+                'Sesiones mensuales Q&A exclusivas con instructores',
+            ],
+            ctaText: 'Contactar a Ventas',
+        },
+    ];
 
     const toggleBillingCycle = () => {
         setBillingCycle((prev) => (prev === 'monthly' ? 'annual' : 'monthly'));
     };
 
-    // Precios base mensuales y anuales (con 20% descuento en anual)
-    const plans = [
-        {
-            id: 'starter',
-            name: 'Starter',
-            badge: null,
-            description: 'Ideal para explorar la plataforma y tomar las primeras lecciones de prueba.',
-            priceMonthly: 0,
-            priceAnnualMonthly: 0,
-            highlight: false,
-            ctaText: 'Comenzar Gratis',
-            ctaVariant: 'secondary',
-            features: [
-                'Acceso a lecciones de prueba en abierto',
-                'Acceso a la comunidad en Discord',
-                'Asistente de IA (consultas básicas)',
-                'Sin tarjeta de crédito requerida',
-            ],
-        },
-        {
-            id: 'pro',
-            name: 'Pro',
-            badge: 'Más Popular',
-            description: 'Acceso ilimitado a todas las rutas tecnológicas, certificados y recursos.',
-            priceMonthly: 19,
-            priceAnnualMonthly: 15, // 20% de ahorro ($180/año)
-            highlight: true,
-            ctaText: 'Obtener Plan Pro',
-            ctaVariant: 'primary',
-            features: [
-                'Acceso ilimitado a las 4 rutas de especialización',
-                '+500 clases grabadas en 4K',
-                'Certificados oficiales con código QR y LinkedIn',
-                'Descarga de código fuente y proyectos',
-                'Consultas ilimitadas con el Asistente IA RAG',
-                'Revisión automática de código',
-            ],
-        },
-        {
-            id: 'teams',
-            name: 'Teams',
-            badge: 'Empresas',
-            description: 'Para equipos de desarrollo y diseño que buscan escalar sus competencias.',
-            priceMonthly: 49,
-            priceAnnualMonthly: 39,
-            highlight: false,
-            ctaText: 'Contactar Ventas B2B',
-            ctaVariant: 'secondary',
-            features: [
-                'Todo lo incluido en el Plan Pro',
-                'Panel de administración de equipo',
-                'Reportes de progreso y métricas de retención',
-                'Facturación B2B e impuestos deducibles',
-                'Gestor de cuenta y soporte prioritario',
-                'Licencias transferibles entre miembros',
-            ],
-        };
-
     return {
         billingCycle,
+        setBillingCycle,
         toggleBillingCycle,
+        selectedPlanId,
+        setSelectedPlanId,
         plans,
     };
 };
+
+export default usePricing;

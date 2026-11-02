@@ -1,63 +1,48 @@
 import React from 'react';
 import { useContactForm } from '../../hooks/useContactForm';
-import { HeaderControls } from '../../components/common/HeaderControls';
+import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { ContactFaqRedirectWidget } from '../../components/domain/contact/ContactFaqRedirectWidget';
 import { ContactFormView } from '../../components/domain/contact/ContactFormView';
 import { DirectChannelsCard } from '../../components/domain/contact/DirectChannelsCard';
+import { MessageSquare } from 'lucide-react';
 
 export const ContactScreen = () => {
     const {
         formData,
-        attachments,
-        quickFaqs,
-        loading,
-        status,
-        feedbackMessage,
-        errors,
         handleChange,
-        handleAddFiles,
-        handleRemoveFile,
         handleSubmit,
+        isSubmitting,
+        isSuccess,
     } = useContactForm();
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-            {/* Header Fijo */}
-            <header className="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 px-4 py-3">
-                <div className="container mx-auto flex items-center justify-between">
-                    <a href="/" className="text-lg font-black tracking-tight text-indigo-600 dark:text-indigo-400">
-                        RutaIA — Contacto & Soporte
-                    </a>
-                    <HeaderControls />
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+            <Navbar brandTitle="RutaIA" />
+
+            <main className="max-w-7xl mx-auto px-6 py-12">
+                <div className="text-center mb-10">
+                    <MessageSquare size={40} className="mx-auto text-indigo-600 mb-3" />
+                    <h1 className="text-3xl font-black text-slate-900 dark:text-slate-50">
+                        Contacto y Soporte
+                    </h1>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                        Estamos para ayudarte. Ponte en contacto con nuestro equipo de soporte.
+                    </p>
                 </div>
-            </header>
 
-            {/* Main Container Layout 2 Columnas (Formulario 60% + Canales Directos 40%) */}
-            <main className="container mx-auto px-4 py-10 max-w-6xl">
-                <div className="flex flex-col lg:flex-row gap-10">
-                    {/* Columna Izquierda: Formulario (60% W) */}
-                    <div className="w-full lg:w-3/5">
-                        {/* Widget Desviador de FAQs Rápidas */}
-                        <ContactFaqRedirectWidget quickFaqs={quickFaqs} />
-
-                        {/* Formulario Dinámico */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2">
                         <ContactFormView
                             formData={formData}
-                            attachments={attachments}
-                            loading={loading}
-                            status={status}
-                            feedbackMessage={feedbackMessage}
-                            errors={errors}
                             onChange={handleChange}
-                            onAddFiles={handleAddFiles}
-                            onRemoveFile={handleRemoveFile}
                             onSubmit={handleSubmit}
+                            isSubmitting={isSubmitting}
+                            isSuccess={isSuccess}
                         />
                     </div>
-
-                    {/* Columna Derecha: Canales Directos (40% W) */}
-                    <div className="w-full lg:w-2/5">
+                    <div className="space-y-6">
                         <DirectChannelsCard />
+                        <ContactFaqRedirectWidget />
                     </div>
                 </div>
             </main>

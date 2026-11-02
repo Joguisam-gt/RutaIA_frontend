@@ -8,7 +8,7 @@ export const Modal = ({
     subtitle,
     children,
     footer,
-    maxWidth = 'max-w-lg', // 'max-w-md' | 'max-w-lg' | 'max-w-xl' | 'max-w-2xl' | 'max-w-4xl'
+    maxWidth = 'max-w-lg',
 }) => {
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -29,7 +29,6 @@ export const Modal = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 animate-fadeIn">
             <div className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full ${maxWidth} p-6 shadow-2xl relative flex flex-col max-h-[90vh]`}>
-                {/* Modal Header */}
                 <div className="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
                     <div>
                         {title && (
@@ -44,6 +43,7 @@ export const Modal = ({
                         )}
                     </div>
                     <button
+                        type="button"
                         onClick={onClose}
                         className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
                     >
@@ -51,12 +51,10 @@ export const Modal = ({
                     </button>
                 </div>
 
-                {/* Modal Content */}
                 <div className="py-4 overflow-y-auto flex-1 text-xs">
                     {children}
                 </div>
 
-                {/* Modal Footer */}
                 {footer && (
                     <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3 shrink-0">
                         {footer}

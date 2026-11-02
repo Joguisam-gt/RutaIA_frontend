@@ -6,28 +6,30 @@ export const useInstructorDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Filtros del Gráfico de Analítica
-    const [timeRange, setTimeRange] = useState('30d'); // '7d' | '30d' | '90d' | '1y'
-    const [chartMetric, setChartMetric] = useState('revenue'); // 'revenue' | 'enrollments'
+    // Estados del Activity Sidebar
+    const [pendingQuestions, setPendingQuestions] = useState([]);
+    const [recentReviews, setRecentReviews] = useState([]);
+    const [replyingQuestionId, setReplyingQuestionId] = useState(null);
+
+    // Filtros del Gráfico y Tabla
+    const [timeRange, setTimeRange] = useState('30d');
+    const [chartMetric, setChartMetric] = useState('revenue');
     const [chartData, setChartData] = useState([]);
     const [isChartLoading, setIsChartLoading] = useState(false);
-
-    // Filtros de la Tabla de Rendimiento
     const [tableSearch, setTableSearch] = useState('');
-    const [tableSortBy, setTableSortBy] = useState('revenue'); // 'revenue' | 'students' | 'rating' | 'title'
+    const [tableSortBy, setTableSortBy] = useState('revenue');
 
-    // Carga general de métricas principales
     const fetchDashboard = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
             const data = await instructorDashboardApi.getDashboardSummary(timeRange);
             setDashboardData(data);
-            if (data?.analytics) {
-                setChartData(data.analytics);
-            }
+            if (data?.analytics) setChartData(data.analytics);
+            if (data?.pendingQuestions) setPendingQuestions(data.pendingQuestions);
+            if (data?.recentReviews) setRecentReviews(data.recentReviews);
         } catch (err) {
-            setError(err.message || 'No se pudo cargar el panel de administración del instructor.');
+            setError(err.message || 'No se pudo cargar el panel de instructor.');
         } finally {
             setLoading(false);
         }
@@ -37,24 +39,20 @@ export const useInstructorDashboard = () => {
         fetchDashboard();
     }, [fetchDashboard]);
 
-    // Recarga exclusiva del gráfico al cambiar tipo de métrica o rango
-    const fetchAnalytics = useCallback(async () => {
+    // Enviar respuesta rápida en 1-clic a Q&A
+    const handleQuickReply = async (questionId, answerText) => {
+        if (!answerText.trim()) return;
         try {
-            setIsChartLoading(true);
-            const data = await instructorDashboardApi.getAnalyticsData(timeRange, chartMetric);
-            setChartData(data || []);
+            setReplyingQuestionId(questionId);
+            await instructorDashboardApi.replyToPendingQuestion(questionId, answerText);
+            // Eliminar de la lista de pendientes localmente tras responder
+            setPendingQuestions((prev) => prev.filter((q) => q.id !== questionId));
         } catch (err) {
-            // Mantiene datos previos en caso de falla momentánea
+            // Manejo de error
         } finally {
-            setIsChartLoading(false);
+            setReplyingQuestionId(null);
         }
-    }, [timeRange, chartMetric]);
-
-    useEffect(() => {
-        if (!loading) {
-            fetchAnalytics();
-        }
-    }, [timeRange, chartMetric, fetchAnalytics, loading]);
+    };
 
     const timeRangeOptions = [
         { id: '7d', label: 'Últimos 7 días' },
@@ -78,6 +76,9 @@ export const useInstructorDashboard = () => {
         tableSortBy,
         setTableSortBy,
         timeRangeOptions,
-        refetch: fetchDashboard,
+        pendingQuestions,
+        recentReviews,
+        replyingQuestionId,
+        handleQuickReply,
     };
 };

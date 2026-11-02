@@ -1,68 +1,68 @@
-// src/components/domain/landing/ValuePropsGrid.jsx
 import React from 'react';
 import { Code, Users, Award, Clock } from 'lucide-react';
-import { useLanguage } from '../../../context/LanguageContext';
 
 export const ValuePropsGrid = () => {
-    const { t } = useLanguage();
+  const valueProps = [
+    {
+      id: 'practical',
+      title: 'Proyectos Reales',
+      description: 'Aprende construyendo aplicaciones del mundo real con estándares de la industria.',
+      icon: Code,
+    },
+    {
+      id: 'mentorship',
+      title: 'Mentoría Guiada',
+      description: 'Accede a retroalimentación continua y acompañamiento de instructores experimentados.',
+      icon: Users,
+    },
+    {
+      id: 'certification',
+      title: 'Certificación Validada',
+      description: 'Obtén diplomas acreditados con verificación digital para tu perfil profesional.',
+      icon: Award,
+    },
+    {
+      id: 'flexible',
+      title: 'Ritmo Adaptativo',
+      description: 'Estudia a tu propio ritmo con planes estructurados según tu disponibilidad de tiempo.',
+      icon: Clock,
+    },
+  ];
 
-    const values = [
-        {
-            icon: Code,
-            title: 'Proyectos 100% Reales',
-            desc: 'Construye portafolios listos para el mercado laboral resolviendo desafíos reales de desarrollo y diseño.',
-        },
-        {
-            icon: Users,
-            title: 'Mentores Activos en la Industria',
-            desc: 'Aprende directamente de profesionales con experiencia comprobada en empresas tecnológicas de alto nivel.',
-        },
-        {
-            icon: Award,
-            title: 'Certificaciones Oficiales',
-            desc: 'Obtén diplomas verificables con código QR y firmas digitales para destacar en LinkedIn.',
-        },
-        {
-            icon: Clock,
-            title: 'Aprendizaje a tu Ritmo',
-            desc: 'Acceso ilimitado 24/7 a contenido actualizado, ejercicios interactivos y soporte de IA instantáneo.',
-        },
-    ];
+  return (
+    <section className="space-y-6">
+      <div className="text-center max-w-2xl mx-auto">
+        <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-50">
+          ¿Por qué aprender en RutaIA?
+        </h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+          Diseñado para transformar tu aprendizaje en habilidades prácticas y empleables.
+        </p>
+      </div>
 
-    return (
-        <section className="py-20 bg-slate-100/50 dark:bg-slate-900/40 border-t border-slate-200 dark:border-slate-800">
-            <div className="container mx-auto px-4 max-w-5xl">
-                <div className="text-center max-w-2xl mx-auto mb-14">
-                    <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-50 mb-3">
-                        {t('whyTitle')}
-                    </h2>
-                    <p className="text-sm md:text-base text-slate-600 dark:text-slate-400">
-                        {t('whySubtitle')}
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {values.map((v, idx) => {
-                        const Icon = v.icon;
-                        return (
-                            <div
-                                key={idx}
-                                className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-indigo-500/40 transition-all"
-                            >
-                                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-4">
-                                    <Icon size={24} />
-                                </div>
-                                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">
-                                    {v.title}
-                                </h3>
-                                <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    {v.desc}
-                                </p>
-                            </div>
-                        );
-                    })}
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {valueProps.map((item) => {
+          const IconComponent = item.icon;
+          return (
+            <div
+              key={item.id}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4 hover:border-indigo-500/40 transition-colors shadow-xs"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                <IconComponent size={22} />
+              </div>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                {item.title}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                {item.description}
+              </p>
             </div>
-        </section>
-    );
+          );
+        })}
+      </div>
+    </section>
+  );
 };
+
+export default ValuePropsGrid;

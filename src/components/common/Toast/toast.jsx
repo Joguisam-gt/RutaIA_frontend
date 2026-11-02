@@ -42,3 +42,4 @@ export const Toast = ({ toast, onDismiss }) => {
 };
 
 export default Toast;
+

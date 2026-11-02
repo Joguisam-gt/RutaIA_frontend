@@ -1,4 +1,3 @@
-// src/components/domain/blog/BlogHeroPost.jsx
 import React from 'react';
 import { Clock, User, Calendar, ArrowRight, Sparkles } from 'lucide-react';
 

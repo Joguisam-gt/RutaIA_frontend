@@ -1,4 +1,3 @@
-// src/components/domain/blog/BlogFilterBar.jsx
 import React from 'react';
 import { Search, Tag, X } from 'lucide-react';
 

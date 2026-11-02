@@ -1,103 +1,71 @@
 import { useState, useEffect, useCallback } from 'react';
 import { wishlistApi } from '../api/wishlistApi';
+import { useNotification } from '../context/NotificationContext';
 
 export const useWishlist = () => {
-    const [wishlistItems, setWishlistItems] = useState([]);
+    const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // Modo de visualización: 'grid' (tarjetas en cuadrícula) | 'list' (filas horizontales)
-    const [viewMode, setViewMode] = useState('grid');
-    const [sortBy, setSortBy] = useState('added_at'); // 'added_at' | 'rating' | 'price_low' | 'price_high'
-
-    // Notificación Toast de eliminación con capacidad de deshacer (Undo)
-    const [undoToast, setUndoToast] = useState(null); // { item: courseObject, timerId }
+    const { showSuccess, showError, showToast } = useNotification();
 
     const fetchWishlist = useCallback(async () => {
         try {
             setLoading(true);
-            setError(null);
-            const res = await wishlistApi.getWishlist({ sortBy });
-            setWishlistItems(res.data || []);
+            const data = await wishlistApi.getWishlist();
+            setItems(data || []);
         } catch (err) {
-            setError(err.message || 'No se pudo cargar tu lista de cursos favoritos.');
+            setError(err.message || 'Error al cargar la lista de deseos.');
         } finally {
             setLoading(false);
         }
-    }, [sortBy]);
+    }, []);
 
     useEffect(() => {
         fetchWishlist();
     }, [fetchWishlist]);
 
-    // Elimina un elemento con soporte para notificación Toast y Deshacer
-    const removeItem = async (course) => {
-        const originalItems = [...wishlistItems];
-        setWishlistItems((prev) => prev.filter((item) => item.id !== course.id));
-
-        // Si había un toast previo, limpiar el timeout anterior
-        if (undoToast?.timerId) {
-            clearTimeout(undoToast.timerId);
+    const addToWishlist = async (course) => {
+        try {
+            await wishlistApi.add(course.id);
+            setItems((prev) => [...prev, course]);
+            showSuccess(`"${course.title}" fue agregado a tus favoritos.`);
+        } catch (err) {
+            showError('No se pudo agregar el curso a la lista de deseos.');
         }
+    };
+
+    const removeFromWishlist = async (courseId) => {
+        const itemToRemove = items.find((item) => item.id === courseId);
+        setItems((prev) => prev.filter((item) => item.id !== courseId));
 
         try {
-            await wishlistApi.removeFromWishlist(course.id);
+            await wishlistApi.remove(courseId);
 
-            const timerId = setTimeout(() => {
-                setUndoToast(null);
-            }, 5000);
-
-            setUndoToast({
-                item: course,
-                timerId,
+            showToast({
+                message: 'Curso eliminado de la lista de deseos.',
+                type: 'info',
+                undoAction: async () => {
+                    if (itemToRemove) {
+                        await wishlistApi.add(courseId);
+                        setItems((prev) => [...prev, itemToRemove]);
+                        showSuccess('Se restauro el curso en tu lista.');
+                    }
+                },
             });
         } catch (err) {
-            setWishlistItems(originalItems);
-        }
-    };
-
-    // Deshacer la eliminación reciente
-    const undoRemove = async () => {
-        if (!undoToast?.item) return;
-
-        const restoredCourse = undoToast.item;
-        if (undoToast.timerId) clearTimeout(undoToast.timerId);
-
-        try {
-            await wishlistApi.addToWishlist(restoredCourse.id);
-            setWishlistItems((prev) => [restoredCourse, ...prev]);
-        } catch (err) {
-            // Manejo de error de restauración
-        } finally {
-            setUndoToast(null);
-        }
-    };
-
-    // Vaciar toda la lista de deseos
-    const clearAll = async () => {
-        const originalItems = [...wishlistItems];
-        setWishlistItems([]);
-        try {
-            await wishlistApi.clearWishlist();
-            setUndoToast(null);
-        } catch (err) {
-            setWishlistItems(originalItems);
+            if (itemToRemove) {
+                setItems((prev) => [...prev, itemToRemove]);
+            }
+            showError('No se pudo eliminar el curso.');
         }
     };
 
     return {
-        wishlistItems,
+        items,
         loading,
         error,
-        viewMode,
-        setViewMode,
-        sortBy,
-        setSortBy,
-        undoToast,
-        dismissToast: () => setUndoToast(null),
-        removeItem,
-        undoRemove,
-        clearAll,
+        addToWishlist,
+        removeFromWishlist,
         refetch: fetchWishlist,
     };
 };

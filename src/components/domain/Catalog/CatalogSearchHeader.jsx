@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, SlidersHorizontal, ArrowUpDown, X, Loader2 } from 'lucide-react';
-import { useLanguage } from '../../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext.jsx';
 
 export const CatalogSearchHeader = ({
     searchValue,
@@ -28,7 +28,6 @@ export const CatalogSearchHeader = ({
 
     return (
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-            {/* Buscador Central con Autocompletado */}
             <div className="relative flex-1" ref={containerRef}>
                 <div className="relative flex items-center">
                     <Search size={18} className="absolute left-3.5 text-slate-400 pointer-events-none" />
@@ -54,8 +53,6 @@ export const CatalogSearchHeader = ({
                         </button>
                     ) : null}
                 </div>
-
-                {/* Dropdown de Sugerencias */}
                 {showDropdown && suggestions.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 z-30 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden max-h-60 overflow-y-auto">
                         {suggestions.map((item, idx) => (
@@ -76,14 +73,10 @@ export const CatalogSearchHeader = ({
                     </div>
                 )}
             </div>
-
-            {/* Acciones: Conteo, Filtro Móvil y Dropdown Ordenamiento */}
             <div className="flex items-center justify-between md:justify-end gap-3">
                 <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">
                     {totalResults} cursos encontrados
                 </span>
-
-                {/* Botón Trigger de Filtros para UX Móvil */}
                 <button
                     onClick={onOpenMobileFilters}
                     className="flex lg:hidden items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800"
@@ -91,8 +84,6 @@ export const CatalogSearchHeader = ({
                     <SlidersHorizontal size={16} />
                     <span>Filtros</span>
                 </button>
-
-                {/* Selector de Ordenamiento */}
                 <div className="relative flex items-center">
                     <ArrowUpDown size={14} className="absolute left-3 text-slate-400 pointer-events-none" />
                     <select

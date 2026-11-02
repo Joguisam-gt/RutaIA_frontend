@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, ShieldCheck } from 'lucide-react';
-import { useLanguage } from '../../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext.jsx';
 
 const testimonials = [
     {
@@ -21,14 +21,12 @@ const testimonials = [
 
 export const TestimonialsCarousel = () => {
     const { t } = useLanguage();
-
     return (
         <section className="py-20 bg-slate-50 dark:bg-slate-950">
             <div className="container mx-auto px-4 max-w-4xl text-center">
                 <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-50 mb-12">
                     {t('testimonialsTitle')}
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                     {testimonials.map((item, idx) => (
                         <div
@@ -45,7 +43,6 @@ export const TestimonialsCarousel = () => {
                                     "{item.quote}"
                                 </p>
                             </div>
-
                             <div className="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <img
                                     src={item.avatar}

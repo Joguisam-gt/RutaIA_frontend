@@ -1,100 +1,72 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { courseManagementApi } from '../api/courseManagementApi';
+import { useNotification } from '../context/NotificationContext';
 
 export const useCourseManagement = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [toastMessage, setToastMessage] = useState(null);
-
-    // Filtros y Controles de Toolbar
-    const [activeTab, setActiveTab] = useState('all'); // 'all' | 'published' | 'draft' | 'under_review'
-    const [searchQuery, setSearchQuery] = useState('');
-    const [sortBy, setSortBy] = useState('last_updated'); // 'last_updated' | 'students' | 'revenue' | 'title'
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
-
-    // Menú contextual abierto (ID del curso)
-    const [activeMenuId, setActiveMenuId] = useState(null);
-
-    const showToast = (msg) => {
-        setToastMessage(msg);
-        setTimeout(() => setToastMessage(null), 3000);
-    };
+    const [deletingCourseId, setDeletingCourseId] = useState(null);
+    const { showSuccess, showError } = useNotification();
 
     const fetchCourses = useCallback(async () => {
         try {
             setLoading(true);
-            setError(null);
-            const res = await courseManagementApi.getCourses({
-                status: activeTab,
-                search: searchQuery,
-                sortBy,
-            });
-            setCourses(res.data || []);
+            const data = await courseManagementApi.getInstructorCourses();
+            setCourses(data || []);
         } catch (err) {
-            setError(err.message || 'Error al obtener la lista de cursos.');
+            setError(err.message || 'Error al cargar tus cursos.');
+            showError('No se pudieron obtener los cursos del instructor.');
         } finally {
             setLoading(false);
         }
-    }, [activeTab, searchQuery, sortBy]);
+    }, [showError]);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            fetchCourses();
-        }, 250);
-        return () => clearTimeout(timer);
+        fetchCourses();
     }, [fetchCourses]);
 
-    const handleDuplicate = async (courseId) => {
+    const duplicateCourse = async (courseId) => {
         try {
-            setActiveMenuId(null);
-            await courseManagementApi.duplicateCourse(courseId);
-            showToast('Curso duplicado con éxito en borrador.');
-            fetchCourses();
+            const duplicated = await courseManagementApi.duplicateCourse(courseId);
+            setCourses((prev) => [duplicated, ...prev]);
+            showSuccess('Curso duplicado exitosamente.');
         } catch (err) {
-            showToast('Error al duplicar el curso.');
+            showError('Ocurrio un error al duplicar el curso.');
         }
     };
 
-    const handleToggleArchive = async (courseId, isArchived) => {
-        try {
-            setActiveMenuId(null);
-            await courseManagementApi.toggleArchiveCourse(courseId, !isArchived);
-            showToast(isArchived ? 'Curso desarchivado.' : 'Curso archivado.');
-            fetchCourses();
-        } catch (err) {
-            showToast('Error al cambiar estado de archivo.');
-        }
+    const confirmDeleteCourse = (courseId) => {
+        setDeletingCourseId(courseId);
     };
 
-    const tabs = useMemo(() => [
-        { id: 'all', label: 'Todos' },
-        { id: 'published', label: 'Publicados' },
-        { id: 'draft', label: 'Borradores' },
-        { id: 'under_review', label: 'En Revisión' },
-    ], []);
+    const cancelDeleteCourse = () => {
+        setDeletingCourseId(null);
+    };
+
+    const executeDeleteCourse = async () => {
+        if (!deletingCourseId) return;
+
+        try {
+            await courseManagementApi.deleteCourse(deletingCourseId);
+            setCourses((prev) => prev.filter((c) => c.id !== deletingCourseId));
+            showSuccess('El curso fue eliminado permanentemente.');
+        } catch (err) {
+            showError('No se pudo eliminar el curso.');
+        } finally {
+            setDeletingCourseId(null);
+        }
+    };
 
     return {
         courses,
         loading,
         error,
-        toastMessage,
-        activeTab,
-        setActiveTab: (tab) => {
-            setActiveTab(tab);
-            setActiveMenuId(null);
-        },
-        searchQuery,
-        setSearchQuery,
-        sortBy,
-        setSortBy,
-        viewMode,
-        setViewMode,
-        tabs,
-        activeMenuId,
-        setActiveMenuId,
-        handleDuplicate,
-        handleToggleArchive,
+        deletingCourseId,
+        duplicateCourse,
+        confirmDeleteCourse,
+        cancelDeleteCourse,
+        executeDeleteCourse,
         refetch: fetchCourses,
     };
 };

@@ -4,51 +4,84 @@ const LanguageContext = createContext();
 
 const translations = {
     es: {
-        heroTag: 'Nueva Versión 2.0 con IA',
-        heroTitle: 'Aprende Desarrollo de Software impulsado por Inteligencia Artificial',
-        heroSubtitle: 'Rutas de aprendizaje adaptativas, proyectos reales y feedback de código en tiempo real con asistentes RAG.',
-        btnExplore: 'Explorar Cursos',
-        btnTryFree: 'Probar Gratis',
-        testimonialsTitle: 'Lo que dicen nuestros estudiantes',
+        // Navbar
+        catalog: 'Catálogo',
+        blog: 'Blog',
+        plans: 'Planes',
+        about: 'Nosotros',
+        studentPanel: 'Panel Estudiante',
+        instructorPanel: 'Panel Instructor',
+        login: 'Iniciar Sesión',
+        register: 'Registrarse',
+        logout: 'Cerrar Sesión',
+        back: 'Volver',
+
+        // Blog
+        blogTitle: 'Artículos & Recursos Técnicos',
+        blogSubtitle: 'Publicaciones sobre arquitectura de software, inteligencia artificial y mejores prácticas de la industria.',
+        readMore: 'Leer Artículo',
+        readTime: 'de lectura',
+
+        // Cursos & Landing
         featuredTitle: 'Cursos Destacados',
-        featuredSubtitle: 'Domina las tecnologías más demandadas del mercado laboral tech.',
+        featuredSubtitle: 'Aprende las habilidades técnicas con mayor demanda en el mercado laboral.',
+        viewCourse: 'Ver Curso',
+        level: 'Nivel',
+
+        // Filtros
+        all: 'Todos',
+        categories: 'Categorías',
+        searchPlaceholder: 'Buscar por título o tecnología...',
     },
     en: {
-        heroTag: 'New Version 2.0 with AI',
-        heroTitle: 'Learn Software Development powered by Artificial Intelligence',
-        heroSubtitle: 'Adaptive learning paths, real projects, and real-time code feedback with RAG assistants.',
-        btnExplore: 'Explore Courses',
-        btnTryFree: 'Try Free',
-        testimonialsTitle: 'What our students say',
+        // Navbar
+        catalog: 'Catalog',
+        blog: 'Blog',
+        plans: 'Pricing',
+        about: 'About Us',
+        studentPanel: 'Student Portal',
+        instructorPanel: 'Instructor Portal',
+        login: 'Log In',
+        register: 'Sign Up',
+        logout: 'Log Out',
+        back: 'Back',
+
+        // Blog
+        blogTitle: 'Articles & Technical Resources',
+        blogSubtitle: 'Publications on software architecture, artificial intelligence, and industry best practices.',
+        readMore: 'Read Article',
+        readTime: 'read',
+
+        // Cursos & Landing
         featuredTitle: 'Featured Courses',
-        featuredSubtitle: 'Master the most in-demand technologies in the tech market.',
+        featuredSubtitle: 'Learn the most in-demand technical skills in the job market.',
+        viewCourse: 'View Course',
+        level: 'Level',
+
+        // Filtros
+        all: 'All',
+        categories: 'Categories',
+        searchPlaceholder: 'Search by title or technology...',
     },
 };
 
 export const LanguageProvider = ({ children }) => {
     const [language, setLanguage] = useState('es');
 
-    const t = (key) => {
-        return translations[language]?.[key] || key;
-    };
-
     const toggleLanguage = () => {
         setLanguage((prev) => (prev === 'es' ? 'en' : 'es'));
     };
 
+    const t = (key) => {
+        return translations[language]?.[key] || key;
+    };
+
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, t, toggleLanguage }}>
+        <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
             {children}
         </LanguageContext.Provider>
     );
 };
 
-export const useLanguage = () => {
-    const context = useContext(LanguageContext);
-    if (!context) {
-        throw new Error('useLanguage debe ser utilizado dentro de un LanguageProvider');
-    }
-    return context;
-};
-
+export const useLanguage = () => useContext(LanguageContext);
 export default LanguageContext;

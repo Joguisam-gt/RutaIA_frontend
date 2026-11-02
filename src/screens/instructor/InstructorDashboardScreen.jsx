@@ -4,6 +4,7 @@ import { HeaderControls } from '../../components/common/HeaderControls';
 import { InstructorMetricCards } from '../../components/domain/instructor/InstructorMetricCards';
 import { EarningsAnalyticsChart } from '../../components/domain/instructor/EarningsAnalyticsChart';
 import { CoursePerformanceTable } from '../../components/domain/instructor/CoursePerformanceTable';
+import { InstructorActivitySidebar } from '../../components/domain/instructor/InstructorActivitySidebar';
 import { Loader2, Plus, ShieldCheck } from 'lucide-react';
 
 export const InstructorDashboardScreen = () => {
@@ -22,6 +23,10 @@ export const InstructorDashboardScreen = () => {
         tableSortBy,
         setTableSortBy,
         timeRangeOptions,
+        pendingQuestions,
+        recentReviews,
+        replyingQuestionId,
+        handleQuickReply,
     } = useInstructorDashboard();
 
     if (loading) {
@@ -57,7 +62,7 @@ export const InstructorDashboardScreen = () => {
                             Panel de Instructor
                         </h1>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Supervisa las métricas financieras, inscripciones y la satisfacción de tus estudiantes en tiempo real.
+                            Supervisa las métricas financieras, inscripciones, atención a preguntas Q&A y reseñas recibidas.
                         </p>
                     </div>
 
@@ -77,28 +82,44 @@ export const InstructorDashboardScreen = () => {
                     </div>
                 )}
 
-                {/* 1. Metric Cards (Ingresos, Estudiantes, Rating, Cursos) */}
+                {/* Metric Cards (Ingresos, Estudiantes, Rating, Cursos) */}
                 <InstructorMetricCards metrics={dashboardData?.metrics} />
 
-                {/* 2. Gráfico Interactivo de Área (Ingresos vs Inscripciones) */}
-                <EarningsAnalyticsChart
-                    chartData={chartData}
-                    timeRange={timeRange}
-                    onTimeRangeChange={setTimeRange}
-                    chartMetric={chartMetric}
-                    onMetricChange={setChartMetric}
-                    timeRangeOptions={timeRangeOptions}
-                    isLoading={isChartLoading}
-                />
+                {/* Layout 2 Columnas: Principal (70% W) + Activity Sidebar (30% W) */}
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Columna Principal */}
+                    <div className="w-full lg:w-7/10 space-y-8">
+                        {/* Gráfico Interactivo de Área (Ingresos vs Inscripciones) */}
+                        <EarningsAnalyticsChart
+                            chartData={chartData}
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                            chartMetric={chartMetric}
+                            onMetricChange={setChartMetric}
+                            timeRangeOptions={timeRangeOptions}
+                            isLoading={isChartLoading}
+                        />
 
-                {/* 3. Matriz Comparativa de Cursos */}
-                <CoursePerformanceTable
-                    courses={dashboardData?.coursePerformance}
-                    searchValue={tableSearch}
-                    onSearchChange={setTableSearch}
-                    sortBy={tableSortBy}
-                    onSortChange={setTableSortBy}
-                />
+                        {/* Matriz Comparativa de Cursos */}
+                        <CoursePerformanceTable
+                            courses={dashboardData?.coursePerformance}
+                            searchValue={tableSearch}
+                            onSearchChange={setTableSearch}
+                            sortBy={tableSortBy}
+                            onSortChange={setTableSortBy}
+                        />
+                    </div>
+
+                    {/* Activity Sidebar (Q&A Pendientes + Feed de Reseñas) */}
+                    <div className="w-full lg:w-3/10">
+                        <InstructorActivitySidebar
+                            pendingQuestions={pendingQuestions}
+                            recentReviews={recentReviews}
+                            replyingQuestionId={replyingQuestionId}
+                            onQuickReply={handleQuickReply}
+                        />
+                    </div>
+                </div>
             </main>
         </div>
     );

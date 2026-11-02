@@ -2,8 +2,7 @@ import { apiClient } from './apiClient';
 
 export const instructorDashboardApi = {
     /**
-     * Obtiene la visión global del panel de instructor: tarjetas de métricas, gráfico analítico y tabla comparativa.
-     * Conecta con GET /api/v1/instructor/dashboard
+     * Obtiene la visión global del panel de instructor: tarjetas, analítica, tabla y actividad reciente.
      */
     getDashboardSummary: async (timeRange = '30d') => {
         const response = await apiClient.get(`/instructor/dashboard?range=${timeRange}`);
@@ -11,24 +10,21 @@ export const instructorDashboardApi = {
     },
 
     /**
-     * Obtiene los datos analíticos de ingresos e inscripciones filtrados por rango de tiempo.
-     * Conecta con GET /api/v1/instructor/analytics
+     * Envía una respuesta rápida en 1-clic a una pregunta pendiente de Q&A.
+     * Conecta con POST /api/v1/instructor/questions/:questionId/reply
      */
-    getAnalyticsData: async (timeRange = '30d', metricType = 'revenue') => {
-        const response = await apiClient.get(`/instructor/analytics?range=${timeRange}&metric=${metricType}`);
-        return response.data.data;
+    replyToPendingQuestion: async (questionId, answerText) => {
+        const response = await apiClient.post(`/instructor/questions/${questionId}/reply`, {
+            answer: answerText,
+        });
+        return response.data;
     },
 
     /**
-     * Obtiene el listado comparativo de rendimiento de cursos del instructor.
-     * Conecta con GET /api/v1/instructor/courses/performance
+     * Obtiene el feed de últimas reseñas y preguntas pendientes.
      */
-    getCoursePerformance: async (params = {}) => {
-        const queryParams = new URLSearchParams();
-        if (params.search) queryParams.append('search', params.search);
-        if (params.sortBy) queryParams.append('sortBy', params.sortBy);
-
-        const response = await apiClient.get(`/instructor/courses/performance?${queryParams.toString()}`);
+    getActivityFeed: async () => {
+        const response = await apiClient.get('/instructor/activity-feed');
         return response.data.data;
     },
 };

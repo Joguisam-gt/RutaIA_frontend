@@ -1,29 +1,24 @@
 import React from 'react';
 
-export const AuthBrandingColumn = ({ testimonial }) => {
+export const AuthBrandingColumn = () => {
     return (
-        <div className="relative hidden lg:flex flex-col justify-between p-12 bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white border-r border-slate-200 dark:border-slate-800 transition-colors">
-            {/* Contenido branding adaptable a tema claro y oscuro */}
-            <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-semibold">
-                    <span>RutaIA Learning Platform</span>
-                </div>
-                <h2 className="text-3xl font-extrabold tracking-tight">
-                    Aprende desarrollo web e inteligencia artificial
+        /* Bloque adaptado para soporte de modo claro y oscuro con estilos Tailwind */
+        <div className="hidden lg:flex flex-col justify-between p-12 bg-slate-100 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">
+            <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                    Aprende Desarrollo Web e IA
                 </h2>
+                {/* Comentarios de branding compatibles con tema claro u oscuro */}
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                    "La mejor plataforma para escalar tus conocimientos tecnicos con proyectos reales."
+                </p>
             </div>
-
-            {/* Testimonio dinámico con soporte de tema */}
-            {testimonial && (
-                <blockquote className="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <p className="text-sm text-slate-700 dark:text-slate-300 italic">
-                        "{testimonial.quote}"
-                    </p>
-                    <footer className="mt-4 text-xs font-bold text-slate-900 dark:text-white">
-                        - {testimonial.author}
-                    </footer>
-                </blockquote>
-            )}
+            <div className="text-xs text-slate-500 dark:text-slate-500">
+                RutaIA Platform
+            </div>
         </div>
     );
 };
+
+/* Export default agregado para compatibilidad con importaciones por defecto */
+export default AuthBrandingColumn;

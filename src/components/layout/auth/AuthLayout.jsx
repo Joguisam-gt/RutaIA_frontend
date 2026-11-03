@@ -1,15 +1,16 @@
 import React from 'react';
-import AuthBrandingColumn from './AuthBrandingColumn';
+import { AuthBrandingColumn } from './AuthBrandingColumn';
 
 export const AuthLayout = ({ children }) => {
     return (
-        <div className="min-h-screen flex items-center justify-center p-3 sm:p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
-            <div className="w-full max-w-6xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden my-auto min-h-[580px]">
+        <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+            <div className="w-full lg:w-1/2 lg:min-h-screen flex flex-col">
                 <AuthBrandingColumn />
-                <div className="w-full md:w-1/2 p-8 sm:p-12 flex items-center justify-center">
-                    <div className="w-full max-w-lg space-y-6">
-                        {children}
-                    </div>
+            </div>
+
+            <div className="w-full lg:w-1/2 min-h-screen flex flex-col justify-center items-center p-6 md:p-12 lg:p-16">
+                <div className="w-full max-w-md my-auto">
+                    {children}
                 </div>
             </div>
         </div>

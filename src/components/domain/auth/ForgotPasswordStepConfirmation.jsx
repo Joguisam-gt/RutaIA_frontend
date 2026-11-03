@@ -1,74 +1,102 @@
-import React from 'react';
-import { CheckCircle2, MailCheck, RefreshCw, AlertTriangle, ArrowLeft, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Lock, ArrowRight } from 'lucide-react';
+import { PasswordStrengthBar } from './PasswordStrengthBar';
 
 export const ForgotPasswordStepConfirmation = ({
-    email,
-    resendTimer,
-    canResend,
+    newPassword: externalNewPassword,
+    setNewPassword: externalSetNewPassword,
+    confirmPassword: externalConfirmPassword,
+    setConfirmPassword: externalSetConfirmPassword,
+    onSubmit,
     loading,
-    onResend,
-    onBackToStepOne,
+    error
 }) => {
+    const [internalNewPassword, setInternalNewPassword] = useState('');
+    const [internalConfirmPassword, setInternalConfirmPassword] = useState('');
+
+    const newPassword = externalNewPassword !== undefined ? externalNewPassword : internalNewPassword;
+    const confirmPassword = externalConfirmPassword !== undefined ? externalConfirmPassword : internalConfirmPassword;
+
+    const handleNewPasswordChange = (e) => {
+        if (externalSetNewPassword) {
+            externalSetNewPassword(e.target.value);
+        } else {
+            setInternalNewPassword(e.target.value);
+        }
+    };
+
+    const handleConfirmPasswordChange = (e) => {
+        if (externalSetConfirmPassword) {
+            externalSetConfirmPassword(e.target.value);
+        } else {
+            setInternalConfirmPassword(e.target.value);
+        }
+    };
+
     return (
-        <div className="w-full text-center">
-            {/* Icono Visual de Éxito */}
-            <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
-                <MailCheck size={32} />
-            </div>
-
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight mb-2">
-                ¡Revisa tu bandeja de entrada!
-            </h2>
-
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
-                Hemos enviado un correo de recuperación a:
-            </p>
-
-            {/* Dirección de Correo Resaltada */}
-            <div className="inline-block px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-6">
-                {email}
-            </div>
-
-            {/* Aviso de Carpeta Spam */}
-            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-slate-700 dark:text-slate-300 text-left text-xs mb-6 space-y-1">
-                <div className="flex items-center gap-1.5 font-bold text-amber-600 dark:text-amber-400">
-                    <AlertTriangle size={16} className="shrink-0" />
-                    <span>¿No encuentras el correo?</span>
-                </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    Revisa tu carpeta de <strong>Spam o Correo No Deseado</strong>. Asegúrate también de que la dirección ingresada sea correcta.
+        <div className="w-full max-w-md space-y-6">
+            <div className="text-center space-y-2">
+                <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                    Crear Nueva Contraseña
+                </h1>
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                    Ingresa y confirma tu nueva clave de acceso
                 </p>
             </div>
 
-            {/* Temporizador de Reenvío de 60s */}
-            <div className="mb-6">
-                {canResend ? (
-                    <button
-                        type="button"
-                        onClick={onResend}
-                        disabled={loading}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors"
-                    >
-                        {loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                        <span>Reenviar correo de recuperación</span>
-                    </button>
-                ) : (
-                    <span className="text-xs text-slate-400 font-medium flex items-center justify-center gap-1.5">
-                        <RefreshCw size={14} className="animate-spin text-indigo-500" />
-                        <span>Puedes solicitar un nuevo envío en <strong>{resendTimer}s</strong></span>
-                    </span>
-                )}
-            </div>
+            {error && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs text-center font-medium">
+                    {error}
+                </div>
+            )}
 
-            {/* Cambiar de correo */}
-            <button
-                type="button"
-                onClick={onBackToStepOne}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors inline-flex items-center gap-1"
-            >
-                <ArrowLeft size={14} />
-                <span>Probar con otro correo electrónico</span>
-            </button>
+            <form onSubmit={onSubmit} className="space-y-4">
+                <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                        Nueva Contraseña
+                    </label>
+                    <div className="relative flex items-center mb-2">
+                        <Lock className="w-4 h-4 absolute left-3.5 text-slate-400 pointer-events-none z-10" />
+                        <input
+                            type="password"
+                            name="newPassword"
+                            required
+                            value={newPassword || ''}
+                            onChange={handleNewPasswordChange}
+                            placeholder="••••••••"
+                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors relative z-20"
+                        />
+                    </div>
+                    <PasswordStrengthBar password={newPassword || ''} />
+                </div>
+
+                <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                        Confirmar Contraseña
+                    </label>
+                    <div className="relative flex items-center">
+                        <Lock className="w-4 h-4 absolute left-3.5 text-slate-400 pointer-events-none z-10" />
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            required
+                            value={confirmPassword || ''}
+                            onChange={handleConfirmPasswordChange}
+                            placeholder="••••••••"
+                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors relative z-20"
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 hover:opacity-95 shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 relative z-20"
+                >
+                    <span>{loading ? 'Restableciendo...' : 'Restablecer Contraseña'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                </button>
+            </form>
         </div>
     );
 };

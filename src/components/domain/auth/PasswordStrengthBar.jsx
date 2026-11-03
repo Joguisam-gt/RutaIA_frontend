@@ -1,51 +1,41 @@
 import React from 'react';
-import { Check, ShieldAlert } from 'lucide-react';
 
-export const PasswordStrengthBar = ({ password, strength }) => {
-    if (!password) return null;
+export const PasswordStrengthBar = ({ password = '' }) => {
+    const getStrength = (pass) => {
+        if (!pass) return { score: 0, label: '', color: 'bg-slate-200 dark:bg-slate-800' };
+        let score = 0;
+        if (pass.length >= 6) score += 1;
+        if (pass.length >= 10) score += 1;
+        if (/[A-Z]/.test(pass)) score += 1;
+        if (/[0-9]/.test(pass)) score += 1;
+        if (/[^A-Za-z0-9]/.test(pass)) score += 1;
 
-    const checks = [
-        { label: 'Mínimo 8 caracteres', valid: password.length >= 8 },
-        { label: 'Al menos una mayúscula', valid: /[A-Z]/.test(password) },
-        { label: 'Un número o símbolo', valid: /[0-9!@#$%^&*()]/.test(password) },
-    ];
+        if (score <= 1) return { score: 1, label: 'Débil', color: 'bg-red-500' };
+        if (score <= 3) return { score: 2, label: 'Media', color: 'bg-amber-500' };
+        if (score <= 4) return { score: 3, label: 'Fuerte', color: 'bg-emerald-500' };
+        return { score: 4, label: 'Muy Fuerte', color: 'bg-cyan-500' };
+    };
+
+    const strength = getStrength(password) || { score: 0, label: '', color: 'bg-slate-200 dark:bg-slate-800' };
 
     return (
-        <div className="mt-2 space-y-2">
-            {/* Barra gráfica de progreso */}
-            <div className="flex items-center gap-2">
-                <div className="flex-1 h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+        <div className="space-y-1.5 mt-2">
+            <div className="flex h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden gap-1 p-0.5">
+                {[1, 2, 3, 4].map((level) => (
                     <div
-                        className={`h-full transition-all duration-300 ${strength.color}`}
-                        style={{ width: `${strength.score}%` }}
-                    />
-                </div>
-                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 min-w-[70px] text-right">
-                    {strength.label}
-                </span>
-            </div>
-
-            {/* Lista de requisitos */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 pt-1">
-                {checks.map((check, idx) => (
-                    <div
-                        key={idx}
-                        className={`flex items-center gap-1 text-[10px] font-semibold ${check.valid
-                                ? 'text-emerald-600 dark:text-emerald-400'
-                                : 'text-slate-400 dark:text-slate-500'
+                        key={level}
+                        className={`h-full flex-1 rounded-full transition-all duration-300 ${level <= strength.score ? strength.color : 'bg-slate-300 dark:bg-slate-700'
                             }`}
-                    >
-                        {check.valid ? (
-                            <Check size={12} strokeWidth={3} className="shrink-0" />
-                        ) : (
-                            <ShieldAlert size={12} className="shrink-0" />
-                        )}
-                        <span className="truncate">{check.label}</span>
-                    </div>
+                    />
                 ))}
             </div>
+            {strength.label && (
+                <p className="text-[10px] text-right font-medium text-slate-500 dark:text-slate-400">
+                    Fortaleza: <span className="font-bold">{strength.label}</span>
+                </p>
+            )}
         </div>
     );
 };
 
-export default PasswordStrengthBar
+export default PasswordStrengthBar;

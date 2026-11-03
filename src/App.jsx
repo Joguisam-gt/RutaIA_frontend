@@ -1,14 +1,19 @@
-// Principios SOLID: Aplicación del Single Responsibility Principle (SRP) al delegar la provisión del enrutador al punto de entrada (index.jsx) y concentrar App.jsx en la composición de providers y vistas.
+// Principio SRP: Definición de rutas y provisión de contexto global desde el archivo App.jsx
 import React from 'react';
-import { ThemeProvider } from './context/ThemeContext';
-import { AppRouter } from './routes/AppRouter';
+import { Routes, Route, Navigate } from 'react-router-dom';
+
+// Se corrige la ruta relativa utilizando ./ en lugar de ../
+import AiQueryScreen from './screens/student/AiQueryScreen';
+import LandingScreen from './screens/public/LandingScreen';
 
 export function App() {
     return (
-        // Se elimina el <BrowserRouter> anidado que causaba conflicto con el enrutador raíz de index.jsx
-        <ThemeProvider>
-            <AppRouter />
-        </ThemeProvider>
+        <Routes>
+            <Route path="/" element={<LandingScreen />} />
+            <Route path="/chat" element={<AiQueryScreen />} />
+            <Route path="/ai-query" element={<AiQueryScreen />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
     );
 }
 

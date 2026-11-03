@@ -20,7 +20,7 @@ export const CourseModularPricingSection = () => {
                     ¿Prefieres comprar solo un módulo o una lección individual?
                 </h2>
                 <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Nuestros programas de especialización de 4 meses (16 sesiones)[cite: 4, 6, 8, 10] te permiten inscribirte con máxima flexibilidad sin necesidad de estar suscrito[cite: 4, 6, 8, 10].
+                    Nuestros programas de especialización de 4 meses (16 sesiones) te permiten inscribirte con máxima flexibilidad sin necesidad de estar suscrito.
                 </p>
             </div>
 
@@ -35,7 +35,7 @@ export const CourseModularPricingSection = () => {
                         $5.00 a $12.00 USD
                     </span>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Inscripción flexible por clase individual según el tema exacto de tu interés[cite: 4, 6, 8, 10]. (Principiante: $5 | Intermedio: $7-$8 | Avanzado: $10-$12)[cite: 4, 5, 6, 7, 8, 9, 10, 11].
+                        Inscripción flexible por clase individual según el tema exacto de tu interés. (Principiante: $5 | Intermedio: $7-$8 | Avanzado: $10-$12).
                     </p>
                 </div>
 
@@ -49,7 +49,7 @@ export const CourseModularPricingSection = () => {
                         $16 a $34 USD
                     </span>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Descuento especial al adquirir el paquete mensual de 4 clases[cite: 4, 6, 8, 10]. (M1 Fundamentos: $16 | M2: $22 | M3: $26 | M4 Capstone: $34)[cite: 4, 5, 6, 7, 8, 9, 10, 11].
+                        Descuento especial al adquirir el paquete mensual de 4 clases. (M1 Fundamentos: $16 | M2: $22 | M3: $26 | M4 Capstone: $34).
                     </p>
                 </div>
 
@@ -66,7 +66,7 @@ export const CourseModularPricingSection = () => {
                         $89.00 USD
                     </span>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Acceso total a los 4 meses de especialización con tarifa promocional y derecho al Proyecto Capstone de Certificación[cite: 4, 5, 6, 7, 8, 9, 10, 11].
+                        Acceso total a los 4 meses de especialización con tarifa promocional y derecho al Proyecto Capstone de Certificación.
                     </p>
                 </div>
             </div>

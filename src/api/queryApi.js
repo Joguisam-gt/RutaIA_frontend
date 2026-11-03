@@ -1,33 +1,28 @@
-import { apiClient } from './apiClient';
+// Principio ISP y DIP: Expone los métodos de interacción con el backend proxy desacoplando a los componentes React de los endpoints HTTP directos.
+import apiClient from './apiClient';
 
 export const queryApi = {
     /**
-     * Envia una consulta al asistente virtual de IA.
-     * Conecta con POST /api/v1/ai/query
+     * Envía una pregunta al backend proxy (Express -> n8n -> Qdrant -> IA).
+     * @param {Object} queryData - Objeto con el prompt y metadatos del curso o usuario.
      */
-    sendQuery: async (prompt, courseContextId = null) => {
-        const response = await apiClient.post('/ai/query', {
-            prompt,
-            courseContextId,
-        });
-        return response.data;
+    askQuery: async (queryData) => {
+        return await apiClient.post('/queries/ask', queryData);
     },
 
     /**
-     * Obtiene el historial de conversaciones guardadas con el asistente.
-     * Conecta con GET /api/v1/ai/history
+     * Obtiene el historial de chat almacenado en MongoDB para el usuario en sesión.
      */
     getHistory: async () => {
-        const response = await apiClient.get('/ai/history');
-        return response.data.data;
+        return await apiClient.get('/queries/history');
     },
 
     /**
-     * Limpia el historial de chat del usuario.
-     * Conecta con DELETE /api/v1/ai/history
+     * Envía la calificación dada por el usuario a una respuesta generada por la IA.
+     * @param {string} queryId - ID de la consulta a calificar.
+     * @param {Object} ratingData - Puntuación y retroalimentación.
      */
-    clearHistory: async () => {
-        const response = await apiClient.delete('/ai/history');
-        return response.data;
+    rateQuery: async (queryId, ratingData) => {
+        return await apiClient.post(`/queries/${queryId}/rating`, ratingData);
     },
 };

@@ -1,43 +1,27 @@
+// Principio OCP (Open/Closed Principle): Permite agregar nuevas pantallas dentro de MainLayout sin modificar la logica de navegacion global.
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import MainLayout from '../components/layout/MainLayout';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
+import MainLayout from '../layouts/MainLayout';
 import LandingScreen from '../screens/public/LandingScreen';
-import CatalogScreen from '../screens/public/CatalogScreen';
-import CourseDetailScreen from '../screens/public/CourseDetailScreen';
-import AboutScreen from '../screens/public/AboutScreen';
-import ContactScreen from '../screens/public/ContactScreen';
-import BlogScreen from '../screens/public/BlogScreen';
-import PlanScreen from '../screens/public/PlanScreen';
-
-import LoginScreen from '../screens/auth/LoginScreen';
-import RegisterScreen from '../screens/auth/RegisterScreen';
-
-import StudentDashboardScreen from '../screens/student/StudentDashboardScreen';
-import MyCoursesScreen from '../screens/student/MyCoursesScreen';
-import ClassroomScreen from '../screens/student/ClassroomScreen';
+import AiQueryScreen from '../screens/student/AiQueryScreen';
 
 export const AppRouter = () => {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route element={<MainLayout />}>
-                    <Route path="/" element={<LandingScreen />} />
-                    <Route path="/cursos" element={<CatalogScreen />} />
-                    <Route path="/cursos/:id" element={<CourseDetailScreen />} />
-                    <Route path="/nosotros" element={<AboutScreen />} />
-                    <Route path="/contacto" element={<ContactScreen />} />
-                    <Route path="/blog" element={<BlogScreen />} />
-                    <Route path="/planes" element={<PlanScreen />} />
-                    <Route path="/login" element={<LoginScreen />} />
-                    <Route path="/registro" element={<RegisterScreen />} />
-                    <Route path="/estudiante/dashboard" element={<StudentDashboardScreen />} />
-                    <Route path="/estudiante/mis-cursos" element={<MyCoursesScreen />} />
-                </Route>
+        <Routes>
+            {/* Ruta Padre que envuelve a todas las vistas con el Navbar mediante MainLayout */}
+            <Route element={<MainLayout />}>
+                {/* Vista Principal / Landing */}
+                <Route path="/" element={<LandingScreen />} />
 
-                <Route path="/estudiante/aula/:courseId" element={<ClassroomScreen />} />
-            </Routes>
-        </BrowserRouter>
+                {/* Vistas del Asistente IA */}
+                <Route path="/chat" element={<AiQueryScreen />} />
+                <Route path="/ai-query" element={<AiQueryScreen />} />
+
+                {/* Redirección por defecto para URLs no mapeadas */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+        </Routes>
     );
 };
 

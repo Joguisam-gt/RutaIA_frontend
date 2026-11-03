@@ -1,102 +1,67 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { Search, SlidersHorizontal, ArrowUpDown, X, Loader2 } from 'lucide-react';
-import { useLanguage } from '../../../context/LanguageContext.jsx';
 
 export const CatalogSearchHeader = ({
-    searchValue,
-    onSearchChange,
-    suggestions,
-    isSearchingSuggestions,
-    sortValue,
-    onSortChange,
-    totalResults,
-    onOpenMobileFilters,
+    searchValue = '',
+    onSearchChange = () => { },
+    onClearSearch = () => { },
+    isLoading = false,
+    onToggleMobileFilters = () => { },
+    sortBy = 'popular',
+    onSortChange = () => { },
 }) => {
-    const { t } = useLanguage();
-    const [showDropdown, setShowDropdown] = useState(false);
-    const containerRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (containerRef.current && !containerRef.current.contains(e.target)) {
-                setShowDropdown(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
     return (
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="relative flex-1" ref={containerRef}>
-                <div className="relative flex items-center">
-                    <Search size={18} className="absolute left-3.5 text-slate-400 pointer-events-none" />
+        <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 mb-6 shadow-sm transition-colors">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="relative w-full sm:flex-1">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        {isLoading ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                            <Search className="w-5 h-5" />
+                        )}
+                    </div>
                     <input
                         type="text"
                         value={searchValue}
-                        onChange={(e) => {
-                            onSearchChange(e.target.value);
-                            setShowDropdown(true);
-                        }}
-                        onFocus={() => setShowDropdown(true)}
-                        placeholder="Buscar por tecnología, título o instructor (ej. React, Node.js, UX)..."
-                        className="w-full pl-10 pr-10 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-indigo-500 transition-colors"
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        placeholder="Buscar cursos por título, tecnología o tema..."
+                        className="w-full pl-10 pr-10 py-2.5 text-sm rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     />
-                    {isSearchingSuggestions ? (
-                        <Loader2 size={16} className="absolute right-3.5 text-indigo-500 animate-spin" />
-                    ) : searchValue ? (
+                    {searchValue && (
                         <button
-                            onClick={() => onSearchChange('')}
-                            className="absolute right-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                            onClick={onClearSearch}
+                            aria-label="Limpiar búsqueda"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                         >
-                            <X size={16} />
+                            <X className="w-4 h-4" />
                         </button>
-                    ) : null}
+                    )}
                 </div>
-                {showDropdown && suggestions.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 mt-2 z-30 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden max-h-60 overflow-y-auto">
-                        {suggestions.map((item, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => {
-                                    onSearchChange(item.title);
-                                    setShowDropdown(false);
-                                }}
-                                className="w-full text-left px-4 py-2.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-between border-b border-slate-100 dark:border-slate-800/60 last:border-none"
-                            >
-                                <span>{item.title}</span>
-                                <span className="text-[10px] text-indigo-500 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md">
-                                    {item.category}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </div>
-            <div className="flex items-center justify-between md:justify-end gap-3">
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                    {totalResults} cursos encontrados
-                </span>
-                <button
-                    onClick={onOpenMobileFilters}
-                    className="flex lg:hidden items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800"
-                >
-                    <SlidersHorizontal size={16} />
-                    <span>Filtros</span>
-                </button>
-                <div className="relative flex items-center">
-                    <ArrowUpDown size={14} className="absolute left-3 text-slate-400 pointer-events-none" />
-                    <select
-                        value={sortValue}
-                        onChange={(e) => onSortChange(e.target.value)}
-                        className="pl-8 pr-8 py-2.5 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-indigo-500 appearance-none cursor-pointer"
+
+                <div className="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <button
+                        onClick={onToggleMobileFilters}
+                        className="lg:hidden inline-flex items-center space-x-2 px-3.5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                     >
-                        <option value="popular">Más Populares</option>
-                        <option value="newest">Más Recientes</option>
-                        <option value="rating">Mejor Valorados</option>
-                        <option value="price_asc">Precio: Menor a Mayor</option>
-                        <option value="price_desc">Precio: Mayor a Menor</option>
-                    </select>
+                        <SlidersHorizontal className="w-4 h-4" />
+                        <span>Filtros</span>
+                    </button>
+
+                    <div className="flex items-center space-x-2">
+                        <ArrowUpDown className="w-4 h-4 text-slate-500 dark:text-slate-400 hidden sm:block" />
+                        <select
+                            value={sortBy}
+                            onChange={(e) => onSortChange(e.target.value)}
+                            className="px-3 py-2.5 text-sm rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                        >
+                            <option value="popular">Más populares</option>
+                            <option value="newest">Más recientes</option>
+                            <option value="rating">Mejor valorados</option>
+                            <option value="price-asc">Precio: menor a mayor</option>
+                            <option value="price-desc">Precio: mayor a menor</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,26 +1,24 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState(() => {
-        const savedTheme = localStorage.getItem('rutaia_theme');
-        if (savedTheme) return savedTheme;
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    });
+    const [theme, setTheme] = useState(
+        () => localStorage.getItem('theme') || 'dark'
+    );
 
     useEffect(() => {
-        const root = document.documentElement;
+        const root = window.document.documentElement;
         if (theme === 'dark') {
             root.classList.add('dark');
         } else {
             root.classList.remove('dark');
         }
-        localStorage.setItem('rutaia_theme', theme);
+        localStorage.setItem('theme', theme);
     }, [theme]);
 
     const toggleTheme = () => {
-        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+        setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
     };
 
     return (
@@ -32,8 +30,14 @@ export const ThemeProvider = ({ children }) => {
 
 export const useTheme = () => {
     const context = useContext(ThemeContext);
+    // Retorna un fallback seguro si el provider aun no se ha cargado en el arbol
     if (!context) {
-        throw new Error('useTheme debe ser utilizado dentro de un ThemeProvider');
+        return {
+            theme: 'dark',
+            toggleTheme: () => { }
+        };
     }
     return context;
 };
+
+export default ThemeContext;

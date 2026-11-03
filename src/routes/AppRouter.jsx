@@ -2,7 +2,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import MainLayout from '../layouts/MainLayout';
+import MainLayout from "../components/layout/MainLayout";
 import LandingScreen from '../screens/public/LandingScreen';
 import AiQueryScreen from '../screens/student/AiQueryScreen';
 

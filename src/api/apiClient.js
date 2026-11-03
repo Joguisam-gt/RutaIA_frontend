@@ -1,37 +1,46 @@
+// Principio SRP: Responsable único de configurar Axios, inyectar el Bearer Token en peticiones salientes y normalizar errores HTTP.
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
-
-export const apiClient = axios.create({
-    baseURL: API_BASE_URL,
+// Creación de la instancia centralizada de Axios
+const apiClient = axios.create({
+    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1',
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 10000,
+    timeout: 30000, // Timeout de 30 segundos para respuestas de procesamiento de IA
 });
 
-// Interceptor para adjuntar automáticamente el token de autenticación
+// Interceptor de Peticiones (Request Interceptor)
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        // Recupera el token JWT almacenado en la sesión del usuario
+        const token = localStorage.getItem('auth_token');
+
+        // Si existe token, lo inyecta automáticamente en los encabezados Authorization
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+
         return config;
     },
-    (error) => Promise.reject(error)
-);
-
-// Interceptor para manejo global de respuestas de error (ej. token expirado 401)
-apiClient.interceptors.response.use(
-    (response) => response,
     (error) => {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('token');
-        }
         return Promise.reject(error);
     }
 );
 
-// Exportación por defecto para mantener compatibilidad total
+// Interceptor de Respuestas (Response Interceptor)
+apiClient.interceptors.response.use(
+    (response) => response.data,
+    (error) => {
+        // Normalización de respuestas de error para ser consumidas limpiamente en la UI
+        const customError = {
+            message: error.response?.data?.message || 'Ocurrió un error inesperado en el servidor.',
+            status: error.response?.status || 500,
+            details: error.response?.data || null,
+        };
+
+        return Promise.reject(customError);
+    }
+);
+
 export default apiClient;

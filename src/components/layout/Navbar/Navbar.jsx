@@ -1,151 +1,114 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sun, Moon, Globe } from 'lucide-react';
-import { useLanguage } from '../../../context/LanguageContext.jsx';
-import { useAuth } from '../../../context/AuthContext.jsx';
+import HeaderControls from '../../common/HeaderControls';
+import { Menu, X } from 'lucide-react';
 
 export const Navbar = () => {
     const location = useLocation();
-    const { language, toggleLanguage, t } = useLanguage();
-    const { isAuthenticated, user, logout } = useAuth();
-    const [isDark, setIsDark] = React.useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const toggleTheme = () => {
-        setIsDark(!isDark);
-        document.documentElement.classList.toggle('dark');
-    };
+    const navItems = [
+        { label: 'Inicio', path: '/' },
+        { label: 'Cursos', path: '/cursos' },
+        { label: 'Nosotros', path: '/nosotros' },
+        { label: 'Blog', path: '/blog' },
+        { label: 'Planes', path: '/planes' },
+        { label: 'Contacto', path: '/contacto' },
+    ];
 
     const isActive = (path) => location.pathname === path;
 
     return (
-        <header className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
-            <div className="container mx-auto px-4 flex items-center justify-between h-16">
-                {/* Logo */}
-                <Link to="/" className="flex items-center gap-2 font-bold text-lg text-slate-900 dark:text-slate-100">
-                    <span className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-extrabold text-sm">
-                        R
-                    </span>
-                    <span>RutaIA</span>
-                </Link>
-
-                {/* Navegación Pública y Paneles Protegidos */}
-                <nav className="hidden md:flex items-center gap-6 text-xs font-semibold">
-                    <Link
-                        to="/cursos"
-                        className={`transition-colors ${isActive('/cursos')
-                                ? 'text-indigo-600 dark:text-indigo-400 font-bold'
-                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                            }`}
-                    >
-                        {t('catalog')}
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    <Link to="/" className="flex items-center space-x-2">
+                        <span className="text-xl font-bold tracking-tight text-blue-600 dark:text-blue-400">
+                            RutaIA
+                        </span>
                     </Link>
 
-                    <Link
-                        to="/blog"
-                        className={`transition-colors ${isActive('/blog')
-                                ? 'text-indigo-600 dark:text-indigo-400 font-bold'
-                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                            }`}
-                    >
-                        {t('blog')}
-                    </Link>
+                    <nav className="hidden md:flex items-center space-x-6">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className={`text-sm font-medium transition-colors ${isActive(item.path)
+                                        ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                                    }`}
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
+                    </nav>
 
-                    <Link
-                        to="/planes"
-                        className={`transition-colors ${isActive('/planes')
-                                ? 'text-indigo-600 dark:text-indigo-400 font-bold'
-                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                            }`}
-                    >
-                        {t('plans')}
-                    </Link>
-
-                    <Link
-                        to="/nosotros"
-                        className={`transition-colors ${isActive('/nosotros')
-                                ? 'text-indigo-600 dark:text-indigo-400 font-bold'
-                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                            }`}
-                    >
-                        {t('about')}
-                    </Link>
-
-                    {isAuthenticated && (
-                        <>
-                            <span className="h-4 w-px bg-slate-200 dark:bg-slate-800" />
-                            {(user?.role === 'student' || !user?.role) && (
-                                <Link
-                                    to="/estudiante/dashboard"
-                                    className={`transition-colors ${isActive('/estudiante/dashboard')
-                                            ? 'text-indigo-600 dark:text-indigo-400 font-bold'
-                                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                                        }`}
-                                >
-                                    {t('studentPanel')}
-                                </Link>
-                            )}
-
-                            {(user?.role === 'instructor' || !user?.role) && (
-                                <Link
-                                    to="/instructor/dashboard"
-                                    className={`transition-colors ${isActive('/instructor/dashboard')
-                                            ? 'text-indigo-600 dark:text-indigo-400 font-bold'
-                                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                                        }`}
-                                >
-                                    {t('instructorPanel')}
-                                </Link>
-                            )}
-                        </>
-                    )}
-                </nav>
-
-                {/* Controles de Idioma, Tema y Sesión */}
-                <div className="flex items-center gap-3">
-                    <button
-                        onClick={toggleLanguage}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                        aria-label="Cambiar Idioma"
-                    >
-                        <Globe size={14} />
-                        <span className="uppercase">{language}</span>
-                    </button>
-
-                    <button
-                        onClick={toggleTheme}
-                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                        aria-label="Cambiar Tema"
-                    >
-                        {isDark ? <Sun size={15} /> : <Moon size={15} />}
-                    </button>
-
-                    <span className="h-4 w-px bg-slate-200 dark:bg-slate-800" />
-
-                    {isAuthenticated ? (
-                        <button
-                            onClick={logout}
-                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    <div className="hidden md:flex items-center space-x-4">
+                        <HeaderControls />
+                        <Link
+                            to="/login"
+                            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2"
                         >
-                            {t('logout')}
+                            Iniciar Sesión
+                        </Link>
+                        <Link
+                            to="/registro"
+                            className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
+                        >
+                            Registrarse
+                        </Link>
+                    </div>
+
+                    <div className="flex md:hidden items-center space-x-2">
+                        <HeaderControls />
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            aria-label="Abrir menú"
+                            className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        >
+                            {isMobileMenuOpen ? (
+                                <X className="w-6 h-6" />
+                            ) : (
+                                <Menu className="w-6 h-6" />
+                            )}
                         </button>
-                    ) : (
-                        <>
-                            <Link
-                                to="/login"
-                                className="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                            >
-                                {t('login')}
-                            </Link>
-                            <Link
-                                to="/registro"
-                                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
-                            >
-                                {t('register')}
-                            </Link>
-                        </>
-                    )}
+                    </div>
                 </div>
             </div>
+
+            {isMobileMenuOpen && (
+                <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-2">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.path}
+                            to={item.path}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(item.path)
+                                    ? 'bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400'
+                                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                }`}
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
+                    <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-2">
+                        <Link
+                            to="/login"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="w-full text-center py-2 text-sm font-medium text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-md"
+                        >
+                            Iniciar Sesión
+                        </Link>
+                        <Link
+                            to="/registro"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="w-full text-center py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+                        >
+                            Registrarse
+                        </Link>
+                    </div>
+                </div>
+            )}
         </header>
     );
 };

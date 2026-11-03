@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import HeaderControls from '../../common/HeaderControls';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import HeaderControls from '../../common/HeaderControls'; // Si está en src/components/common/HeaderControls.jsx
 import { Menu, X } from 'lucide-react';
 
 export const Navbar = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const navItems = [
         { label: 'Inicio', path: '/' },
-        { label: 'Cursos', path: '/cursos' },
-        { label: 'Nosotros', path: '/nosotros' },
+        { label: 'Cursos', path: '/catalog' },
+        { label: 'Nosotros', path: '/about' },
         { label: 'Blog', path: '/blog' },
-        { label: 'Planes', path: '/planes' },
-        { label: 'Contacto', path: '/contacto' },
+        { label: 'Planes', path: '/pricing' },
+        { label: 'Contacto', path: '/contact' },
     ];
 
     const isActive = (path) => location.pathname === path;
+
+    const handleNavigation = (path) => {
+        setIsMobileMenuOpen(false);
+        navigate(path);
+    };
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
@@ -33,7 +39,7 @@ export const Navbar = () => {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`text-sm font-medium transition-colors ${isActive(item.path)
+                                className={`text-sm font-medium transition-colors cursor-pointer ${isActive(item.path)
                                         ? 'text-blue-600 dark:text-blue-400 font-semibold'
                                         : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                                     }`}
@@ -52,7 +58,7 @@ export const Navbar = () => {
                             Iniciar Sesión
                         </Link>
                         <Link
-                            to="/registro"
+                            to="/register"
                             className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
                         >
                             Registrarse
@@ -79,17 +85,16 @@ export const Navbar = () => {
             {isMobileMenuOpen && (
                 <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-2">
                     {navItems.map((item) => (
-                        <Link
+                        <button
                             key={item.path}
-                            to={item.path}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(item.path)
+                            onClick={() => handleNavigation(item.path)}
+                            className={`w-full text-left block px-3 py-2 rounded-md text-base font-medium ${isActive(item.path)
                                     ? 'bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400'
                                     : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800'
                                 }`}
                         >
                             {item.label}
-                        </Link>
+                        </button>
                     ))}
                     <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-2">
                         <Link
@@ -100,7 +105,7 @@ export const Navbar = () => {
                             Iniciar Sesión
                         </Link>
                         <Link
-                            to="/registro"
+                            to="/register"
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="w-full text-center py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
                         >

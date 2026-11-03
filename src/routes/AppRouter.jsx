@@ -1,125 +1,88 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import HeaderControls from '../../common/HeaderControls';
-import { Menu, X } from 'lucide-react';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
-export const Navbar = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+import MainLayout from '../components/layout/MainLayout';
 
-    // Mapeo directo a las rutas declaradas en AppRouter.jsx
-    const navItems = [
-        { label: 'Inicio', path: '/' },
-        { label: 'Cursos', path: '/catalog' },
-        { label: 'Nosotros', path: '/about' },
-        { label: 'Blog', path: '/blog' },
-        { label: 'Planes', path: '/pricing' },
-        { label: 'Contacto', path: '/contact' },
-    ];
+// Pantallas públicas
+import LandingScreen from '../screens/public/LandingScreen';
+import AboutScreen from '../screens/public/AboutScreen';
+import CatalogScreen from '../screens/public/CatalogScreen';
+import CourseDetailScreen from '../screens/public/CourseDetailScreen';
+import BlogScreen from '../screens/public/BlogScreen';
+import ArticleDetailScreen from '../screens/public/ArticleDetailScreen';
+import ContactScreen from '../screens/public/ContactScreen';
+import FaqScreen from '../screens/public/FaqScreen';
+import PlanScreen from '../screens/public/PlanScreen';
+import TermsScreen from '../screens/public/TermsScreen';
+import PrivacyPolicyScreen from '../screens/public/PrivacyPolicyScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import RegisterScreen from '../screens/auth/RegisterScreen';
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 
-    const isActive = (path) => location.pathname === path;
+// Pantallas de estudiante
+import StudentDashboardScreen from '../screens/student/StudentDashboardScreen';
+import MyCoursesScreen from '../screens/student/MyCoursesScreen';
+import ClassroomScreen from '../screens/student/ClassroomScreen';
+import ProfileScreen from '../screens/student/ProfileScreen';
+import CertificatesScreen from '../screens/student/CertificatesScreen';
+import WishlistScreen from '../screens/student/WishlistScreen';
+import MetricsScreen from '../screens/student/MetricsScreen';
+import AiQueryScreen from '../screens/student/AiQueryScreen';
 
-    const handleNavigation = (path) => {
-        setIsMobileMenuOpen(false);
-        navigate(path);
-    };
+// Pantallas de instructor
+import InstructorDashboardScreen from '../screens/instructor/InstructorDashboardScreen';
+import CourseManagementScreen from '../screens/instructor/CourseManagementScreen';
+import CourseEditorScreen from '../screens/instructor/CourseEditorScreen';
+import InstructorFinancesScreen from '../screens/instructor/InstructorFinancesScreen';
+import StudentManagementScreen from '../screens/instructor/StudentManagementScreen';
 
+export const AppRouter = () => {
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    <Link to="/" className="flex items-center space-x-2">
-                        <span className="text-xl font-bold tracking-tight text-blue-600 dark:text-blue-400">
-                            RutaIA
-                        </span>
-                    </Link>
+        <Routes>
+            <Route element={<MainLayout />}>
+                {/* Rutas Públicas */}
+                <Route path="/" element={<LandingScreen />} />
+                <Route path="/about" element={<AboutScreen />} />
+                <Route path="/catalog" element={<CatalogScreen />} />
+                <Route path="/courses/:id" element={<CourseDetailScreen />} />
+                <Route path="/blog" element={<BlogScreen />} />
+                <Route path="/blog/:id" element={<ArticleDetailScreen />} />
+                <Route path="/contact" element={<ContactScreen />} />
+                <Route path="/faq" element={<FaqScreen />} />
+                <Route path="/pricing" element={<PlanScreen />} />
+                <Route path="/terms" element={<TermsScreen />} />
+                <Route path="/privacy" element={<PrivacyPolicyScreen />} />
 
-                    {/* Navegación Desktop */}
-                    <nav className="hidden md:flex items-center space-x-6">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.path}
-                                to={item.path}
-                                className={`text-sm font-medium transition-colors cursor-pointer ${isActive(item.path)
-                                        ? 'text-blue-600 dark:text-blue-400 font-semibold'
-                                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-                                    }`}
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
-                    </nav>
+                {/* Chat IA */}
+                <Route path="/chat" element={<AiQueryScreen />} />
+                <Route path="/ai-query" element={<AiQueryScreen />} />
 
-                    <div className="hidden md:flex items-center space-x-4">
-                        <HeaderControls />
-                        <Link
-                            to="/login"
-                            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2"
-                        >
-                            Iniciar Sesión
-                        </Link>
-                        <Link
-                            to="/register"
-                            className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
-                        >
-                            Registrarse
-                        </Link>
-                    </div>
+                {/* Auth */}
+                <Route path="/login" element={<LoginScreen />} />
+                <Route path="/register" element={<RegisterScreen />} />
+                <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
 
-                    {/* Menú Mobile */}
-                    <div className="flex md:hidden items-center space-x-2">
-                        <HeaderControls />
-                        <button
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            aria-label="Abrir menú"
-                            className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="w-6 h-6" />
-                            ) : (
-                                <Menu className="w-6 h-6" />
-                            )}
-                        </button>
-                    </div>
-                </div>
-            </div>
+                {/* Estudiantes */}
+                <Route path="/student/dashboard" element={<StudentDashboardScreen />} />
+                <Route path="/student/courses" element={<MyCoursesScreen />} />
+                <Route path="/student/classroom/:courseId" element={<ClassroomScreen />} />
+                <Route path="/student/profile" element={<ProfileScreen />} />
+                <Route path="/student/certificates" element={<CertificatesScreen />} />
+                <Route path="/student/wishlist" element={<WishlistScreen />} />
+                <Route path="/student/metrics" element={<MetricsScreen />} />
+                <Route path="/student/chat" element={<AiQueryScreen />} />
 
-            {/* Menú Desplegable Mobile */}
-            {isMobileMenuOpen && (
-                <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-2">
-                    {navItems.map((item) => (
-                        <button
-                            key={item.path}
-                            onClick={() => handleNavigation(item.path)}
-                            className={`w-full text-left block px-3 py-2 rounded-md text-base font-medium ${isActive(item.path)
-                                    ? 'bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400'
-                                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800'
-                                }`}
-                        >
-                            {item.label}
-                        </button>
-                    ))}
-                    <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-2">
-                        <Link
-                            to="/login"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="w-full text-center py-2 text-sm font-medium text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-md"
-                        >
-                            Iniciar Sesión
-                        </Link>
-                        <Link
-                            to="/register"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="w-full text-center py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
-                        >
-                            Registrarse
-                        </Link>
-                    </div>
-                </div>
-            )}
-        </header>
+                {/* Instructores */}
+                <Route path="/instructor/dashboard" element={<InstructorDashboardScreen />} />
+                <Route path="/instructor/courses" element={<CourseManagementScreen />} />
+                <Route path="/instructor/editor" element={<CourseEditorScreen />} />
+                <Route path="/instructor/finances" element={<InstructorFinancesScreen />} />
+                <Route path="/instructor/students" element={<StudentManagementScreen />} />
+
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+        </Routes>
     );
 };
 
-export default Navbar;
+export default AppRouter;

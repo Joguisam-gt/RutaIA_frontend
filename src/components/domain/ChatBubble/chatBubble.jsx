@@ -1,15 +1,17 @@
 // src/components/domain/ChatBubble/chatBubble.jsx
 import React, { useState } from 'react';
 import { Bot, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { AiQueryScreen } from '../../../screens/student/AiQueryScreen';
 
 export const ChatBubble = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { user } = useAuth() || {};
+    const location = useLocation();
 
-    // Visibilidad exclusiva para el rol 'student'
-    if (user?.role !== 'student') {
+    // Se oculta exclusivamente en las pantallas de instructor (/instructor/*)
+    if (location.pathname.startsWith('/instructor')) {
         return null;
     }
 
@@ -20,6 +22,7 @@ export const ChatBubble = () => {
                     <div className="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-700">
                         <span className="text-xs font-bold text-white">Chat RutaIA (n8n RAG)</span>
                         <button
+                            type="button"
                             onClick={() => setIsOpen(false)}
                             className="text-gray-400 hover:text-white p-1 rounded-lg"
                         >

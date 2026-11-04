@@ -1,28 +1,42 @@
-// Principio ISP y DIP: Expone los métodos de interacción con el backend proxy desacoplando a los componentes React de los endpoints HTTP directos.
-import apiClient from './apiClient';
+// src/api/queryApi.js
+import { apiClient } from './apiClient.js';
 
 export const queryApi = {
     /**
-     * Envía una pregunta al backend proxy (Express -> n8n -> Qdrant -> IA).
-     * @param {Object} queryData - Objeto con el prompt y metadatos del curso o usuario.
+     * Envía la consulta a la API Backend -> n8n -> Qdrant
      */
     askQuery: async (queryData) => {
-        return await apiClient.post('/queries/ask', queryData);
+        const response = await apiClient.post('/queries/ask', {
+            prompt: queryData.prompt || queryData.userQuery,
+            studentId: queryData.studentId || queryData.userId || null,
+            courseId: queryData.courseId || 'general',
+            userRole: queryData.userRole || 'anonymous'
+        });
+        return response.data;
     },
 
     /**
-     * Obtiene el historial de chat almacenado en MongoDB para el usuario en sesión.
+     * Obtiene el historial del estudiante autenticado
      */
     getHistory: async () => {
-        return await apiClient.get('/queries/history');
+        try {
+            const response = await apiClient.get('/queries/history');
+            return response.data;
+        } catch (error) {
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                return { success: true, data: [] };
+            }
+            throw error;
+        }
     },
 
     /**
-     * Envía la calificación dada por el usuario a una respuesta generada por la IA.
-     * @param {string} queryId - ID de la consulta a calificar.
-     * @param {Object} ratingData - Puntuación y retroalimentación.
+     * Registra la calificación dada por el usuario
      */
-    rateQuery: async (queryId, ratingData) => {
-        return await apiClient.post(`/queries/${queryId}/rating`, ratingData);
-    },
+    rateQuery: async (ratingData) => {
+        const response = await apiClient.post('/queries/rate', ratingData);
+        return response.data;
+    }
 };
+
+export default queryApi;

@@ -1,4 +1,6 @@
+// src/screens/student/ClassroomScreen.jsx
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { useClassroom } from '../../hooks/useClassroom';
 import { ClassroomFocusNavbar } from '../../components/domain/classroom/ClassroomFocusNavbar';
 import { CustomVideoPlayer } from '../../components/domain/classroom/CustomVideoPlayer';
@@ -7,7 +9,11 @@ import { LessonResourcesTab } from '../../components/domain/classroom/LessonReso
 import { LessonForumTab } from '../../components/domain/classroom/LessonForumTab';
 import { Loader2, FileText, MessageSquare } from 'lucide-react';
 
-export const ClassroomScreen = ({ courseSlug = 'backend-nodejs-express', lessonSlug = 'middlewares-avanzados' }) => {
+export const ClassroomScreen = () => {
+    const { courseSlug: paramCourse, lessonSlug: paramLesson } = useParams();
+    const courseSlug = paramCourse || 'backend-nodejs-express';
+    const lessonSlug = paramLesson || 'middlewares-avanzados';
+
     const {
         data,
         loading,
@@ -51,7 +57,6 @@ export const ClassroomScreen = ({ courseSlug = 'backend-nodejs-express', lessonS
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-            {/* Navbar de Enfoque */}
             <ClassroomFocusNavbar
                 courseTitle={data?.courseTitle}
                 lessonTitle={data?.lessonTitle}
@@ -59,11 +64,8 @@ export const ClassroomScreen = ({ courseSlug = 'backend-nodejs-express', lessonS
                 completedLessons={data?.completedLessons || 14}
                 totalLessons={data?.totalLessons || 24}
             />
-
-            {/* Main Grid: Reproductor HTML5 + Sidebar Lateral Temario */}
             <main className="container mx-auto px-4 py-6 max-w-7xl">
                 <div className="flex flex-col lg:flex-row gap-6 mb-8">
-                    {/* Reproductor de Video Custom (70% W en escritorio) */}
                     <div className="w-full lg:w-7/10">
                         <CustomVideoPlayer
                             videoRef={videoRef}
@@ -88,8 +90,6 @@ export const ClassroomScreen = ({ courseSlug = 'backend-nodejs-express', lessonS
                             onLoadedMetadata={setDuration}
                         />
                     </div>
-
-                    {/* Sidebar Lateral de Índice de Módulos (30% W en escritorio) */}
                     <div className="w-full lg:w-3/10">
                         <CurriculumSidebar
                             modules={data?.modules}
@@ -99,8 +99,6 @@ export const ClassroomScreen = ({ courseSlug = 'backend-nodejs-express', lessonS
                         />
                     </div>
                 </div>
-
-                {/* Pestañas Inferiores: Descripción/Recursos y Foro Q&A */}
                 <div className="w-full lg:w-7/10 bg-slate-900/60 rounded-3xl border border-slate-800 p-6 shadow-xl">
                     <div className="flex items-center gap-2 border-b border-slate-800 pb-4 mb-6">
                         <button
@@ -113,7 +111,6 @@ export const ClassroomScreen = ({ courseSlug = 'backend-nodejs-express', lessonS
                             <FileText size={16} />
                             <span>Descripción y Recursos</span>
                         </button>
-
                         <button
                             onClick={() => setActiveBottomTab('forum')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeBottomTab === 'forum'
@@ -125,8 +122,6 @@ export const ClassroomScreen = ({ courseSlug = 'backend-nodejs-express', lessonS
                             <span>Foro Q&A de la Lección</span>
                         </button>
                     </div>
-
-                    {/* Contenido Dinámico de la Pestaña Activa */}
                     {activeBottomTab === 'resources' ? (
                         <LessonResourcesTab resources={data?.resources} />
                     ) : (

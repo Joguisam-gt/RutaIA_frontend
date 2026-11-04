@@ -1,104 +1,124 @@
-// Principio SRP (Single Responsibility Principle): Encapsula el estado del chat, el envío de mensajes y la sincronización con la API backend.
+// src/hooks/useAiQuery.js
 import { useState, useCallback, useEffect } from 'react';
 import { queryApi } from '../api/queryApi';
 
-export const useAiQuery = (courseId = null) => {
-    // Estado para la lista de mensajes del chat
+export const useAiQuery = (courseId = null, isAnonymous = false) => {
     const [messages, setMessages] = useState([]);
-    // Estado para indicar si la IA está procesando una consulta (Proxy -> n8n -> Qdrant -> IA)
     const [loading, setLoading] = useState(false);
-    // Estado para capturar y mostrar errores en la interfaz
     const [error, setError] = useState(null);
 
-    /**
-     * Carga el historial de chat persistido en MongoDB desde el backend.
-     */
     const loadHistory = useCallback(async () => {
+        if (isAnonymous) return;
+
         try {
             setError(null);
             const response = await queryApi.getHistory();
-            if (response && response.data) {
-                // Mapea la estructura de la base de datos al formato del chat frontend
-                const formattedHistory = response.data.map((item) => ([
-                    { id: `${item._id}-user`, sender: 'user', text: item.prompt, timestamp: item.createdAt },
-                    { id: `${item._id}-ai`, sender: 'ai', text: item.response, queryId: item._id, timestamp: item.updatedAt }
+            const historyData = response?.data || response;
+
+            if (Array.isArray(historyData) && historyData.length > 0) {
+                const formattedHistory = historyData.map((item) => ([
+                    {
+                        id: `${item._id}-user`,
+                        sender: 'user',
+                        role: 'user',
+                        text: item.userQuery || item.prompt,
+                        content: item.userQuery || item.prompt,
+                        timestamp: item.createdAt
+                    },
+                    {
+                        id: `${item._id}-ai`,
+                        sender: 'ai',
+                        role: 'assistant',
+                        text: item.aiResponse || item.response || item.output || 'Sin respuesta registrada.',
+                        content: item.aiResponse || item.response || item.output || 'Sin respuesta registrada.',
+                        queryId: item._id,
+                        timestamp: item.updatedAt
+                    }
                 ])).flat();
 
                 setMessages(formattedHistory);
             }
         } catch (err) {
-            setError(err.message || 'No se pudo cargar el historial del chat.');
+            console.warn('Historial de chat no disponible:', err.message);
         }
-    }, []);
+    }, [isAnonymous]);
 
-    // Carga el historial al montar el hook
     useEffect(() => {
         loadHistory();
     }, [loadHistory]);
 
-    /**
-     * Envía un nuevo mensaje al backend proxy para ser procesado por n8n e IA.
-     * @param {string} promptText - Texto ingresado por el alumno o visitante.
-     */
-    const sendMessage = async (promptText) => {
+    const sendMessage = async (promptText, extraMetadata = {}) => {
         if (!promptText || !promptText.trim()) return;
 
-        const userMessageId = Date.now().toString();
+        const userMessageId = `user-${Date.now()}`;
         const userMessage = {
             id: userMessageId,
             sender: 'user',
-            text: promptText,
+            role: 'user',
+            text: promptText.trim(),
+            content: promptText.trim(),
             timestamp: new Date().toISOString()
         };
 
-        // Actualiza la interfaz de forma optimista
         setMessages((prev) => [...prev, userMessage]);
         setLoading(true);
         setError(null);
 
         try {
-            // Envía la consulta al Backend Express (Proxy)
             const payload = {
-                prompt: promptText,
-                courseId: courseId || 'general'
+                prompt: promptText.trim(),
+                courseId: courseId || extraMetadata.courseId || 'general',
+                userRole: isAnonymous ? 'anonymous' : (extraMetadata.userRole || 'estudiante'),
+                studentId: extraMetadata.studentId || null
             };
 
             const result = await queryApi.askQuery(payload);
 
-            // Crea el mensaje de respuesta de la IA
+            // Mapeo adaptativo: extrae la propiedad aiResponse enviada por la API
+            const responseBody = result?.data || result;
+            const aiText = responseBody?.aiResponse
+                || responseBody?.response
+                || responseBody?.output
+                || 'No se pudo obtener la respuesta.';
+
+            const queryId = responseBody?._id || responseBody?.queryId || Date.now().toString();
+
             const aiMessage = {
-                id: result.data?.queryId || Date.now().toString(),
+                id: `ai-${queryId}`,
                 sender: 'ai',
-                text: result.data?.response || 'No recibí respuesta del asistente.',
-                queryId: result.data?.queryId,
+                role: 'assistant',
+                text: aiText,
+                content: aiText,
+                queryId: queryId,
                 timestamp: new Date().toISOString()
             };
 
             setMessages((prev) => [...prev, aiMessage]);
         } catch (err) {
+            const errorText = err.response?.data?.message
+                || err.message
+                || 'Ocurrió un error al procesar tu consulta con la IA.';
+
             const errorMessage = {
-                id: Date.now().toString(),
+                id: `err-${Date.now()}`,
                 sender: 'ai',
-                text: 'Lo siento, ocurrió un error al procesar tu consulta con la IA. Por favor, reintenta en unos momentos.',
+                role: 'assistant',
+                text: `⚠️ ${errorText}`,
+                content: `⚠️ ${errorText}`,
                 isError: true,
                 timestamp: new Date().toISOString()
             };
+
             setMessages((prev) => [...prev, errorMessage]);
-            setError(err.message || 'Error en la comunicación con el servicio de IA.');
+            setError(errorText);
         } finally {
             setLoading(false);
         }
     };
 
-    /**
-     * Permite al usuario calificar una respuesta de la IA.
-     * @param {string} queryId - ID de la consulta.
-     * @param {number} score - Puntuación de 1 a 5.
-     * @param {string} comment - Comentario opcional.
-     */
     const rateResponse = async (queryId, score, comment = '') => {
         try {
-            await queryApi.rateQuery(queryId, { score, comment });
+            await queryApi.rateQuery({ queryId, score, comment });
             return true;
         } catch (err) {
             setError(err.message || 'No se pudo registrar la calificación.');
@@ -111,8 +131,10 @@ export const useAiQuery = (courseId = null) => {
         loading,
         error,
         sendMessage,
+        sendQuery: sendMessage, // Alias de compatibilidad
         rateResponse,
-        reloadHistory: loadHistory
+        reloadHistory: loadHistory,
+        clearChat: () => setMessages([])
     };
 };
 

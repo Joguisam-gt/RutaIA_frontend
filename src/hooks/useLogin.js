@@ -30,6 +30,7 @@ export const useLogin = (locationSearch = '') => {
         if (errors[field]) {
             setErrors((prev) => ({ ...prev, [field]: null }));
         }
+        console.log(field)
     };
 
     const validate = () => {

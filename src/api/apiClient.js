@@ -18,7 +18,6 @@ apiClient.interceptors.request.use(
         }
         return config;
     },
-    (error) => Promise.reject(error)
+    (error) => {console.log(error.message); return Promise.reject(error)}
 );
-
 export default apiClient;

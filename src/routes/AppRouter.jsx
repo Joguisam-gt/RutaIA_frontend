@@ -68,7 +68,7 @@ export const AppRouter = () => {
                 <Route path="/register" element={<RegisterScreen />} />
 
                 <Route 
-                    path="/app/dashboard" 
+                    path="/app/dashboard"   
                     element={isInstructor ? <Navigate to="/instructor/dashboard" replace /> : <StudentDashboardScreen />} 
                 />
 

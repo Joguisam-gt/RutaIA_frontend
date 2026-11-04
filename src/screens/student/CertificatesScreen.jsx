@@ -1,9 +1,9 @@
 import React from 'react';
 import { useCertificates } from '../../hooks/useCertificates';
-import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 import { CertificateCard } from '../../components/domain/certificates/CertificateCard';
 import { CertificatePreviewModal } from '../../components/domain/certificates/CertificatePreviewModal';
+import { ThemeToggle } from '../../components/common/themetoggle.jsx';
 import { Award, Loader2 } from 'lucide-react';
 
 export const CertificatesScreen = () => {
@@ -20,11 +20,8 @@ export const CertificatesScreen = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-            <Navbar role="student" brandTitle="RutaIA" />
-
             <div className="flex">
                 <Sidebar role="student" currentRoute="/app/certificados" />
-
                 <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
                     <div className="flex items-center justify-between mb-6">
                         <div>
@@ -36,8 +33,8 @@ export const CertificatesScreen = () => {
                                 Visualiza y descarga las acreditaciones de los cursos completados.
                             </p>
                         </div>
+                        <ThemeToggle />
                     </div>
-
                     {loading ? (
                         <div className="py-16 flex flex-col items-center justify-center text-slate-400">
                             <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
@@ -69,7 +66,6 @@ export const CertificatesScreen = () => {
                             ))}
                         </div>
                     )}
-
                     <CertificatePreviewModal
                         isOpen={isModalOpen}
                         onClose={closeModal}

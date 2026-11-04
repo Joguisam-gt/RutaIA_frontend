@@ -1,6 +1,5 @@
 import React from 'react';
 import { useStudentDashboards } from '../../hooks/useStudentDashboards';
-import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 import { HeroContinueWidget } from '../../components/domain/dashboard/HeroContinueWidget';
 import { GaminificationSteakWidget } from '../../components/domain/dashboard/GaminificationSteakWidget';
@@ -20,22 +19,17 @@ export const StudentDashboardScreen = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-            <Navbar role="student" brandTitle="RutaIA" />
-
             <div className="flex">
                 <Sidebar role="student" currentRoute="/app/dashboard" />
-
                 <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 flex items-center gap-2">
-                                <LayoutDashboard size={24} className="text-indigo-600" />
-                                <span>Panel del Estudiante</span>
-                            </h1>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                                Continúa donde lo dejaste y explora nuevas rutas de aprendizaje.
-                            </p>
-                        </div>
+                    <div className="mb-6">
+                        <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 flex items-center gap-2">
+                            <LayoutDashboard size={24} className="text-indigo-600" />
+                            <span>Panel del Estudiante</span>
+                        </h1>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            Continúa donde lo dejaste y explora nuevas rutas de aprendizaje.
+                        </p>
                     </div>
 
                     {loading ? (
@@ -57,9 +51,7 @@ export const StudentDashboardScreen = () => {
                                     <GaminificationSteakWidget streak={streakInfo} />
                                 </div>
                             </div>
-
                             <CoursesInProgressGrid courses={inProgressCourses} />
-
                             <RecommendationsCarousel courses={recommendedCourses} />
                         </div>
                     )}

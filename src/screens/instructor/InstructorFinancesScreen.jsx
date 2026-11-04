@@ -1,6 +1,6 @@
+// src/screens/instructor/InstructorFinancesScreen.jsx
 import React from 'react';
 import { useInstructorFinances } from '../../hooks/useInstructorFinances';
-import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 import { BalanceHeroCard } from '../../components/domain/finances/BalanceHeroCard';
 import { PayoutMethodsTab } from '../../components/domain/finances/PayoutMethodsTab';
@@ -26,11 +26,8 @@ export const InstructorFinancesScreen = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-            <Navbar role="instructor" brandTitle="RutaIA" />
-
             <div className="flex">
                 <Sidebar role="instructor" currentRoute="/instructor/finanzas" />
-
                 <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
                     <div className="flex items-center justify-between mb-6">
                         <div>
@@ -43,7 +40,6 @@ export const InstructorFinancesScreen = () => {
                             </p>
                         </div>
                     </div>
-
                     {loading ? (
                         <div className="py-16 flex flex-col items-center justify-center text-slate-400">
                             <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
@@ -55,40 +51,41 @@ export const InstructorFinancesScreen = () => {
                                 balance={balance}
                                 onWithdrawClick={openWithdrawalModal}
                             />
-
                             <div className="mt-8 border-b border-slate-200 dark:border-slate-800 flex gap-4">
                                 <button
                                     type="button"
                                     onClick={() => setActiveTab('transactions')}
-                                    className={`pb-3 text-xs font-bold border-b-2 transition-colors ${activeTab === 'transactions'
+                                    className={`pb-3 text-xs font-bold border-b-2 transition-colors ${
+                                        activeTab === 'transactions'
                                             ? 'border-indigo-600 text-indigo-600'
                                             : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-                                        }`}
+                                    }`}
                                 >
                                     Historial de Transacciones
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setActiveTab('sales')}
-                                    className={`pb-3 text-xs font-bold border-b-2 transition-colors ${activeTab === 'sales'
+                                    className={`pb-3 text-xs font-bold border-b-2 transition-colors ${
+                                        activeTab === 'sales'
                                             ? 'border-indigo-600 text-indigo-600'
                                             : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-                                        }`}
+                                    }`}
                                 >
                                     Ventas por Curso
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setActiveTab('payouts')}
-                                    className={`pb-3 text-xs font-bold border-b-2 transition-colors ${activeTab === 'payouts'
+                                    className={`pb-3 text-xs font-bold border-b-2 transition-colors ${
+                                        activeTab === 'payouts'
                                             ? 'border-indigo-600 text-indigo-600'
                                             : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-                                        }`}
+                                    }`}
                                 >
                                     Métodos de Cobro
                                 </button>
                             </div>
-
                             <div className="mt-6">
                                 {activeTab === 'transactions' && (
                                     <TransactionsHistoryTab transactions={transactions} />
@@ -100,7 +97,6 @@ export const InstructorFinancesScreen = () => {
                                     <PayoutMethodsTab payoutMethods={payoutMethods} />
                                 )}
                             </div>
-
                             <WithdrawalModal
                                 isOpen={isModalOpen}
                                 onClose={closeWithdrawalModal}

@@ -1,8 +1,16 @@
+// src/api/authApi.js
 import { apiClient } from './apiClient.js';
 
 export const authApi = {
     login: async (credentials) => {
-        const response = await apiClient.post('/auth/login', credentials);
+        const payload = {
+            email: String(credentials.email || credentials.username || '').toLowerCase().trim(),
+            password: String(credentials.password || '')
+        };
+
+        console.log('[authApi] Enviando payload a /auth/login:', payload);
+
+        const response = await apiClient.post('/auth/login', payload);
         return response.data;
     },
 
@@ -19,17 +27,7 @@ export const authApi = {
     getProfile: async () => {
         const response = await apiClient.get('/auth/me');
         return response.data;
-    },
-
-    forgotPassword: async (email) => {
-        const response = await apiClient.post('/auth/forgot-password', { email });
-        return response.data;
-    },
-
-    resetPassword: async (resetData) => {
-        const response = await apiClient.post('/auth/reset-password', resetData);
-        return response.data;
-    },
+    }
 };
 
 export default authApi;

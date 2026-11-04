@@ -1,67 +1,39 @@
-import { useState } from 'react';
+// src/hooks/useClassroom.js
+import { useState, useEffect } from 'react';
+import { courseApi } from '../api/courseApi';
 
-export const useClassroom = (courseId) => {
-    const [currentLesson, setCurrentLesson] = useState({
-        id: 'lesson-1',
-        title: '1. Introducción al ecosistema y arquitectura',
-        videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        duration: '12:45',
-        moduleTitle: 'Módulo 1: Fundamentos Básicos',
-    });
+export const useClassroom = (courseId, lessonSlug) => {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const [activeTab, setActiveTab] = useState('resources'); // 'resources' | 'forum' | 'notes'
-    const [completedLessons, setCompletedLessons] = useState(['lesson-1']);
-    const [notes, setNotes] = useState('');
-    const [forumPosts, setForumPosts] = useState([
-        {
-            id: 'post-1',
-            author: 'Carlos Gómez',
-            avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100',
-            date: 'Hace 2 días',
-            comment: '¿Cuál es la diferencia principal entre Renderizado en Servidor (SSR) y Estático (SSG)?',
-            repliesCount: 3,
-        },
-    ]);
-
-    const toggleLessonCompletion = (lessonId) => {
-        setCompletedLessons((prev) =>
-            prev.includes(lessonId)
-                ? prev.filter((id) => id !== lessonId)
-                : [...prev, lessonId]
-        );
-    };
-
-    const handleAddForumPost = (commentText) => {
-        if (!commentText.trim()) return;
-
-        const newPost = {
-            id: `post-${Date.now()}`,
-            author: 'Estudiante',
-            avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
-            date: 'Ahora mismo',
-            comment: commentText,
-            repliesCount: 0,
+    useEffect(() => {
+        const fetchClassroom = async () => {
+            setLoading(true);
+            try {
+                let title = 'Curso de RutaIA';
+                if (courseId) {
+                    const res = await courseApi.getCourseById(courseId);
+                    title = res?.data?.title || res?.title || title;
+                }
+                setData({
+                    courseTitle: title,
+                    lessonTitle: lessonSlug ? `Lección: ${lessonSlug}` : 'Introducción y Conceptos Clave',
+                    globalProgress: 40,
+                    completedLessons: 4,
+                    totalLessons: 10,
+                    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                    modules: [
+                        { title: 'Módulo 1: Fundamentos', lessons: [{ title: 'Introducción', slug: 'inicio' }] }
+                    ]
+                });
+            } catch {
+                setData({ courseTitle: 'Curso', lessonTitle: 'Lección', globalProgress: 0 });
+            } finally {
+                setLoading(false);
+            }
         };
+        fetchClassroom();
+    }, [courseId, lessonSlug]);
 
-        setForumPosts((prev) => [newPost, ...prev]);
-    };
-
-    const handleSaveNotes = (newNoteText) => {
-        setNotes(newNoteText);
-    };
-
-    return {
-        currentLesson,
-        setCurrentLesson,
-        activeTab,
-        setActiveTab,
-        completedLessons,
-        toggleLessonCompletion,
-        notes,
-        handleSaveNotes,
-        forumPosts,
-        handleAddForumPost,
-    };
+    return { data, loading, activeBottomTab: 'resources', setActiveBottomTab: () => {} };
 };
-
-export default useClassroom;

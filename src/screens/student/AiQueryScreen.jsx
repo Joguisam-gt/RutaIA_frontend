@@ -2,8 +2,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useAiQuery from '../../hooks/useAiQuery';
 
-export const AiQueryScreen = ({ courseId = null }) => {
-    const { messages, loading, error, sendMessage } = useAiQuery(courseId);
+export const AiQueryScreen = ({ courseId = null, user = null }) => {
+    // Si no hay usuario en sesión se marca como anónimo para prevenir llamadas fallidas de historial
+    const isAnonymous = !user;
+    const { messages, loading, sendMessage } = useAiQuery(courseId, isAnonymous);
     const [inputText, setInputText] = useState('');
     const messagesEndRef = useRef(null);
 
@@ -18,7 +20,7 @@ export const AiQueryScreen = ({ courseId = null }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!inputText.trim() || loading) return;
-        sendMessage(inputText);
+        sendMessage(inputText, { studentId: user?.id || user?._id });
         setInputText('');
     };
 
@@ -84,7 +86,7 @@ export const AiQueryScreen = ({ courseId = null }) => {
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input */}
+                {/* Input Form */}
                 <form onSubmit={handleSubmit} className="flex gap-2 pt-2 border-t border-gray-800">
                     <input
                         type="text"

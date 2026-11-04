@@ -1,6 +1,6 @@
+// src/screens/instructor/CourseManagementScreen.jsx
 import React from 'react';
 import { useCourseManagement } from '../../hooks/useCourseManagement';
-import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 import { CourseManagementToolbar } from '../../components/domain/course-management/CourseManagementToolbar';
 import { InstructorCourseCard } from '../../components/domain/course-management/InstructorCourseCard';
@@ -21,11 +21,8 @@ export const CourseManagementScreen = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-            <Navbar role="instructor" brandTitle="RutaIA" />
-
             <div className="flex">
                 <Sidebar role="instructor" currentRoute="/instructor/cursos" />
-
                 <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
                     <div className="flex items-center justify-between mb-6">
                         <div>
@@ -38,9 +35,7 @@ export const CourseManagementScreen = () => {
                             </p>
                         </div>
                     </div>
-
                     <CourseManagementToolbar />
-
                     {loading ? (
                         <div className="py-16 flex flex-col items-center justify-center text-slate-400">
                             <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
@@ -72,7 +67,6 @@ export const CourseManagementScreen = () => {
                             ))}
                         </div>
                     )}
-
                     <Modal
                         isOpen={Boolean(deletingCourseId)}
                         onClose={cancelDeleteCourse}

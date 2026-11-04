@@ -1,22 +1,22 @@
 // src/api/apiClient.js
-// Principio SRP: Instancia centralizada de Axios para la comunicación con el Backend Express.
 import axios from 'axios';
 
 /**
- * Instancia centralizada de Axios con configuración base y timeouts.
+ * Instancia de Axios con exportación doble (nombrada y por defecto)
+ * para garantizar compatibilidad con cualquier tipo de importación.
  */
 export const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     },
-    timeout: 10000
+    timeout: 360000, // Timeout de 6 minutos para dar tiempo a RAG y Qdrant
 });
 
-// Interceptor de Peticiones: Inyecta el Token JWT en el encabezado Authorization
+// Interceptor para adjuntar Token JWT si existe la sesión activa
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('rutaia_token');
+        const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -25,19 +25,4 @@ apiClient.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Interceptor de Respuestas: Manejo global de expiración de sesión (401)
-apiClient.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('rutaia_token');
-        }
-        return Promise.reject(error.response?.data || error);
-    }
-);
-
-// Alias para mantener compatibilidad con archivos que importen { api }
-export const api = apiClient;
-
-// Exportación por defecto para archivos que utilicen: import apiClient from './apiClient'
 export default apiClient;

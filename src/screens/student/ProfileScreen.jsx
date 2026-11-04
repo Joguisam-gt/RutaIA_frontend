@@ -1,6 +1,5 @@
 import React from 'react';
 import { useProfileSettings } from '../../hooks/useProfileSettings';
-import { Navbar } from '../../components/layout/Navbar/Navbar';
 import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 import { ProfileHeader } from '../../components/domain/profile/ProfileHeader';
 import { PublicProfileTab } from '../../components/domain/profile/PublicProfileTab';
@@ -9,6 +8,7 @@ import { NotificationsTab } from '../../components/domain/profile/NotificationsT
 import { BillingTab } from '../../components/domain/profile/BillingTab';
 import { PreferenceTab } from '../../components/domain/profile/PreferenceTab';
 import { AvatarCropModal } from '../../components/domain/profile/AvatarCropModal';
+import { ThemeToggle } from '../../components/common/themetoggle.jsx';
 import { User, Loader2 } from 'lucide-react';
 
 export const ProfileScreen = () => {
@@ -26,11 +26,8 @@ export const ProfileScreen = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-            <Navbar role="student" brandTitle="RutaIA" />
-
             <div className="flex">
                 <Sidebar role="student" currentRoute="/app/perfil" />
-
                 <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
                     <div className="flex items-center justify-between mb-6">
                         <div>
@@ -42,8 +39,8 @@ export const ProfileScreen = () => {
                                 Gestiona tu información personal, seguridad, notificaciones y preferencias.
                             </p>
                         </div>
+                        <ThemeToggle />
                     </div>
-
                     {loading ? (
                         <div className="py-16 flex flex-col items-center justify-center text-slate-400">
                             <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
@@ -55,7 +52,6 @@ export const ProfileScreen = () => {
                                 user={user}
                                 onOpenAvatarModal={() => setIsAvatarModalOpen(true)}
                             />
-
                             <div className="border-b border-slate-200 dark:border-slate-800 flex gap-4 overflow-x-auto">
                                 <button
                                     type="button"
@@ -108,7 +104,6 @@ export const ProfileScreen = () => {
                                     Preferencias
                                 </button>
                             </div>
-
                             <div className="mt-6">
                                 {activeTab === 'public' && (
                                     <PublicProfileTab user={user} onSave={handleSaveProfile} />
@@ -120,7 +115,6 @@ export const ProfileScreen = () => {
                                 {activeTab === 'billing' && <BillingTab />}
                                 {activeTab === 'preferences' && <PreferenceTab />}
                             </div>
-
                             <AvatarCropModal
                                 isOpen={isAvatarModalOpen}
                                 onClose={() => setIsAvatarModalOpen(false)}

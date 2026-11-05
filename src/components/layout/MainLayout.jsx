@@ -1,7 +1,7 @@
+// src/components/layout/MainLayout.jsx
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
-import ChatBubble from '../domain/ChatBubble/chatBubble.jsx';
 
 export const MainLayout = () => {
     return (
@@ -13,9 +13,6 @@ export const MainLayout = () => {
             <main className="flex-1 pt-16">
                 <Outlet />
             </main>
-
-            {/* Widget Flotante de Chat IA */}
-            <ChatBubble />
         </div>
     );
 };

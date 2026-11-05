@@ -8,36 +8,54 @@ export const useAiQuery = (currentUser) => {
     const [error, setError] = useState(null);
 
     const sendMessage = async (userText) => {
-        if (!userText.trim()) return;
+        if (!userText || !userText.trim()) return;
 
-        const userMsg = { id: Date.now(), sender: 'user', text: userText };
+        const userMsg = { 
+            id: Date.now(), 
+            sender: 'user', 
+            text: userText.trim() 
+        };
+        
         setMessages((prev) => [...prev, userMsg]);
         setLoading(true);
         setError(null);
 
         try {
+            // Se envia 'question' para cumplir con el contrato de la API
             const response = await askQueryApi({
-                query: userText,
-                userId: currentUser?.id || currentUser?._id
+                question: userText.trim(),
+                prompt: userText.trim(),
+                query: userText.trim(),
+                studentId: currentUser?.id || currentUser?._id
             });
 
-            // Extrae el texto de la respuesta según el formato normalizado o el output directo de n8n
+            // Extraer el payload de respuesta estandarizado de Express
+            const resultData = response?.data || response;
+
             const botReplyText =
-                response?.answer ||
-                response?.data?.answer ||
-                (Array.isArray(response) ? response[0]?.output : response?.output) ||
+                resultData?.answer ||
+                resultData?.response ||
                 'No se obtuvo respuesta del asistente.';
 
+            const sources = resultData?.sources || [];
+            const status = resultData?.status || 'Respondida';
+            const queryId = resultData?.queryId || null;
+
+            // Se preservan fuentes y similitudes requeridas por RF 13 y RF 15
             const botMsg = {
                 id: Date.now() + 1,
                 sender: 'bot',
-                text: botReplyText
+                text: botReplyText,
+                sources: sources,
+                status: status,
+                queryId: queryId
             };
 
             setMessages((prev) => [...prev, botMsg]);
         } catch (err) {
             console.error('Error al enviar consulta:', err);
-            setError('No se pudo establecer comunicación con el asistente de IA.');
+            const serverMessage = err.response?.data?.message || 'No se pudo establecer comunicacion con el asistente de IA.';
+            setError(serverMessage);
         } finally {
             setLoading(false);
         }

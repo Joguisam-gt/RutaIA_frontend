@@ -1,3 +1,4 @@
+// src/hooks/useCourses.js
 import { useState, useEffect, useCallback } from 'react';
 import { courseApi } from '../api/courseApi';
 
@@ -11,27 +12,34 @@ export const useCourses = () => {
         search: '',
         categories: [],
         levels: [],
-        modality: 'all', // 'all', 'free', 'paid'
+        modality: 'all',
         minRating: 0,
-        sort: 'popular', // 'popular', 'newest', 'rating', 'price_asc', 'price_desc'
+        sort: 'popular',
         page: 1,
-        limit: 12,
+        limit: 50,
     });
 
     const [pagination, setPagination] = useState({ total: 0, totalPages: 1 });
     const [suggestions, setSuggestions] = useState([]);
     const [isSearchingSuggestions, setIsSearchingSuggestions] = useState(false);
 
-    // Carga de Cursos desde Backend
+    // Carga de Cursos desde el Backend de Express (RF 04)
     const fetchCourses = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
+            
             const res = await courseApi.getCourses(filters);
-            setCourses(res.data || []);
-            setPagination(res.pagination || { total: res.data?.length || 0, totalPages: 1 });
+
+            // Extraccion resiliente de cursos
+            const courseList = Array.isArray(res) 
+                ? res 
+                : (res?.data || res?.courses || []);
+
+            setCourses(courseList);
+            setPagination(res.pagination || { total: courseList.length, totalPages: 1 });
         } catch (err) {
-            setError(err.message || 'Error al obtener el catálogo de cursos.');
+            setError(err.response?.data?.message || err.message || 'Error al obtener el catalogo de cursos.');
         } finally {
             setLoading(false);
         }
@@ -40,11 +48,11 @@ export const useCourses = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             fetchCourses();
-        }, 300); // Debounce para evitar llamadas excesivas en la búsqueda
+        }, 300);
         return () => clearTimeout(timer);
     }, [fetchCourses]);
 
-    // Autocompletado de Búsqueda
+    // Autocompletado de Busqueda
     const handleSearchChange = async (value) => {
         setFilters((prev) => ({ ...prev, search: value, page: 1 }));
         if (value.trim().length >= 2) {
@@ -62,7 +70,7 @@ export const useCourses = () => {
         }
     };
 
-    // Handlers para Filtros de Sidebar
+    // Handlers para Filtros de Sidebar (RF 04)
     const toggleCategory = (category) => {
         setFilters((prev) => {
             const exists = prev.categories.includes(category);
@@ -104,7 +112,7 @@ export const useCourses = () => {
             minRating: 0,
             sort: 'popular',
             page: 1,
-            limit: 12,
+            limit: 50,
         });
         setSuggestions([]);
     };
@@ -127,3 +135,5 @@ export const useCourses = () => {
         setPage: (page) => setFilters((prev) => ({ ...prev, page })),
     };
 };
+
+export default useCourses;

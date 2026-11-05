@@ -2,11 +2,13 @@ import { useState, useMemo } from 'react';
 import { authRegisterApi } from '../api/authRegisterApi';
 
 export const useRegister = (locationSearch = '') => {
-    const [role, setRole] = useState('student'); // 'student' | 'instructor'
+    const [role, setRole] = useState('student');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
+        level: 'PRINCIPIANTE',
+        areaOfInterest: 'Desarrollo Web',
         termsAccepted: false,
     });
 
@@ -16,7 +18,6 @@ export const useRegister = (locationSearch = '') => {
     const [errors, setErrors] = useState({});
     const [pendingApprovalSuccess, setPendingApprovalSuccess] = useState(false);
 
-    // Extraer el plan seleccionado desde los parámetros de búsqueda de la URL (ej. ?plan=pro)
     const selectedPlan = useMemo(() => {
         const params = new URLSearchParams(locationSearch);
         const planKey = params.get('plan');
@@ -30,7 +31,6 @@ export const useRegister = (locationSearch = '') => {
         return planKey ? planMap[planKey.toLowerCase()] || null : null;
     }, [locationSearch]);
 
-    // Cálculo de fortaleza de la contraseña en tiempo real
     const passwordStrength = useMemo(() => {
         const pass = formData.password;
         if (!pass) return { score: 0, label: '', color: 'bg-slate-200 dark:bg-slate-800' };
@@ -68,10 +68,8 @@ export const useRegister = (locationSearch = '') => {
         if (!formData.email.trim() || !formData.email.includes('@')) {
             newErrors.email = 'Introduce un correo electrónico válido.';
         }
-        if (!formData.password || formData.password.length < 8) {
-            newErrors.password = 'La contraseña debe tener al menos 8 caracteres.';
-        } else if (passwordStrength.score < 50) {
-            newErrors.password = 'La contraseña debe incluir mayúsculas, números o símbolos.';
+        if (!formData.password || formData.password.length < 6) {
+            newErrors.password = 'La contraseña debe tener al menos 6 caracteres.';
         }
         if (!formData.termsAccepted) {
             newErrors.termsAccepted = 'Debes aceptar los Términos y la Política de Privacidad.';
@@ -95,17 +93,20 @@ export const useRegister = (locationSearch = '') => {
                     plan: selectedPlan ? selectedPlan.name : 'starter',
                 });
 
-                if (response.token) {
-                    localStorage.setItem('rutaia_token', response.token);
+                // Extracción correcta del token enviado por el backend en response.data.token
+                const token = response.data?.token || response.token;
+                if (token) {
+                    localStorage.setItem('rutaia_token', token);
                 }
+
                 window.location.href = response.redirectTo || '/app/dashboard';
             } else {
-                // Registro de Maestro: Sujeto a aprobación del Administrador
                 await authRegisterApi.requestInstructorAccount(formData);
                 setPendingApprovalSuccess(true);
             }
         } catch (err) {
-            setError(err.message || 'Error al procesar la solicitud de registro.');
+            const apiMessage = err.response?.data?.message || err.message;
+            setError(apiMessage || 'Error al procesar la solicitud de registro.');
         } finally {
             setLoading(false);
         }

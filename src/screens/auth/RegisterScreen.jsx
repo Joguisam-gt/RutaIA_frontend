@@ -4,6 +4,7 @@ import { AuthLayout } from '../../components/layout/auth/AuthLayout';
 import { RegisterFormView } from '../../components/domain/auth/RegisterFormView';
 import { Modal } from '../../components/common/Modal/Modal';
 import { useNotification } from '../../context/NotificationContext';
+import { authRegisterApi } from '../../api/authRegisterApi';
 import { CheckCircle, UserCheck } from 'lucide-react';
 
 export const RegisterScreen = () => {
@@ -13,11 +14,12 @@ export const RegisterScreen = () => {
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
-        password: ''
+        password: '',
+        level: 'PRINCIPIANTE',
+        areaOfInterest: 'Tecnología e IA'
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
     const handleChange = (e) => {
@@ -30,6 +32,7 @@ export const RegisterScreen = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         if (!formData.fullName || !formData.email || !formData.password) {
             setError('Todos los campos son obligatorios');
             return;
@@ -38,13 +41,33 @@ export const RegisterScreen = () => {
         setError(null);
         setLoading(true);
 
-        setTimeout(() => {
-            setLoading(false);
+        try {
+            // Llamada real al Backend MongoDB
+            const response = await authRegisterApi.registerStudent({
+                name: formData.fullName,
+                email: formData.email,
+                password: formData.password,
+                level: formData.level || 'PRINCIPIANTE',
+                areaOfInterest: formData.areaOfInterest || 'Tecnología e IA'
+            });
+
+            // Guardar JWT si viene en la respuesta
+            const token = response.data?.token || response.token;
+            if (token) {
+                localStorage.setItem('rutaia_token', token);
+            }
+
             if (showToast) {
                 showToast('¡Cuenta de alumno registrada con éxito!', 'success');
             }
+
             setIsSuccessModalOpen(true);
-        }, 1000);
+        } catch (err) {
+            const message = err.response?.data?.message || err.message || 'Error al registrar la cuenta.';
+            setError(message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleModalCloseAndRedirect = () => {
@@ -86,6 +109,10 @@ export const RegisterScreen = () => {
                             <span className="font-semibold text-slate-900 dark:text-white">{formData.email}</span>
                         </div>
                         <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                            <span>Nivel:</span>
+                            <span className="font-semibold text-slate-900 dark:text-white">{formData.level}</span>
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
                             <span>Rol asignado:</span>
                             <span className="font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
                                 <UserCheck className="w-3.5 h-3.5" /> Alumno / Estudiante
@@ -94,7 +121,7 @@ export const RegisterScreen = () => {
                     </div>
 
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Tu registro como alumno ha finalizado correctamente. Haz clic abajo para ir al inicio de sesión.
+                        Tu registro como alumno ha finalizado correctamente y se ha guardado en la base de datos. Haz clic abajo para ir al inicio de sesión.
                     </p>
 
                     <button

@@ -3,9 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import useAiQuery from '../../hooks/useAiQuery';
 
 export const AiQueryScreen = ({ courseId = null, user = null }) => {
-    // Si no hay usuario en sesión se marca como anónimo para prevenir llamadas fallidas de historial
-    const isAnonymous = !user;
-    const { messages, loading, sendMessage } = useAiQuery(courseId, isAnonymous);
+    const { messages, loading, sendMessage } = useAiQuery(user);
     const [inputText, setInputText] = useState('');
     const messagesEndRef = useRef(null);
 
@@ -20,7 +18,7 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!inputText.trim() || loading) return;
-        sendMessage(inputText, { studentId: user?.id || user?._id });
+        sendMessage(inputText);
         setInputText('');
     };
 
@@ -33,7 +31,7 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
                     <div>
                         <h2 className="text-xl font-bold text-blue-400">Asistente Virtual RutaIA</h2>
                         <p className="text-xs text-gray-400">
-                            Pregunta sobre cursos, certificados, precios y ruta de aprendizaje
+                            Recomendaciones fundamentadas mediante búsqueda semántica y RAG
                         </p>
                     </div>
                     <span className="px-3 py-1 text-xs rounded-full bg-green-900/50 text-green-400 border border-green-700">
@@ -45,9 +43,9 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
                 <div className="flex-1 overflow-y-auto my-4 space-y-4 pr-2">
                     {messages.length === 0 && !loading && (
                         <div className="text-center text-gray-500 my-12">
-                            <p className="text-lg font-medium">¡Hola! ¿En qué puedo ayudarte hoy?</p>
+                            <p className="text-lg font-medium">Hola, ¿qué te gustaría aprender hoy?</p>
                             <p className="text-sm mt-1">
-                                Puedes preguntarme: "¿Qué costo tiene el curso de SQL?", "¿Cómo obtengo mi certificado?"
+                                Escribe tu necesidad en lenguaje natural y te recomendaremos los cursos ideales.
                             </p>
                         </div>
                     )}
@@ -58,17 +56,42 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
                             className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div
-                                className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.sender === 'user'
+                                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                                    msg.sender === 'user'
                                         ? 'bg-blue-600 text-white rounded-br-none'
-                                        : msg.isError
-                                            ? 'bg-red-900/40 border border-red-700 text-red-200 rounded-bl-none'
-                                            : 'bg-gray-800 text-gray-200 border border-gray-700 rounded-bl-none'
-                                    }`}
+                                        : 'bg-gray-800 text-gray-200 border border-gray-700 rounded-bl-none'
+                                }`}
                             >
                                 <p className="whitespace-pre-wrap">{msg.text}</p>
-                                <span className="block text-[10px] text-gray-400 mt-1 text-right">
-                                    {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                                </span>
+
+                                {/* RF 15: Renderizado diferenciado de Cursos Fuente con Score de Similitud */}
+                                {msg.sources && msg.sources.length > 0 && (
+                                    <div className="mt-4 pt-3 border-t border-gray-700/80 space-y-2">
+                                        <span className="block text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+                                            Cursos Recomendados (Fuentes Qdrant)
+                                        </span>
+                                        <div className="grid grid-cols-1 gap-2">
+                                            {msg.sources.map((src, idx) => (
+                                                <div
+                                                    key={src.courseId || idx}
+                                                    className="p-2.5 rounded-lg bg-gray-900/90 border border-gray-700 flex items-center justify-between gap-2"
+                                                >
+                                                    <div className="overflow-hidden">
+                                                        <span className="block text-xs font-semibold text-gray-200 truncate">
+                                                            {src.title}
+                                                        </span>
+                                                        <span className="block text-[10px] text-gray-400">
+                                                            Categoría: {src.category || 'General'}
+                                                        </span>
+                                                    </div>
+                                                    <span className="shrink-0 px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-950 text-blue-300 border border-blue-800">
+                                                        {src.similarity ? `${Math.round(src.similarity * 100)}% relevancia` : 'Alta coincidencia'}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -79,7 +102,7 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
                                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
                                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-                                <span className="text-xs ml-2">Consultando base de conocimientos en Qdrant...</span>
+                                <span className="text-xs ml-2">Consultando memoria semántica en Qdrant...</span>
                             </div>
                         </div>
                     )}
@@ -92,7 +115,7 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
                         type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="Escribe tu consulta sobre los cursos o la plataforma..."
+                        placeholder="Escribe lo que deseas aprender (ej: Quiero aprender desarrollo frontend con React)..."
                         disabled={loading}
                         className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
                     />

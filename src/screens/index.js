@@ -1,5 +1,6 @@
+// src/screens/index.js
 
-// PANTALLAS PÚBLICAS (Public Screens)
+// PANTALLAS PUBLICAS
 export { default as LandingScreen } from './public/LandingScreen.jsx';
 export { default as CatalogScreen } from './public/CatalogScreen.jsx';
 export { default as CategoryCoursesScreen } from './public/CategoryCoursesScreen.jsx';
@@ -14,12 +15,12 @@ export { default as PlanScreen } from './public/PlanScreen.jsx';
 export { default as PrivacyPolicyScreen } from './public/PrivacyPolicyScreen.jsx';
 export { default as TermsScreen } from './public/TermsScreen.jsx';
 
-// PANTALLAS DE AUTENTICACIÓN (Auth Screens)
+// PANTALLAS DE AUTENTICACION
 export { default as LoginScreen } from './auth/LoginScreen.jsx';
 export { default as RegisterScreen } from './auth/RegisterScreen.jsx';
 export { default as ForgotPasswordScreen } from './auth/ForgotPasswordScreen.jsx';
 
-// PANTALLAS DE ESTUDIANTE (Student Screens)
+// PANTALLAS DE ESTUDIANTE
 export { default as StudentDashboardScreen } from './student/StudentDashboardScreen.jsx';
 export { default as ClassroomScreen } from './student/ClassroomScreen.jsx';
 export { default as MyCoursesScreen } from './student/MyCoursesScreen.jsx';
@@ -29,9 +30,11 @@ export { default as CertificatesScreen } from './student/CertificatesScreen.jsx'
 export { default as AiQueryScreen } from './student/AiQueryScreen.jsx';
 export { default as MetricsScreen } from './student/MetricsScreen.jsx';
 
-// PANTALLAS DE INSTRUCTOR (Instructor Screens)
+// PANTALLAS DE INSTRUCTOR
 export { default as InstructorDashboardScreen } from './instructor/InstructorDashboardScreen.jsx';
 export { default as CourseEditorScreen } from './instructor/CourseEditorScreen.jsx';
 export { default as CourseManagementScreen } from './instructor/CourseManagementScreen.jsx';
 export { default as InstructorFinancesScreen } from './instructor/InstructorFinancesScreen.jsx';
 export { default as StudentManagementScreen } from './instructor/StudentManagementScreen.jsx';
+export { default as DocumentIngestionScreen } from './instructor/DocumentIngestionScreen.jsx';
+export { default as KnowledgeGraphScreen } from './instructor/KnowledgeGraphScreen.jsx';

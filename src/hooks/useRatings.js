@@ -1,7 +1,8 @@
+// src/hooks/useRatings.js
 import { useState, useEffect, useCallback } from 'react';
 import { ratingApi } from '../api/ratingApi';
 
-export const useRatings = (courseId) => {
+export const useRatings = (targetId) => {
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
@@ -10,34 +11,47 @@ export const useRatings = (courseId) => {
     const [isSuccess, setIsSuccess] = useState(false);
 
     const fetchMyRating = useCallback(async () => {
-        if (!courseId) return;
+        if (!targetId) return;
         try {
             setLoading(true);
-            const data = await ratingApi.getMyRating(courseId);
+            const data = await ratingApi.getMyRating(targetId);
             if (data) {
-                setRating(data.rating || 5);
+                setRating(data.score || data.rating || 5);
                 setComment(data.comment || '');
             }
         } catch (err) {
-            // Sin valoracion previa
+            // Silencioso si no hay valoracion previa
         } finally {
             setLoading(false);
         }
-    }, [courseId]);
+    }, [targetId]);
 
     useEffect(() => {
         fetchMyRating();
     }, [fetchMyRating]);
 
     const submitRating = async () => {
-        if (!courseId || rating < 1) return;
+        if (!targetId || rating < 1 || rating > 5) {
+            setError('La calificacion debe ser un valor entre 1 y 5.');
+            return;
+        }
+
         try {
             setSubmitting(true);
             setError(null);
-            await ratingApi.submitRating(courseId, rating, comment);
+
+            // Se envia tanto recommendationId como courseId para cumplir con RF 17
+            await ratingApi.submitRating({
+                recommendationId: targetId,
+                courseId: targetId,
+                score: Number(rating),
+                comment: comment.trim() || null
+            });
+
             setIsSuccess(true);
         } catch (err) {
-            setError(err.message || 'No se pudo enviar la valoracion.');
+            const message = err.response?.data?.message || err.message || 'No se pudo enviar la calificacion.';
+            setError(message);
         } finally {
             setSubmitting(false);
         }
@@ -52,6 +66,8 @@ export const useRatings = (courseId) => {
         submitting,
         error,
         isSuccess,
-        submitRating,
+        submitRating
     };
 };
+
+export default useRatings;

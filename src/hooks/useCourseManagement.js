@@ -1,72 +1,107 @@
+// src/hooks/useCourseManagement.js
 import { useState, useEffect, useCallback } from 'react';
-import { courseManagementApi } from '../api/courseManagementApi';
-import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api/apiClient';
 
 export const useCourseManagement = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [deletingCourseId, setDeletingCourseId] = useState(null);
-  const { showSuccess, showError } = useNotification();
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [deletingCourseId, setDeletingCourseId] = useState(null);
 
-  const fetchCourses = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await courseManagementApi.getInstructorCourses();
-      setCourses(data || []);
-    } catch (err) {
-      setError(err.message || 'Error al cargar tus cursos.');
-      showError('No se pudieron obtener los cursos del instructor.');
-    } finally {
-      setLoading(false);
-    }
-  }, [showError]);
+    // Consulta los cursos reales desde MongoDB (RF 03 y RF 04)
+    const fetchCourses = useCallback(async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            // Llama a la ruta oficial del backend
+            const response = await apiClient.get('/courses?limit=100');
+            const rawList = response.data?.data || response.data || [];
 
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
+            // Normaliza _id a id para que InstructorCourseCard no falle
+            const formatted = rawList.map(c => ({
+                id: c._id || c.id,
+                _id: c._id || c.id,
+                title: c.title || c.name || 'Curso sin título',
+                description: c.description || '',
+                category: c.category || 'General',
+                level: c.level || 'INTERMEDIO',
+                durationHours: c.durationHours || c.duration || 20,
+                status: c.status || 'ACTIVO',
+                isVisible: c.isVisible !== false,
+                rating: c.averageRating || 5.0,
+                enrolledCount: c.totalRatings || 1
+            }));
 
-  const duplicateCourse = async (courseId) => {
-    try {
-      const duplicated = await courseManagementApi.duplicateCourse(courseId);
-      setCourses((prev) => [duplicated, ...prev]);
-      showSuccess('Curso duplicado exitosamente.');
-    } catch (err) {
-      showError('Ocurrio un error al duplicar el curso.');
-    }
-  };
+            setCourses(formatted);
+        } catch (err) {
+            console.error('Error cargando cursos de instructor:', err);
+            setError(err.response?.data?.message || 'Error al obtener los cursos de la base de datos.');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
-  const confirmDeleteCourse = (courseId) => {
-    setDeletingCourseId(courseId);
-  };
+    useEffect(() => {
+        fetchCourses();
+    }, [fetchCourses]);
 
-  const cancelDeleteCourse = () => {
-    setDeletingCourseId(null);
-  };
+    // Modal de confirmacion de eliminacion
+    const confirmDeleteCourse = (courseId) => {
+        setDeletingCourseId(courseId);
+    };
 
-  const executeDeleteCourse = async () => {
-    if (!deletingCourseId) return;
+    const cancelDeleteCourse = () => {
+        setDeletingCourseId(null);
+    };
 
-    try {
-      await courseManagementApi.deleteCourse(deletingCourseId);
-      setCourses((prev) => prev.filter((c) => c.id !== deletingCourseId));
-      showSuccess('El curso fue eliminado permanentemente.');
-    } catch (err) {
-      showError('No se pudo eliminar el curso.');
-    } finally {
-      setDeletingCourseId(null);
-    }
-  };
+    // Desactivacion logica en backend (RF 03)
+    const executeDeleteCourse = async () => {
+        if (!deletingCourseId) return;
 
-  return {
-    courses,
-    loading,
-    error,
-    deletingCourseId,
-    duplicateCourse,
-    confirmDeleteCourse,
-    cancelDeleteCourse,
-    executeDeleteCourse,
-    refetch: fetchCourses,
-  };
+        try {
+            await apiClient.delete(`/courses/${deletingCourseId}`);
+            
+            // Actualiza la lista en memoria eliminando o marcando como inactivo
+            setCourses(prev => prev.filter(c => c.id !== deletingCourseId));
+            setDeletingCourseId(null);
+        } catch (err) {
+            console.error('Error al desactivar el curso:', err);
+            alert(err.response?.data?.message || 'No se pudo desactivar el curso.');
+        }
+    };
+
+    const duplicateCourse = async (courseId) => {
+        const target = courses.find(c => c.id === courseId);
+        if (!target) return;
+
+        try {
+            await apiClient.post('/courses', {
+                title: `${target.title} (Copia)`,
+                description: target.description,
+                category: target.category,
+                level: target.level,
+                durationHours: target.durationHours,
+                status: 'ACTIVO',
+                isVisible: true
+            });
+            fetchCourses();
+        } catch (err) {
+            alert('Error al duplicar el curso.');
+        }
+    };
+
+    return {
+        courses,
+        loading,
+        error,
+        deletingCourseId,
+        duplicateCourse,
+        confirmDeleteCourse,
+        cancelDeleteCourse,
+        executeDeleteCourse,
+        refetch: fetchCourses
+    };
 };
+
+export default useCourseManagement;

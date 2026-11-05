@@ -1,5 +1,6 @@
 // src/screens/public/CourseDetailScreen.jsx
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useCourseDetail } from "../../hooks/useCourseDetail.js";
 import { Navbar } from "../../components/layout/Navbar/Navbar";
 import { CourseHeader } from "../../components/domain/Course-detail/CourseHeader.jsx";
@@ -13,6 +14,10 @@ import { RecommendedCourseSection } from "../../components/domain/Course-detail/
 import { Loader2, X, Play } from "lucide-react";
 
 export const CourseDetailScreen = ({ courseSlug = 'react-nextjs-cero-a-produccion' }) => {
+    // Captura el slug dinamico de la URL (/curso/:slug)
+    const { slug } = useParams();
+    const activeSlug = slug || courseSlug;
+
     const {
         course,
         reviews,
@@ -21,7 +26,7 @@ export const CourseDetailScreen = ({ courseSlug = 'react-nextjs-cero-a-produccio
         error,
         previewLesson,
         setPreviewLesson,
-    } = useCourseDetail(courseSlug);
+    } = useCourseDetail(activeSlug);
     const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
     if (loading) {
@@ -46,7 +51,6 @@ export const CourseDetailScreen = ({ courseSlug = 'react-nextjs-cero-a-produccio
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-            {/* Navbar Superior Público */}
             <Navbar />
 
             <main className="pt-16">

@@ -1,21 +1,19 @@
+// src/components/domain/student-management/StudentActivityStats.jsx
 import React from 'react';
-import { Users, UserCheck, Award, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Users, UserCheck, Award, AlertTriangle } from 'lucide-react';
 
 export const StudentActivityStats = ({ stats }) => {
-    const defaultStats = {
-        totalEnrolled: 1240,
-        activeThisWeek: 485,
-        certificatesDelivered: 142,
-        atRiskCount: 28,
-    };
-
-    const data = stats || defaultStats;
+    // 1. Asignacion segura de datos previniendo valores null o undefined
+    const totalEnrolled = stats?.totalEnrolled ?? 0;
+    const activeThisWeek = stats?.activeThisWeek ?? 0;
+    const certificatesDelivered = stats?.certificatesDelivered ?? 0;
+    const atRiskCount = stats?.atRiskCount ?? 0;
 
     const cards = [
         {
             id: 'enrolled',
             title: 'Alumnos Matriculados',
-            value: data.totalEnrolled.toLocaleString(),
+            value: totalEnrolled.toLocaleString(),
             subtitle: 'En todos tus cursos activos',
             icon: Users,
             iconBg: 'bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800',
@@ -23,15 +21,15 @@ export const StudentActivityStats = ({ stats }) => {
         {
             id: 'active_week',
             title: 'Activos esta Semana',
-            value: data.activeThisWeek.toLocaleString(),
-            subtitle: 'Interacción en los últimos 7 días',
+            value: activeThisWeek.toLocaleString(),
+            subtitle: 'Interaccion en los ultimos 7 dias',
             icon: UserCheck,
             iconBg: 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
         },
         {
             id: 'certificates',
             title: 'Certificados Entregados',
-            value: data.certificatesDelivered.toLocaleString(),
+            value: certificatesDelivered.toLocaleString(),
             subtitle: 'Alumnos que completaron el 100%',
             icon: Award,
             iconBg: 'bg-cyan-50 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800',
@@ -39,11 +37,11 @@ export const StudentActivityStats = ({ stats }) => {
         {
             id: 'at_risk',
             title: 'En Riesgo de Abandono',
-            value: data.atRiskCount.toLocaleString(),
-            subtitle: 'Inactivos por más de 14 días',
+            value: atRiskCount.toLocaleString(),
+            subtitle: 'Inactivos por mas de 14 dias',
             icon: AlertTriangle,
             iconBg: 'bg-rose-50 dark:bg-rose-950/80 text-rose-500 border-rose-200 dark:border-rose-900/60',
-        },
+        }
     ];
 
     return (
@@ -80,4 +78,4 @@ export const StudentActivityStats = ({ stats }) => {
     );
 };
 
-export default StudentActivityStats;
+export default StudentActivityStats;    

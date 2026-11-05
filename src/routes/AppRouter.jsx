@@ -3,44 +3,41 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-// Pantallas Públicas
-import LandingScreen from '../screens/public/LandingScreen';
-import CatalogScreen from '../screens/public/CatalogScreen';
-import AboutScreen from '../screens/public/AboutScreen';
-import BlogScreen from '../screens/public/BlogScreen';
-import PlanScreen from '../screens/public/PlanScreen';
-import ContactScreen from '../screens/public/ContactScreen';
-import ArticleDetailScreen from '../screens/public/ArticleDetailScreen';
-import CourseDetailScreen from '../screens/public/CourseDetailScreen';
-import FaqScreen from '../screens/public/FaqScreen';
-import PrivacyPolicyScreen from '../screens/public/PrivacyPolicyScreen';
-import TermsScreen from '../screens/public/TermsScreen';
-import LegalScreen from '../screens/public/LegalScreen';
+// Importacion limpia y unificada mediante el Barrel File
+import {
+    LandingScreen,
+    CatalogScreen,
+    CourseDetailScreen,
+    AboutScreen,
+    BlogScreen,
+    ArticleDetailScreen,
+    PlanScreen,
+    ContactScreen,
+    FaqScreen,
+    PrivacyPolicyScreen,
+    TermsScreen,
+    LegalScreen,
+    LoginScreen,
+    RegisterScreen,
+    StudentDashboardScreen,
+    MyCoursesScreen,
+    MetricsScreen,
+    ProfileScreen,
+    CertificatesScreen,
+    WishlistScreen,
+    ClassroomScreen,
+    InstructorDashboardScreen,
+    CourseManagementScreen,
+    CourseEditorScreen,
+    StudentManagementScreen,
+    InstructorFinancesScreen,
+    DocumentIngestionScreen,
+    KnowledgeGraphScreen
+} from '../screens';
 
-// Autenticación
-import LoginScreen from '../screens/auth/LoginScreen';
-import RegisterScreen from '../screens/auth/RegisterScreen';
-
-// Pantallas de Estudiante
-import StudentDashboardScreen from '../screens/student/StudentDashboardScreen';
-import MyCoursesScreen from '../screens/student/MyCoursesScreen';
-import MetricsScreen from '../screens/student/MetricsScreen';
-import ProfileScreen from '../screens/student/ProfileScreen';
-import CertificatesScreen from '../screens/student/CertificatesScreen';
-import WishlistScreen from '../screens/student/WishlistScreen';
-import ClassroomScreen from '../screens/student/ClassroomScreen';
-
-// Pantallas de Instructor / Maestro
-import InstructorDashboardScreen from '../screens/instructor/InstructorDashboardScreen';
-import CourseManagementScreen from '../screens/instructor/CourseManagementScreen';
-import StudentManagementScreen from '../screens/instructor/StudentManagementScreen';
-import InstructorFinancesScreen from '../screens/instructor/InstructorFinancesScreen';
-import CourseEditorScreen from '../screens/instructor/CourseEditorScreen';
-import DocumentIngestionScreen from '../screens/instructor/DocumentIngestionScreen';
-import KnowledgeGraphScreen from '../screens/instructor/KnowledgeGraphScreen';
-
-// Componente global del Chat de IA
-import ChatBubble from '../components/domain/ChatBubble/chatBubble';
+// Componente global del Chat de IA (Importacion defensiva)
+import ChatBubbleComponent from '../components/domain/ChatBubble/chatBubble.jsx';
+const ChatBubble = ChatBubbleComponent?.ChatBubble || ChatBubbleComponent;
 
 export const AppRouter = () => {
     const { user } = useAuth() || {};
@@ -49,7 +46,7 @@ export const AppRouter = () => {
     return (
         <>
             <Routes>
-                {/* Rutas Públicas */}
+                {/* Rutas Publicas */}
                 <Route path="/" element={<LandingScreen />} />
                 <Route path="/catalog" element={<CatalogScreen />} />
                 <Route path="/curso/:slug" element={<CourseDetailScreen />} />
@@ -63,10 +60,11 @@ export const AppRouter = () => {
                 <Route path="/terms" element={<TermsScreen />} />
                 <Route path="/legal" element={<LegalScreen />} />
 
-                {/* Autenticación */}
+                {/* Autenticacion */}
                 <Route path="/login" element={<LoginScreen />} />
                 <Route path="/register" element={<RegisterScreen />} />
 
+                {/* Redireccion de Dashboard segun Rol */}
                 <Route 
                     path="/app/dashboard"   
                     element={isInstructor ? <Navigate to="/instructor/dashboard" replace /> : <StudentDashboardScreen />} 
@@ -81,7 +79,7 @@ export const AppRouter = () => {
                 <Route path="/app/favoritos" element={<WishlistScreen />} />
                 <Route path="/app/aprender/:courseSlug?/:lessonSlug?" element={<ClassroomScreen />} />
 
-                {/* Rutas de Instructor / Maestro */}
+                {/* Rutas de Instructor / Administrador */}
                 <Route path="/instructor/dashboard" element={<InstructorDashboardScreen />} />
                 <Route path="/instructor/cursos" element={<CourseManagementScreen />} />
                 <Route path="/instructor/editor-curso/:id?" element={<CourseEditorScreen />} />
@@ -90,11 +88,12 @@ export const AppRouter = () => {
                 <Route path="/instructor/ingesta-n8n" element={<DocumentIngestionScreen />} />
                 <Route path="/instructor/grafo-qdrant" element={<KnowledgeGraphScreen />} />
 
+                {/* Fallback general */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
 
-            {/* Chat flotante activo para rutas públicas y de estudiantes */}
-            <ChatBubble />
+            {/* Chat flotante disponible en la aplicacion */}
+            {ChatBubble && <ChatBubble />}
         </>
     );
 };

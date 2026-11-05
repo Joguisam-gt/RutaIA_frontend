@@ -25,19 +25,24 @@ export const CatalogScreen = () => {
             !searchQuery ||
             course.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             course.category?.toLowerCase().includes(searchQuery.toLowerCase());
+            
         const matchesCategory =
             selectedCategory === 'Todos' || course.category === selectedCategory;
+            
         const matchesLevel =
-            selectedLevel === 'Todos' || course.level === selectedLevel;
+            selectedLevel === 'Todos' || 
+            course.level?.toUpperCase() === selectedLevel?.toUpperCase();
+
+        // Tolerancia si el curso no tiene campo price definido
         const matchesPrice =
             selectedPrice === 'Todos' ||
-            (selectedPrice === 'Gratis' ? course.price === 0 : course.price > 0);
+            (course.price === undefined ? true : (selectedPrice === 'Gratis' ? course.price === 0 : course.price > 0));
+
         return matchesSearch && matchesCategory && matchesLevel && matchesPrice;
     });
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
-            {/* Navbar Superior Público */}
             <Navbar />
 
             <main className="pt-20 pb-12 container mx-auto px-4">
@@ -54,7 +59,10 @@ export const CatalogScreen = () => {
                     />
                     <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredCourses.map((course) => (
-                            <CourseCard key={course.id} course={course} />
+                            <CourseCard 
+                                key={course._id || course.id} 
+                                course={course} 
+                            />
                         ))}
                     </div>
                 </div>

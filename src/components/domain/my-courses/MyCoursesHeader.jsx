@@ -2,13 +2,7 @@ import React from 'react';
 import { Clock, Award, BookCheck, GraduationCap } from 'lucide-react';
 
 export const MyCoursesHeader = ({ stats }) => {
-    const defaultStats = {
-        totalHours: 42.5,
-        completedCourses: 3,
-        certificatesEarned: 3,
-    };
-
-    const data = stats || defaultStats;
+    const data = stats || { totalHours: 0, completedCourses: 0, certificatesEarned: 0 };
 
     return (
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-200 dark:border-slate-800 mb-8">

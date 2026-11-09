@@ -3,7 +3,7 @@ import { apiClient } from './apiClient';
 
 export const metricApi = {
     /**
-     * Obtiene las 5 metricas globales de la plataforma RAG (RF 18)
+     * Métricas globales de la plataforma RAG
      * GET /api/v1/metrics
      */
     getPlatformMetrics: async () => {
@@ -11,10 +11,14 @@ export const metricApi = {
         return response.data?.data || response.data;
     },
 
+    /**
+     * Métricas personales del estudiante autenticado
+     * GET /api/v1/students/metrics
+     */
     getStudentMetrics: async () => {
-        const response = await apiClient.get('/metrics/student');
+        const response = await apiClient.get('/students/metrics');
         return response.data?.data || response.data;
-    }
+    },
 };
 
 export default metricApi;

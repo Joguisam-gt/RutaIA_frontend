@@ -11,7 +11,7 @@ export const courseManagementApi = {
         if (params.search) queryParams.append('search', params.search);
         if (params.sortBy) queryParams.append('sortBy', params.sortBy); // 'last_updated' | 'students' | 'revenue' | 'title'
 
-        const response = await apiClient.get(`/instructor/courses?${queryParams.toString()}`);
+        const response = await apiClient.get(`/courses?${queryParams.toString()}`);
         return response.data;
     },
 
@@ -20,7 +20,7 @@ export const courseManagementApi = {
      * Conecta con POST /api/v1/instructor/courses/:courseId/duplicate
      */
     duplicateCourse: async (courseId) => {
-        const response = await apiClient.post(`/instructor/courses/${courseId}/duplicate`);
+        const response = await apiClient.post(`/courses/${courseId}/duplicate`);
         return response.data;
     },
 
@@ -29,7 +29,7 @@ export const courseManagementApi = {
      * Conecta con PATCH /api/v1/instructor/courses/:courseId/archive
      */
     toggleArchiveCourse: async (courseId, archive = true) => {
-        const response = await apiClient.patch(`/instructor/courses/${courseId}/archive`, { archive });
+        const response = await apiClient.patch(`/courses/${courseId}/archive`, { archive });
         return response.data;
     },
 };

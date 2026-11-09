@@ -7,6 +7,13 @@ import { EducationalPillars } from '../../components/domain/About/EducationalPil
 import { CompanyTimeline } from '../../components/domain/About/CompanyTimeline.jsx';
 import { TeamGrid } from '../../components/domain/About/TeamGrid.jsx';
 
+const platformStats = [
+    { value: '20+', label: 'Cursos disponibles' },
+    { value: '5', label: 'Categorías temáticas' },
+    { value: '100%', label: 'Proyectos prácticos' },
+    { value: '24/7', label: 'Asistente con IA' },
+];
+
 const publicTimeline = [
     {
         year: '2024',
@@ -60,7 +67,7 @@ export const AboutScreen = () => {
 
             <main className="pt-16">
                 <AboutHero />
-                <AboutStatsCounter />
+                <AboutStatsCounter stats={platformStats} />
                 <EducationalPillars />
                 <CompanyTimeline timeline={publicTimeline} />
                 <TeamGrid team={teamMembers} />

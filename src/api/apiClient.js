@@ -21,5 +21,5 @@ apiClient.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 
-// ✅ Exportación por defecto para retrocompatibilidad
+// Exportación por defecto para retrocompatibilidad
 export default apiClient;

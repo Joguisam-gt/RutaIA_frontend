@@ -1,6 +1,6 @@
 // src/hooks/useCertificates.js
 import { useState, useEffect } from 'react';
-import { studentApi } from '../api/studentApi';
+import { certificatesApi } from '../api/certificatesApi';
 
 export const useCertificates = () => {
     const [certificates, setCertificates] = useState([]);
@@ -13,12 +13,13 @@ export const useCertificates = () => {
         const fetchCertificates = async () => {
             try {
                 setLoading(true);
-                const res = await studentApi.getCertificates();
+                setError(null);
+                const res = await certificatesApi.getCertificates();
                 const data = res.data || res;
                 setCertificates(Array.isArray(data) ? data : []);
             } catch (err) {
                 setError('No se pudieron cargar los certificados.');
-            } flex: {
+            } finally {
                 setLoading(false);
             }
         };
@@ -35,8 +36,15 @@ export const useCertificates = () => {
         setIsModalOpen(false);
     };
 
-    const downloadCertificate = (id) => {
-        console.log('Descargando certificado:', id);
+    const downloadCertificate = async (id) => {
+        const cert = certificates.find(c => c.id === id);
+        if (cert) {
+            try {
+                await certificatesApi.downloadPdf(id, cert.courseTitle);
+            } catch (err) {
+                console.error('Error descargando certificado:', err);
+            }
+        }
     };
 
     return {

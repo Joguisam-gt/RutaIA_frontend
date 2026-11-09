@@ -1,8 +1,11 @@
 // src/screens/student/AiQueryScreen.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import useAiQuery from '../../hooks/useAiQuery';
+import { useAuth } from '../../context/AuthContext';
+import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 
-export const AiQueryScreen = ({ courseId = null, user = null }) => {
+export const AiQueryScreen = () => {
+    const { user } = useAuth() || {};
     const { messages, loading, sendMessage } = useAiQuery(user);
     const [inputText, setInputText] = useState('');
     const messagesEndRef = useRef(null);
@@ -23,7 +26,11 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
     };
 
     return (
-        <div className="max-w-5xl w-full mx-auto p-4 flex flex-col h-[calc(100vh-4rem)]">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans">
+            <div className="flex">
+                <Sidebar role="student" currentRoute="/app/asistente-ia" />
+                <main className="flex-1 p-6 flex flex-col" style={{height: "100vh", overflow: "hidden"}}>
+                <div className="max-w-5xl w-full mx-auto flex flex-col h-full">
             <div className="flex-1 flex flex-col bg-gray-900 border border-gray-800 rounded-xl shadow-2xl p-4 overflow-hidden">
 
                 {/* Encabezado del Chat */}
@@ -128,6 +135,9 @@ export const AiQueryScreen = ({ courseId = null, user = null }) => {
                     </button>
                 </form>
 
+            </div>
+                </div>
+                </main>
             </div>
         </div>
     );

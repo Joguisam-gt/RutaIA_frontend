@@ -1,21 +1,58 @@
+// src/api/studentDashboardApi.js
 import { apiClient } from './apiClient';
 
 export const studentDashboardApi = {
     /**
-     * Obtiene la vista consolidada del estudiante: último curso, cursos en progreso, métricas de racha y recomendaciones.
-     * Conecta con GET /api/v1/student/dashboard
+     * Cursos del estudiante en progreso.
+     * GET /api/v1/students/my-courses?status=in_progress&sortBy=last_accessed
      */
-    getDashboardData: async () => {
-        const response = await apiClient.get('/student/dashboard');
-        return response.data.data;
+    getInProgressCourses: async () => {
+        const response = await apiClient.get('/students/my-courses', {
+            params: { status: 'in_progress', sortBy: 'last_accessed' },
+        });
+        return response.data;
     },
 
     /**
-     * Actualiza la meta diaria de tiempo de estudio del estudiante (en minutos).
-     * Conecta con PATCH /api/v1/student/goals
+     * Métricas personales del estudiante autenticado.
+     * GET /api/v1/students/metrics
      */
-    updateDailyGoal: async (targetMinutes) => {
-        const response = await apiClient.patch('/student/goals', { targetMinutes });
+    getStudentMetrics: async () => {
+        const response = await apiClient.get('/students/metrics');
         return response.data;
+    },
+
+    /**
+     * Cursos completados del estudiante.
+     * GET /api/v1/students/my-courses?status=completed
+     */
+    getCompletedCourses: async () => {
+        const response = await apiClient.get('/students/my-courses', {
+            params: { status: 'completed', sortBy: 'title' },
+        });
+        return response.data;
+    },
+
+    /**
+     * @deprecated Usar getInProgressCourses + getStudentMetrics por separado.
+     * Alias de compatibilidad.
+     */
+    getDashboardData: async () => {
+        const [coursesRes, metricsRes] = await Promise.allSettled([
+            apiClient.get('/students/my-courses', {
+                params: { status: 'in_progress', sortBy: 'last_accessed' },
+            }),
+            apiClient.get('/students/metrics'),
+        ]);
+
+        const courses = coursesRes.status === 'fulfilled'
+            ? (coursesRes.value?.data?.data || coursesRes.value?.data || [])
+            : [];
+
+        const metrics = metricsRes.status === 'fulfilled'
+            ? (metricsRes.value?.data?.data || metricsRes.value?.data || {})
+            : {};
+
+        return { courses, metrics };
     },
 };

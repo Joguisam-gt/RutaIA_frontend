@@ -32,12 +32,9 @@ import {
     StudentManagementScreen,
     InstructorFinancesScreen,
     DocumentIngestionScreen,
-    KnowledgeGraphScreen
+    KnowledgeGraphScreen,
 } from '../screens';
 
-// Componente global del Chat de IA (Importacion defensiva)
-import ChatBubbleComponent from '../components/domain/ChatBubble/chatBubble.jsx';
-const ChatBubble = ChatBubbleComponent?.ChatBubble || ChatBubbleComponent;
 
 export const AppRouter = () => {
     const { user } = useAuth() || {};
@@ -92,8 +89,6 @@ export const AppRouter = () => {
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
 
-            {/* Chat flotante disponible en la aplicacion */}
-            {ChatBubble && <ChatBubble />}
         </>
     );
 };

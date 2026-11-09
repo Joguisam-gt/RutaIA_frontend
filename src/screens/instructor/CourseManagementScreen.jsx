@@ -13,6 +13,10 @@ export const CourseManagementScreen = () => {
         loading,
         error,
         deletingCourseId,
+        searchQuery,
+        setSearchQuery,
+        activeTab,
+        setActiveTab,
         duplicateCourse,
         confirmDeleteCourse,
         cancelDeleteCourse,
@@ -24,18 +28,23 @@ export const CourseManagementScreen = () => {
             <div className="flex">
                 <Sidebar role="instructor" currentRoute="/instructor/cursos" />
                 <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 flex items-center gap-2">
-                                <BookOpen size={24} className="text-indigo-600" />
-                                <span>Gestión de Cursos</span>
-                            </h1>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                                Crea, edita y gestiona el contenido e itinerario de tus programas educativos.
-                            </p>
-                        </div>
+                    <div className="mb-6">
+                        <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 flex items-center gap-2">
+                            <BookOpen size={24} className="text-indigo-600" />
+                            <span>Gestión de Cursos</span>
+                        </h1>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            Administra el contenido e itinerario de tus programas educativos.
+                        </p>
                     </div>
-                    <CourseManagementToolbar />
+
+                    <CourseManagementToolbar
+                        activeTab={activeTab}
+                        onTabChange={setActiveTab}
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                    />
+
                     {loading ? (
                         <div className="py-16 flex flex-col items-center justify-center text-slate-400">
                             <Loader2 size={28} className="animate-spin text-indigo-600 mb-2" />
@@ -49,10 +58,14 @@ export const CourseManagementScreen = () => {
                         <div className="py-16 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-white dark:bg-slate-900 p-8 mt-6">
                             <BookOpen size={36} className="mx-auto text-slate-300 dark:text-slate-700 mb-3" />
                             <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                                Aún no has creado ningún curso
+                                {searchQuery
+                                    ? `Sin resultados para "${searchQuery}"`
+                                    : 'Aún no hay cursos en esta categoría'}
                             </h3>
                             <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-                                Haz clic en "Nuevo Curso" para comenzar a diseñar tu primer plan de estudio.
+                                {searchQuery
+                                    ? 'Prueba con otro término de búsqueda.'
+                                    : 'Usa la ingesta de documentos para agregar cursos desde PDF.'}
                             </p>
                         </div>
                     ) : (
@@ -67,6 +80,7 @@ export const CourseManagementScreen = () => {
                             ))}
                         </div>
                     )}
+
                     <Modal
                         isOpen={Boolean(deletingCourseId)}
                         onClose={cancelDeleteCourse}

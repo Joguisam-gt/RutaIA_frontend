@@ -3,7 +3,6 @@ import { useWishlist } from '../../hooks/useWishlist';
 import { Sidebar } from '../../components/layout/Sidebar/Sidebar';
 import { WishlistCourseCard } from '../../components/domain/wishlist/WishlistCourseCard';
 import { WishlistToolbar } from '../../components/domain/wishlist/WishlistToolbar';
-import { ThemeToggle } from '../../components/common/themetoggle.jsx';
 import { Heart, Loader2 } from 'lucide-react';
 
 export const WishlistScreen = () => {
@@ -24,7 +23,6 @@ export const WishlistScreen = () => {
                                 Cursos guardados para inscribirte o revisar más adelante.
                             </p>
                         </div>
-                        <ThemeToggle />
                     </div>
                     <WishlistToolbar totalItems={items.length} />
                     {loading ? (

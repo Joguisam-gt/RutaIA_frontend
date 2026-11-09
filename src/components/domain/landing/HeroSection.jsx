@@ -21,14 +21,14 @@ export const HeroSection = () => {
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link
-                        to="/cursos"
+                        to="/catalog"
                         className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
                     >
                         <span>Explorar Cursos</span>
                         <ArrowRight className="w-4 h-4" />
                     </Link>
                     <Link
-                        to="/planes"
+                        to="/pricing"
                         className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md transition-colors"
                     >
                         <BookOpen className="w-4 h-4" />

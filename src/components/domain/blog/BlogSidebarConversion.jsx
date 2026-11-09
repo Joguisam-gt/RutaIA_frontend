@@ -34,19 +34,19 @@ export const BlogSidebarConversion = ({ popularArticles = [] }) => {
     return (
         <aside className="space-y-6">
             {/* Widget 1: Captura de Newsletter */}
-            <div className="p-6 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-lg">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-3">
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-3">
                     <Mail size={20} />
                 </div>
-                <h3 className="text-sm font-bold text-white mb-1">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
                     Boletín Tecnológico Semanal
                 </h3>
-                <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
                     Recibe artículos sobre desarrollo web, IA y UX/UI directo en tu bandeja sin spam.
                 </p>
 
                 {status === 'success' ? (
-                    <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
+                    <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2">
                         <CheckCircle2 size={16} />
                         <span>{message}</span>
                     </div>
@@ -58,7 +58,7 @@ export const BlogSidebarConversion = ({ popularArticles = [] }) => {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="tu.correo@ejemplo.com"
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-950 text-white border border-slate-800 focus:outline-none focus:border-indigo-500"
+                            className="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-indigo-500 placeholder-slate-400"
                         />
                         {/* Botón con degradado */}
                         <button

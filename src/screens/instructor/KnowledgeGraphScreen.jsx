@@ -83,21 +83,45 @@ export const KnowledgeGraphScreen = () => {
     // Renderizador custom para dibujar las esferas y el texto estilo Obsidian
     const drawNode = (node, ctx, globalScale) => {
         const radius = Math.sqrt(Math.max(0, node.val || 1)) * 1.5;
-        
-        // Dibujar el nodo (esfera)
+
+        // Resplandor sutil (glow)
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, radius + 3, 0, 2 * Math.PI, false);
+        const isRoot = node.id === 'qdrant_root';
+        const isCat  = node.id?.startsWith('cat_');
+        ctx.fillStyle = isRoot ? 'rgba(99,102,241,0.15)' : isCat ? 'rgba(45,212,191,0.12)' : 'rgba(56,189,248,0.10)';
+        ctx.fill();
+
+        // Nodo principal
         ctx.beginPath();
         ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = node.color;
         ctx.fill();
 
-        // Dibujar el texto interactivo
-        const label = node.label;
-        const fontSize = 12 / globalScale;
-        ctx.font = `${fontSize}px Sans-Serif`;
+        // Borde blanco muy fino
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+
+        // Etiqueta: más grande para categorías y raíz
+        const label = node.label || '';
+        const isCategory = isCat || isRoot;
+        const baseFontSize = isCategory ? 14 : 11;
+        const fontSize = baseFontSize / globalScale;
+        ctx.font = `${isCategory ? 'bold ' : ''}${fontSize}px Inter, Sans-Serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.fillStyle = '#cbd5e1'; // slate-300
-        ctx.fillText(label, node.x, node.y + radius + 2);
+
+        // Sombra para legibilidad
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 3 / globalScale;
+
+        ctx.fillStyle = isCategory ? '#f0fdf4' : '#e2e8f0'; // verde claro para cats, gris para cursos
+        // Truncar label largo (cursos) a 30 chars en vista alejada
+        const maxChars = globalScale < 1.5 ? 20 : 50;
+        const shortLabel = label.length > maxChars ? label.slice(0, maxChars - 1) + '…' : label;
+        ctx.fillText(shortLabel, node.x, node.y + radius + 3 / globalScale);
+        ctx.shadowBlur = 0;
     };
 
     return (

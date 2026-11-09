@@ -16,7 +16,9 @@ export const BlogHeroPost = ({ post }) => {
         image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200',
     };
 
-    const data = post || defaultPost;
+    const rawData = post || defaultPost;
+    // Soporta tanto el campo 'image' como 'coverImage'
+    const data = { ...rawData, image: rawData.image || rawData.coverImage };
 
     return (
         <article className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl mb-12 group transition-all">

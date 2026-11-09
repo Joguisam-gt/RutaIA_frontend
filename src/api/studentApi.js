@@ -13,6 +13,10 @@ export const studentApi = {
     const response = await apiClient.get('/students/courses');
     return response.data;
   },
+  getWishlist: async () => {
+    const response = await apiClient.get('/students/wishlist');
+    return response.data;
+  },
 };
 
 export default studentApi;

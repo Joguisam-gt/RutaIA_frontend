@@ -13,7 +13,7 @@ import {
     Network,
     Sun, 
     Moon, 
-    LogOut 
+    LogOut
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
@@ -77,13 +77,13 @@ export const Sidebar = ({ role = 'student', currentRoute = '/app/dashboard' }) =
                                 <a
                                     key={item.route}
                                     href={item.route}
-                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                                         isActive
-                                            ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400'
-                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                                            ? 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 ring-1 ring-indigo-200 dark:ring-indigo-900 shadow-sm'
+                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
                                     }`}
                                 >
-                                    <Icon size={18} />
+                                    <Icon size={18} className={isActive ? 'text-indigo-600 dark:text-indigo-400' : ''} />
                                     <span>{item.label}</span>
                                 </a>
                             );

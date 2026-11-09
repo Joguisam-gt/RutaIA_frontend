@@ -1,30 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X, Download, Copy, Check, ShieldCheck, Linkedin, ExternalLink, Award, Sparkles } from 'lucide-react';
 
 export const CertificatePreviewModal = ({
+    isOpen,
     certificate,
     onClose,
-    copiedLink,
-    onCopyVerifyUrl,
-    onDownloadPdf,
-    onAddToLinkedIn,
-    isDownloading,
+    onDownload,
 }) => {
-    if (!certificate) return null;
+    const [copied, setCopied] = useState(false);
 
-    const {
-        title,
-        studentName = 'José Guillermo Rodríguez Samcam',
-        issueDate,
-        uuid,
-        verificationToken,
-        accreditedHours,
-    } = certificate;
+    if (!isOpen || !certificate) return null;
 
-    const verifyUrl = `${window.location.origin}/verify/${verificationToken}`;
+    // Normalización — acepta tanto campos raw del backend como ya normalizados
+    const displayTitle    = certificate.courseTitle    || certificate.title    || 'Sin título';
+    const displayName     = certificate.studentName    || '';
+    const displayHours    = certificate.durationHours  ?? certificate.accreditedHours ?? 0;
+    const displayCode     = certificate.certCode       || certificate.uuid     || '';
+    const displayDate     = certificate.issueDate      || '';
+    const displayUrl      = certificate.validationUrl  || '';
+
+    const handleCopyUrl = async () => {
+        if (!displayUrl) return;
+        try {
+            await navigator.clipboard.writeText(displayUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch {
+            /* fallback silencioso */
+        }
+    };
+
+    const handleLinkedIn = () => {
+        if (displayUrl) window.open(displayUrl, '_blank');
+    };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-3xl w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
                 {/* Header Modal */}
                 <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 mb-6">
@@ -41,7 +52,6 @@ export const CertificatePreviewModal = ({
                             </span>
                         </div>
                     </div>
-
                     <button
                         onClick={onClose}
                         className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
@@ -50,7 +60,7 @@ export const CertificatePreviewModal = ({
                     </button>
                 </div>
 
-                {/* Previsualización Renderizada en Alta Resolución del Diploma */}
+                {/* Diploma HD */}
                 <div className="aspect-[16/10] w-full rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-white p-8 md:p-12 flex flex-col justify-between border-2 border-indigo-500/40 shadow-2xl relative overflow-hidden mb-6">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -74,67 +84,70 @@ export const CertificatePreviewModal = ({
                             CERTIFICADO OFICIAL DE FINALIZACIÓN
                         </span>
                         <span className="text-xs text-slate-400 block">Este diploma certifica que</span>
-                        <h2 className="text-xl md:text-3xl font-black text-slate-50 tracking-tight">
-                            {studentName}
-                        </h2>
+                        {displayName && (
+                            <h2 className="text-xl md:text-3xl font-black text-slate-50 tracking-tight">
+                                {displayName}
+                            </h2>
+                        )}
                         <p className="text-xs md:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
                             ha completado satisfactoriamente el programa de especialización práctica en{' '}
-                            <strong className="text-indigo-400">{title}</strong>, cumpliendo {accreditedHours} horas académicas.
+                            <strong className="text-indigo-400">{displayTitle}</strong>
+                            {displayHours > 0 && `, cumpliendo ${displayHours} horas académicas`}.
                         </p>
                     </div>
 
                     {/* Footer Diploma HD */}
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-slate-400 pt-4 border-t border-slate-800 relative z-10 font-mono">
-                        <span>EMISIÓN: {issueDate}</span>
-                        <span>UUID: {uuid}</span>
+                        <span>EMISIÓN: {displayDate}</span>
+                        <span>ID: {displayCode}</span>
                     </div>
                 </div>
 
-                {/* Sección de URL Pública de Validación (/verify/:token) */}
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 mb-6">
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
-                        URL Pública de Validación Oficial
-                    </span>
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="text"
-                            readOnly
-                            value={verifyUrl}
-                            className="flex-1 px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-mono focus:outline-none"
-                        />
-                        <button
-                            onClick={() => onCopyVerifyUrl(verificationToken)}
-                            className="px-3 py-2 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors flex items-center gap-1 shrink-0"
-                        >
-                            {copiedLink ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
-                            <span>{copiedLink ? 'Copiado' : 'Copiar URL'}</span>
-                        </button>
-                        <a
-                            href={`/verify/${verificationToken}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors shrink-0"
-                            title="Abrir página pública de verificación"
-                        >
-                            <ExternalLink size={16} />
-                        </a>
+                {/* URL de Validación */}
+                {displayUrl && (
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 mb-6">
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
+                            URL Pública de Validación Oficial
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                readOnly
+                                value={displayUrl}
+                                className="flex-1 px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-mono focus:outline-none"
+                            />
+                            <button
+                                onClick={handleCopyUrl}
+                                className="px-3 py-2 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors flex items-center gap-1 shrink-0"
+                            >
+                                {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                                <span>{copied ? 'Copiado' : 'Copiar URL'}</span>
+                            </button>
+                            <a
+                                href={displayUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors shrink-0"
+                                title="Abrir página pública de verificación"
+                            >
+                                <ExternalLink size={16} />
+                            </a>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Botones de Acción Modal */}
                 <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                     <button
-                        onClick={() => onDownloadPdf(certificate)}
-                        disabled={isDownloading}
+                        onClick={() => onDownload(certificate.id)}
                         className="w-full sm:w-auto px-5 py-3 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
                     >
                         <Download size={16} />
                         <span>Descargar PDF Oficial</span>
                     </button>
 
-                    {/* Degradado exclusivo para el botón CTA de LinkedIn */}
                     <button
-                        onClick={() => onAddToLinkedIn(certificate)}
+                        onClick={handleLinkedIn}
                         className="w-full sm:w-auto px-5 py-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 hover:opacity-95 shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2"
                     >
                         <Linkedin size={16} />

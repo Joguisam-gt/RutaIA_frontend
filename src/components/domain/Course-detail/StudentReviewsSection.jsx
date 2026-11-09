@@ -1,6 +1,18 @@
 import React from 'react';
 import { Star, ThumbsUp } from 'lucide-react';
 
+const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    try {
+        const diff = Date.now() - new Date(dateStr).getTime();
+        const days = Math.floor(diff / 86400000);
+        if (days < 1) return 'Hoy';
+        if (days < 7) return `Hace ${days} día${days > 1 ? 's' : ''}`;
+        if (days < 30) return `Hace ${Math.floor(days / 7)} semana${Math.floor(days / 7) > 1 ? 's' : ''}`;
+        return `Hace ${Math.floor(days / 30)} mes${Math.floor(days / 30) > 1 ? 'es' : ''}`;
+    } catch { return ''; }
+};
+
 export const StudentReviewsSection = ({ reviews = [] }) => {
     const defaultReviews = [
         {
@@ -17,7 +29,15 @@ export const StudentReviewsSection = ({ reviews = [] }) => {
         },
     ];
 
-    const items = reviews.length > 0 ? reviews : defaultReviews;
+    // Normaliza los datos del API (studentName/score/createdAt) o del formato estático (name/rating/date)
+    const normalize = (rev) => ({
+        name: rev.studentName || rev.name || 'Estudiante',
+        date: rev.createdAt ? formatDate(rev.createdAt) : (rev.date || ''),
+        rating: rev.score || rev.rating || 5,
+        comment: rev.comment || '',
+    });
+
+    const items = reviews.length > 0 ? reviews.map(normalize) : defaultReviews;
 
     return (
         <div className="mb-10">

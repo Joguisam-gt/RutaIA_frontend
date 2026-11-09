@@ -66,19 +66,19 @@ export const CourseSyllabusAccordion = ({ modules = [], onSelectPreviewLesson })
                                             </div>
 
                                             <div className="flex items-center gap-3 shrink-0">
-                                                {lesson.isFree ? (
+                                                {(lesson.isFree || lesson.isPreview) ? (
                                                     <button
-                                                        onClick={() => onSelectPreviewLesson(lesson)}
+                                                        onClick={() => onSelectPreviewLesson && onSelectPreviewLesson(lesson)}
                                                         className="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 font-semibold text-[11px] border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors"
                                                     >
-                                                        Vista Previa Gratis
+                                                        Vista Previa
                                                     </button>
                                                 ) : (
                                                     <Lock size={14} className="text-slate-400" />
                                                 )}
                                                 <span className="text-slate-400 flex items-center gap-1 text-[11px]">
                                                     <Clock size={12} />
-                                                    {lesson.duration}
+                                                    {lesson.duration || (lesson.durationMinutes ? `${lesson.durationMinutes}min` : '—')}
                                                 </span>
                                             </div>
                                         </div>

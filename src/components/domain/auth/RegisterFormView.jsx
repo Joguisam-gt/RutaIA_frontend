@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Mail, Lock, ArrowRight } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight, GraduationCap, Compass } from 'lucide-react';
 import { PasswordStrengthBar } from './PasswordStrengthBar';
 import { SocialLoginButtons } from './SocialLoginButtons';
+
+const LEVELS = [
+    { value: 'PRINCIPIANTE', label: '🌱 Principiante', desc: 'Estoy empezando desde cero' },
+    { value: 'INTERMEDIO',   label: '⚡ Intermedio',   desc: 'Ya tengo bases y quiero avanzar' },
+    { value: 'AVANZADO',     label: '🚀 Avanzado',     desc: 'Busco dominar temas complejos' },
+];
+
+const AREAS = [
+    'Desarrollo Web',
+    'Inteligencia Artificial',
+    'Bases de Datos',
+    'Programación',
+    'Automatización y Datos',
+    'Diseño UX/UI',
+];
 
 export const RegisterFormView = ({
     formData: externalFormData,
@@ -14,7 +29,9 @@ export const RegisterFormView = ({
     const [internalFormData, setInternalFormData] = useState({
         fullName: '',
         email: '',
-        password: ''
+        password: '',
+        level: 'PRINCIPIANTE',
+        areaOfInterest: 'Desarrollo Web',
     });
 
     const formData = externalFormData || internalFormData;
@@ -23,21 +40,18 @@ export const RegisterFormView = ({
         if (externalOnChange) {
             externalOnChange(e);
         } else {
-            setInternalFormData((prev) => ({
-                ...prev,
-                [e.target.name]: e.target.value
-            }));
+            setInternalFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
         }
     };
 
     return (
-        <div className="w-full max-w-md space-y-6">
-            <div className="text-center space-y-2">
+        <div className="w-full max-w-md space-y-5">
+            <div className="text-center space-y-1">
                 <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                     Crear Cuenta
                 </h1>
                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Únete a la plataforma y comienza tu ruta de aprendizaje
+                    Únete a RutaIA y comienza tu camino de aprendizaje
                 </p>
             </div>
 
@@ -48,6 +62,8 @@ export const RegisterFormView = ({
             )}
 
             <form onSubmit={onSubmit} className="space-y-4">
+
+                {/* ── Nombre ── */}
                 <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                         Nombre Completo
@@ -66,6 +82,7 @@ export const RegisterFormView = ({
                     </div>
                 </div>
 
+                {/* ── Email ── */}
                 <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                         Correo Electrónico
@@ -84,6 +101,7 @@ export const RegisterFormView = ({
                     </div>
                 </div>
 
+                {/* ── Contraseña ── */}
                 <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                         Contraseña
@@ -103,6 +121,67 @@ export const RegisterFormView = ({
                     <PasswordStrengthBar password={formData.password || ''} />
                 </div>
 
+                {/* ── Nivel de conocimiento ── */}
+                <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+                        <GraduationCap className="w-3.5 h-3.5 text-indigo-500" />
+                        ¿Cuál es tu nivel actual?
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                        {LEVELS.map((lvl) => {
+                            const isSelected = (formData.level || 'PRINCIPIANTE') === lvl.value;
+                            return (
+                                <button
+                                    key={lvl.value}
+                                    type="button"
+                                    onClick={() => handleChange({ target: { name: 'level', value: lvl.value } })}
+                                    className={`relative p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                                        isSelected
+                                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/60 ring-1 ring-indigo-500/50'
+                                            : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-indigo-400'
+                                    }`}
+                                >
+                                    <span className="block text-base mb-0.5">{lvl.label.split(' ')[0]}</span>
+                                    <span className={`block text-[10px] font-bold ${isSelected ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                                        {lvl.label.split(' ')[1]}
+                                    </span>
+                                    <span className="block text-[9px] text-slate-500 dark:text-slate-500 mt-0.5 leading-tight">
+                                        {lvl.desc}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* ── Área de interés ── */}
+                <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+                        <Compass className="w-3.5 h-3.5 text-indigo-500" />
+                        ¿Qué quieres aprender?
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                        {AREAS.map((area) => {
+                            const isSelected = (formData.areaOfInterest || '') === area;
+                            return (
+                                <button
+                                    key={area}
+                                    type="button"
+                                    onClick={() => handleChange({ target: { name: 'areaOfInterest', value: area } })}
+                                    className={`px-3 py-2 rounded-xl border text-[10px] font-semibold text-left transition-all cursor-pointer ${
+                                        isSelected
+                                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 ring-1 ring-indigo-500/50'
+                                            : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-indigo-400'
+                                    }`}
+                                >
+                                    {area}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* ── Submit ── */}
                 <button
                     type="submit"
                     disabled={loading}
@@ -117,10 +196,7 @@ export const RegisterFormView = ({
 
             <p className="text-center text-xs text-slate-600 dark:text-slate-400">
                 ¿Ya tienes una cuenta?{' '}
-                <Link
-                    to="/login"
-                    className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
-                >
+                <Link to="/login" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
                     Inicia sesión aquí
                 </Link>
             </p>
